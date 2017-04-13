@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\Models\Professor;
+use App\Models\Student;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -48,7 +50,8 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:users',
+            'role' => 'required',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
         ]);
@@ -62,10 +65,32 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
+        $user = User::create([
+            'username' => $data['username'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+        switch ($data['role']) {
+            case 'student' :
+                Student::create([
+                    'user_id' => $user['id'],
+                    'group_id' => $data['group_id'],
+                    'name' => $data['name'],
+                    'surname' => $data['surname'],
+                    'middlename' => $data['middlename'],
+                ]);
+                break;
+            case 'professor' :
+                Professor::create([
+                    'user_id' => $user['id'],
+                    'name' => $data['name'],
+                    'surname' => $data['surname'],
+                    'middlename' => $data['middlename'],
+                    'occupation' => $data['occupation'],
+                    'degree' => $data['degree'],
+                ]);
+                break;
+        }
+        return $user;
     }
 }
