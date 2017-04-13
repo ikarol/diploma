@@ -75,19 +75,19 @@ class RegisterController extends Controller
                 Student::create([
                     'user_id' => $user['id'],
                     'group_id' => $data['group_id'],
-                    'name' => $data['name'],
-                    'surname' => $data['surname'],
-                    'middlename' => $data['middlename'],
+                    'name' => (empty($data['name'])) ? '' : $data['name'],
+                    'surname' => (empty($data['surname'])) ? '' : $data['surname'],
+                    'middlename' => (empty($data['middlename'])) ? '' : $data['middlename'],
                 ]);
                 break;
             case 'professor' :
                 Professor::create([
                     'user_id' => $user['id'],
-                    'name' => $data['name'],
-                    'surname' => $data['surname'],
-                    'middlename' => $data['middlename'],
-                    'occupation' => $data['occupation'],
-                    'degree' => $data['degree'],
+                    'name' => (empty($data['name'])) ? '' : $data['name'],
+                    'surname' => (empty($data['surname'])) ? '' : $data['surname'],
+                    'middlename' => (empty($data['middlename'])) ? '' : $data['middlename'],
+                    'occupation' => (empty($data['occupation'])) ? '' : $data['occupation'],
+                    'degree' => (empty($data['degree'])) ? '' : $data['degree'],
                 ]);
                 break;
         }
