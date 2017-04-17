@@ -11,10 +11,16 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'DashboardController@root');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index');
+Route::post('/localization', 'LocalizationController@index');
+
+Route::get('/dashboard', 'DashboardController@index');
+
+Route::get('/diplomas/create', 'DiplomaController@create');
+
+Route::post('/diplomas', 'DiplomaController@store');
+
+Route::get('/diplomas', 'DiplomaController@index');
