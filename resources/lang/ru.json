@@ -1,3 +1,17 @@
 {
-    "System for organization and management of course and diploma projects": "Система организации и управления курсовыми и дипломными проектами"
+    "System for organization and management of course and diploma projects": "Система организации и управления курсовыми и дипломными проектами",
+    "Students": "Студенты",
+    "Viewing a list of available themes": "Просмотр списка доступных тем",
+    "Submit your own themes and development tools": "Подача предложения собственных тем и инструментальных средств разработки",
+    "Applying for the selected theme": "Подача заявки на выбранную тему",
+    "Notification of the scientific director on the progress of the project": "Уведомление научного руководителя о ходе выполнения проекта",
+    "Review schedules of consultations and preliminary assessments for the project": "Просмотр графиков консультаций и предварительных оценок по проекту",
+    "Professors": "Переподаватели",
+    "Placement of tasks for implementation, indicating the topic of the project , a brief description of the work, expected development tools": "Размещение заданий на выполнение с указанием тем проектов ,краткого описания работы, предполагаемых средств выполнения разработки",
+    "Confirmation and rejection of applications of specific students for work execution": "Подтверждение и отклонение заявок конкретных студентов на выполнение работ",
+    "Setting deadlines and marking the success of the project stages execution": "Установка сроков выполнения, отметка успешности выполнения этапов проектов",
+    "Entering a schedule of student consultations and notes on attending consultations": "Ввод расписания консультаций студентов и отметок о посещении консультаций",
+    "Performing preliminary assessment of works": "Выставление предварительных оценок по работам",
+    "Login": "Войти",
+    "Register": "Регистрация"
 }
