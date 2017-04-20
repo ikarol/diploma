@@ -2,9 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Model;
-use App\User as BasicUser;
-
 
 /**
  * @property integer $id
@@ -17,7 +14,7 @@ use App\User as BasicUser;
  * @property Professor $professor
  * @property Student $student
  */
-class User extends BasicUser
+class User extends Model
 {
     /**
      * @var array
