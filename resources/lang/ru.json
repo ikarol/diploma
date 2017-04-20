@@ -13,5 +13,17 @@
     "Entering a schedule of student consultations and notes on attending consultations": "Ввод расписания консультаций студентов и отметок о посещении консультаций",
     "Performing preliminary assessment of works": "Выставление предварительных оценок по работам",
     "Login": "Войти",
-    "Register": "Регистрация"
+    "Registration": "Регистрация",
+    "Register": "Зарегистрироваться",
+    "Email": "Адрес email",
+    "Password": "Пароль",
+    "Confirm password": "Подтвердите пароль",
+    "Forgot Your Password?": "Забыли пароль?",
+    "Remember Me": "Запомнить меня",
+    "Name": "Имя",
+    "Surname": "Фамилия",
+    "Middlename": "Отчество",
+    "Role": "Роль",
+    "Professor": "Преподаватель",
+    "Student": "Студент"
 }

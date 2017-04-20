@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use App\User as Eloquent;
 
 /**
  * @property integer $id
@@ -14,7 +14,7 @@ namespace App\Models;
  * @property Professor $professor
  * @property Student $student
  */
-class User extends Model
+class User extends Eloquent
 {
     /**
      * @var array
