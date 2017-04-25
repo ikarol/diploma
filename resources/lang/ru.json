@@ -32,5 +32,10 @@
     "Diploma projects management": "Управление дипломными проектами",
     "Dashboard": "Панель управления",
     "Logout": "Выйти",
-    "List of tasks": "Список заданий"
+    "List of tasks": "Список заданий",
+    "You haven't published any tasks yet": "Вы ещё не разместили ни одного задания",
+    "Group": "Группа",
+    "Edit": "Изменить",
+    "Delete": "Удалить",
+    "New task": "Новое задание"
 }
