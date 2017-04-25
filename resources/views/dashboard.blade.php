@@ -8,8 +8,8 @@
                 <div class="panel panel-default text-center">
                     <div class="panel-heading">@lang('Course works')</div>
                     <div class="panel-body">
-                        <a class="btn btn-primary" href="/course_works?professor=
-                            {{Auth::user()->professor->id}}">
+                        <a class="btn btn-primary"
+                            href="/course_works?professor={{Auth::user()->professor->id}}">
                                 @lang('Course works management')
                         </a>
                     </div>
@@ -19,23 +19,23 @@
                 <div class="panel panel-default text-center">
                     <div class="panel-heading">@lang('Diploma projects')</div>
                     <div class="panel-body">
-                        <a class="btn btn-primary" href="/diplomas?professor=
-                            {{Auth::user()->professor->id}}">
+                        <a class="btn btn-primary"
+                            href="/diplomas?professor={{Auth::user()->professor->id}}">
                                 @lang('Diploma projects management')
                         </a>
                     </div>
                 </div>
             </div>
         </div>
-    @endif
+    @elseif ($userType == 2)
     <div class="row">
         <div class="col-md-6">
             <div class="panel panel-default text-center">
                 <div class="panel-heading">@lang('Course works')</div>
                 <div class="panel-body">
-                    <a class="btn btn-primary" href="/course_works?group=
-                        {{Auth::user()->student->group_id}}">
-                            @lang('Course works management')
+                    <a class="btn btn-primary"
+                    href="/course_works?group={{Auth::user()->student->group_id}}">
+                            @lang('List of tasks')
                     </a>
                 </div>
             </div>
@@ -44,13 +44,13 @@
             <div class="panel panel-default text-center">
                 <div class="panel-heading">@lang('Diploma projects')</div>
                 <div class="panel-body">
-                    <a class="btn btn-primary" href="/diplomas?group=
-                        {{Auth::user()->student->group_id}}">
-                            @lang('Diploma projects management')
+                    <a class="btn btn-primary" href="/diplomas?group={{Auth::user()->student->group_id}}">
+                            @lang('List of tasks')
                     </a>
                 </div>
             </div>
         </div>
     </div>
+    @endif
 </div>
 @endsection

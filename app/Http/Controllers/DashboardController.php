@@ -21,10 +21,11 @@ class DashboardController extends Controller
     public function index()
     {
         $userType = 0;
-        if (!Auth::user()->student()) {
+        if (Auth::user()->professor) {
             $userType = 1;
+        } elseif (Auth::user()->student) {
+            $userType = 2;
         }
-        $userType = 2;
         return view('dashboard')->with(['userType' => $userType]);
     }
 }

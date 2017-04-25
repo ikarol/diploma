@@ -49,7 +49,7 @@ CREATE TABLE users
 	surname varchar(255) NOT NULL,
 	middlename varchar(255),
 	password varchar(255) NOT NULL,
-	remember_token varchar(100) NOT NULL,
+	remember_token varchar(100),
 	created_at DATETIME NOT NULL
 )
 
