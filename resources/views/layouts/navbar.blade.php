@@ -31,21 +31,17 @@
                         @else
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    @if (! empty(Auth::user()->professor->name) || ! empty(Auth::user()->professor->middlename))
-                                        {{ Auth::user()->professor->name }} {{ Auth::user()->professor->middlename }}
-                                    @else
-                                        {{ Auth::user()->username }}
-                                    @endif
+                                    {{ Auth::user()->surname }} {{ Auth::user()->name }}
                                     <span class="caret"></span>
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
                                     <li>
-                                        <a href="/dashboard" >@lang('nav.dropdown.dashboard')</a>
+                                        <a href="/dashboard" >@lang('Dashboard')</a>
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                            @lang('nav.dropdown.logout')
+                                            @lang('Logout')
                                         </a>
 
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

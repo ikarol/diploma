@@ -25,5 +25,11 @@
     "Middlename": "Отчество",
     "Role": "Роль",
     "Professor": "Преподаватель",
-    "Student": "Студент"
+    "Student": "Студент",
+    "Course works": "Курсовые работы",
+    "Course works management": "Управление курсовыми работами",
+    "Diploma projects": "Дипломные проекты",
+    "Diploma projects management": "Управление дипломными проектами",
+    "Dashboard": "Панель управления",
+    "Logout": "Выйти"
 }

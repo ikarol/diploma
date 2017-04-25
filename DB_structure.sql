@@ -49,7 +49,8 @@ CREATE TABLE users
 	surname varchar(255) NOT NULL,
 	middlename varchar(255),
 	password varchar(255) NOT NULL,
-	created_at DATETIME NOT NULL 
+	remember_token varchar(100) NOT NULL,
+	created_at DATETIME NOT NULL
 )
 
 GO
@@ -59,7 +60,7 @@ CREATE TABLE professors
 	id int identity primary key,
 	user_id int NOT NULL references users(id) unique,
 	occupation varchar(255),
-	degree varchar(255)	
+	degree varchar(255)
 )
 
 GO
@@ -126,7 +127,7 @@ CREATE TABLE requests
 
 GO
 
-CREATE TABLE marks_logs 
+CREATE TABLE marks_logs
 (
 	id int identity primary key,
 	task_id int,
@@ -142,14 +143,14 @@ CREATE TRIGGER UpdateMark ON requests AFTER UPDATE
 AS
 	IF UPDATE(mark)
 	BEGIN
-		declare 
+		declare
 			@task_id int,
 			@old_val varchar(255),
 			@new_val varchar(255)
 			select @old_val = mark from deleted
 			select @new_val = mark from inserted
 			select @task_id = task_id from inserted
-		
+
 		INSERT INTO marks_logs(task_id, old_value, new_value, updated_at)
 			VALUES(@task_id, @old_val, @new_val, GETDATE() )
 	END
