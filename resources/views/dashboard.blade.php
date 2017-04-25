@@ -28,7 +28,7 @@
             </div>
         </div>
     @endif
-    {{-- <div class="row">
+    <div class="row">
         <div class="col-md-6">
             <div class="panel panel-default text-center">
                 <div class="panel-heading">@lang('Course works')</div>
@@ -51,6 +51,6 @@
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
 </div>
 @endsection
