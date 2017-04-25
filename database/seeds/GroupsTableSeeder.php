@@ -1,8 +1,9 @@
 <?php
 
+use App\Models\Group;
 use Illuminate\Database\Seeder;
 
-class DatabaseSeeder extends Seeder
+class GroupsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,6 +12,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(ProfessorGroupStudentSeeder::class);
+        Group::create([
+            'name' => str_random(10),
+        ]);
     }
 }
