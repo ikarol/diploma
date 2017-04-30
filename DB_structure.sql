@@ -90,6 +90,7 @@ CREATE TABLE tasks
 	title varchar(255) NOT NULL,
 	description varchar(255) NOT NULL,
 	technologies varchar(255),
+	group_id int NOT NULL references groups(id),
 	created_at datetime NOT NULL,
 	updated_at datetime
 )

@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\Model;
 
 /**
  * @property integer $id
  * @property integer $professor_id
+ * @property integer $group_id
  * @property integer $type
  * @property string $title
  * @property string $description
@@ -13,6 +15,7 @@ namespace App\Models;
  * @property string $created_at
  * @property string $updated_at
  * @property Professor $professor
+ * @property Group $group
  * @property Request[] $requests
  * @property Discipline[] $disciplines
  */
@@ -21,7 +24,7 @@ class Task extends Model
     /**
      * @var array
      */
-    protected $fillable = ['professor_id', 'type', 'title', 'description', 'technologies', 'created_at', 'updated_at'];
+    protected $fillable = ['professor_id', 'group_id', 'type', 'title', 'description', 'technologies', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -29,6 +32,14 @@ class Task extends Model
     public function professor()
     {
         return $this->belongsTo('App\Models\Professor');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function group()
+    {
+        return $this->belongsTo('App\Models\Group');
     }
 
     /**
