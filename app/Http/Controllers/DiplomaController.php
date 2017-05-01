@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Group;
+use App\Models\Professor;
 use App\Models\Task;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
+
 
 class DiplomaController extends Controller
 {
@@ -16,10 +20,8 @@ class DiplomaController extends Controller
      */
     public function index()
     {
-        $diplomas = Task::latest()->where('type', 2);
-        if ($professor_id = request('professor')) {
-            $diplomas->where('professor_id', $professor_id);
-        }
+        $diplomas = Task::latest()->where('type', 2)
+          ->where('professor_id', Auth::user()->professor->id);
         if ($group_id = request('group')) {
             $diplomas->where('group_id', $group_id);
         }
@@ -29,6 +31,14 @@ class DiplomaController extends Controller
             'groups' => Group::all(),
             'diplomas' => $diplomas,
         ]);
+    }
+
+    public function data(Request $request)
+    {
+        $diplomas = Task::latest()->where('type', 2)
+          ->where('professor_id', Auth::user()->professor->id)
+          ->where('group_id', request('group_id'))->get();
+        return Response::json($diplomas);
     }
 
     /**
@@ -49,7 +59,20 @@ class DiplomaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'title' => 'required',
+            'description' => 'required'
+        ]);
+        $diploma = Professor::find(Auth::user()->professor->id)->tasks()->save(new Task([
+            'type' => 2,
+            'title' => request('title'),
+            'description' => request('description'),
+            'technologies' =>
+                request('technologies') ? request('technologies') : '',
+            'group_id' => request('group_id'),
+            'created_at' => Carbon::now()->format('Y-d-m'),
+        ]));
+        return Response::json($diploma);
     }
 
     /**

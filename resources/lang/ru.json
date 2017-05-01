@@ -37,5 +37,12 @@
     "Group": "Группа",
     "Edit": "Изменить",
     "Delete": "Удалить",
-    "New task": "Новое задание"
+    "New task": "Новое задание",
+    "Topic": "Тема",
+    "Number of requests": "Количество заявок",
+    "Description": "Описание",
+    "Publish": "Опубликовать",
+    "Cancel": "Отмена",
+    "Publication date": "Дата публикации",
+    "Actions": "Действия"
 }

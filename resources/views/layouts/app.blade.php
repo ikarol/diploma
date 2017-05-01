@@ -11,7 +11,8 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/vendor.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/main.css') }}" rel="stylesheet">
 
     <!-- Scripts -->
     <script>
@@ -31,8 +32,8 @@
 
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
-
+    <script src="{{ asset('js/vendor.js') }}"></script>
+    <script src="{{ asset('js/main.js') }}"></script>
     {{-- @include('layouts.footer') --}}
 
 </body>

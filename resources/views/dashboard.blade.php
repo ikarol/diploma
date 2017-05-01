@@ -9,7 +9,7 @@
                     <div class="panel-heading">@lang('Course works')</div>
                     <div class="panel-body">
                         <a class="btn btn-primary"
-                            href="/course_works?professor={{Auth::user()->professor->id}}">
+                            href="/course_works">
                                 @lang('Course works management')
                         </a>
                     </div>
@@ -20,7 +20,7 @@
                     <div class="panel-heading">@lang('Diploma projects')</div>
                     <div class="panel-body">
                         <a class="btn btn-primary"
-                            href="/diplomas?professor={{Auth::user()->professor->id}}">
+                            href="/diplomas">
                                 @lang('Diploma projects management')
                         </a>
                     </div>
@@ -34,7 +34,7 @@
                 <div class="panel-heading">@lang('Course works')</div>
                 <div class="panel-body">
                     <a class="btn btn-primary"
-                    href="/course_works?group={{Auth::user()->student->group_id}}">
+                    href="/course_works">
                             @lang('List of tasks')
                     </a>
                 </div>
@@ -44,7 +44,7 @@
             <div class="panel panel-default text-center">
                 <div class="panel-heading">@lang('Diploma projects')</div>
                 <div class="panel-body">
-                    <a class="btn btn-primary" href="/diplomas?group={{Auth::user()->student->group_id}}">
+                    <a class="btn btn-primary" href="/diplomas">
                             @lang('List of tasks')
                     </a>
                 </div>
