@@ -16,14 +16,26 @@ class StudentsTableSeeder extends Seeder
     public function run()
     {
         $groups = Group::all();
-        User::create([
-            'name' => str_random(10),
-            'surname' => str_random(10),
-            'email' => str_random(5).'@gmail.com',
-            'password' => bcrypt('123456'),
-            'created_at' => Carbon::now()->format('Y-d-m'),
-        ])->student()->save(new Student([
-            'group_id' => mt_rand($groups->first()->id, $groups->last()->id),
-        ]));
+        try {
+            User::create([
+                'name' => str_random(10),
+                'surname' => str_random(10),
+                'email' => str_random(5).'@gmail.com',
+                'password' => bcrypt('123456'),
+                'created_at' => Carbon::now()->format('Y-d-m'),
+            ])->student()->save(new Student([
+                'group_id' => mt_rand($groups->first()->id, $groups->last()->id),
+            ]));
+        } catch (\Illuminate\Database\QueryException $e) {
+            User::create([
+                'name' => str_random(10),
+                'surname' => str_random(10),
+                'email' => str_random(5).'@gmail.com',
+                'password' => bcrypt('123456'),
+                'created_at' => Carbon::now()->format('Y-m-d'),
+            ])->student()->save(new Student([
+                'group_id' => mt_rand($groups->first()->id, $groups->last()->id),
+            ]));
+        }
     }
 }

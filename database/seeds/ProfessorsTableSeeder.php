@@ -14,15 +14,28 @@ class ProfessorsTableSeeder extends Seeder
      */
     public function run()
     {
-        User::create([
-            'name' => str_random(10),
-            'surname' => str_random(10),
-            'email' => str_random(5).'@gmail.com',
-            'password' => bcrypt('123456'),
-            'created_at' => Carbon::now()->format('Y-d-m'),
-        ])->professor()->save(new Professor([
-            'occupation' => str_random(10),
-            'degree' => str_random(10),
-        ]));
+        try {
+            User::create([
+                'name' => str_random(10),
+                'surname' => str_random(10),
+                'email' => str_random(5).'@gmail.com',
+                'password' => bcrypt('123456'),
+                'created_at' => Carbon::now()->format('Y-d-m'),
+            ])->professor()->save(new Professor([
+                'occupation' => str_random(10),
+                'degree' => str_random(10),
+            ]));
+        } catch (\Illuminate\Database\QueryException $e) {
+            User::create([
+                'name' => str_random(10),
+                'surname' => str_random(10),
+                'email' => str_random(5).'@gmail.com',
+                'password' => bcrypt('123456'),
+                'created_at' => Carbon::now()->format('Y-m-d'),
+            ])->professor()->save(new Professor([
+                'occupation' => str_random(10),
+                'degree' => str_random(10),
+            ]));
+        }
     }
 }
