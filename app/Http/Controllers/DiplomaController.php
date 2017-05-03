@@ -36,8 +36,12 @@ class DiplomaController extends Controller
     public function data(Request $request)
     {
         $diplomas = Task::latest()->where('type', 2)
-          ->where('professor_id', Auth::user()->professor->id)
-          ->where('group_id', request('group_id'))->get();
+            ->where('professor_id', Auth::user()->professor->id)
+            ->where('group_id', request('group_id'))
+            ->get()->toArray();
+        foreach ($diplomas as &$diploma) {
+            $diploma['requests'] = count(Task::find($diploma['id'])->requests);
+        }
         return Response::json($diplomas);
     }
 

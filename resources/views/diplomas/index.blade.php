@@ -10,57 +10,23 @@
         <div class="panel-body">
             <div class="form-group">
                 <label for="group" class="control-label">@lang('Group')</label>
-                <select name="group" id="group" class="form-control">
+                <select name="group" id="group-id" class="form-control">
                     @foreach ($groups as $group)
                         <option value="{{ $group->id }}">{{ $group->name }}</option>
                     @endforeach
                 </select>
             </div>
-            @if ($diplomas->isEmpty())
-                <div id="noTasksDiv" class="col-md-4">
-                    <p>@lang('You haven\'t published any tasks yet')</p>
-                </div>
-            @else
-                <div class="form-group">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>
-                                    @lang('Topic')
-                                </th>
-                                <th>
-                                    @lang('Number of requests')
-                                </th>
-                                <th>
-                                    @lang('Publication date')
-                                </th>
-                                <th>
-                                    @lang('Actions')
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody id="diplomas">
-                            @foreach ($diplomas as $diploma)
-                                <tr>
-                                    <td>
-                                        {{ $diploma->title }}
-                                    </td>
-                                    <td>
-                                        {{ count($diploma->requests) }}
-                                    </td>
-                                    <td>
-                                        {{ Carbon\Carbon::parse($diploma->created_at)->format('d.m.Y') }}
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-primary">@lang('Edit')</button>
-                                        <button class="btn btn-danger">@lang('Delete')</button>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @endif
+            <div class="form-group">
+                <professor-diplomas-table>
+                    <template slot='button-edit'>@lang('Edit')</template>
+                    <template slot='button-delete'>@lang('Delete')</template>
+                    <template slot='title-topic'>@lang('Topic')</template>
+                    <template slot='title-request'>@lang('Number of requests')</template>
+                    <template slot='title-cr_at'>@lang('Publication date')</template>
+                    <template slot='title-actions'>@lang('Actions')</template>
+                    <template slot='no-diplomas'>@lang('You haven\'t published any tasks yet')</template>
+                </professor-diplomas-table>
+            </div>
         </div>
         <div class="panel-footer">
             <a id="new_task" data-toggle="modal" data-target="#myModal" href="#" class="btn btn-primary">@lang('New task')</a>
