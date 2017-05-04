@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Response;
 
 class DiplomaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('ajax')->only('data');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -20,27 +25,18 @@ class DiplomaController extends Controller
      */
     public function index()
     {
-        $diplomas = Task::latest()->where('type', 2)
-          ->where('professor_id', Auth::user()->professor->id);
-        if ($group_id = request('group')) {
-            $diplomas->where('group_id', $group_id);
-        }
-        $diplomas = $diplomas->get();
-        return view('diplomas.index')->with([
-            'professor' => Auth::user()->professor,
-            'groups' => Group::all(),
-            'diplomas' => $diplomas,
-        ]);
+        return view('diplomas.index');
     }
 
     public function data(Request $request)
     {
-        $diplomas = Task::latest()->where('type', 2)
+        $diplomas = Task::where('type', 2)
             ->where('professor_id', Auth::user()->professor->id)
             ->where('group_id', request('group_id'))
             ->get()->toArray();
         foreach ($diplomas as &$diploma) {
             $diploma['requests'] = count(Task::find($diploma['id'])->requests);
+            $diploma['created_at'] = Carbon::parse($diploma['created_at'])->format('d.m.Y');
         }
         return Response::json($diplomas);
     }
@@ -75,7 +71,11 @@ class DiplomaController extends Controller
                 request('technologies') ? request('technologies') : '',
             'group_id' => request('group_id'),
             'created_at' => Carbon::now()->format('Y-d-m'),
-        ]));
+        ]))->toArray();
+        $diploma['requests'] = count(Task::find($diploma['id'])->requests);
+        // TODO: Дата отображается неверно
+        $diploma['created_at'] = Carbon::parse($diploma['created_at'])->format('m.d.Y');
+        $diploma['updated_at'] = null;
         return Response::json($diploma);
     }
 
@@ -119,8 +119,9 @@ class DiplomaController extends Controller
      * @param  \App\Models\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Task $task)
+    public function destroy($id)
     {
-        //
+        Task::destroy($id);
+        return Response::json('success');
     }
 }

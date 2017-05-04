@@ -16,3 +16,4 @@ Route::get('/dashboard', 'DashboardController@index');
 Auth::routes();
 Route::get('diplomas/data', 'DiplomaController@data');
 Route::resource('diplomas', 'DiplomaController');
+Route::get('/groups', 'GroupController@index');
