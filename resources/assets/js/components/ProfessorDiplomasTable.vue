@@ -182,6 +182,7 @@ import ProfessorDiplomasRow from './ProfessorDiplomasRow.vue';
                     console.log("success");
                     console.log(response);
                     self.diplomas.unshift(response);
+                    self.clearTaskInputs();
                     $('#close-modal').click();
                 })
                 .fail(function(response) {
