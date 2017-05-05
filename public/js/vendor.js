@@ -2517,6 +2517,58 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2531,7 +2583,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     mounted: function mounted() {
         console.log('Diplomas list mounted.');
         var self = this;
-        this.assignButtonNames();
+        this.assignButtonLabelNames();
         setTimeout(function () {
             self.getFilteredData();
         }, 400);
@@ -2563,9 +2615,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log(response);
             });
         },
-        assignButtonNames: function assignButtonNames() {
+        assignButtonLabelNames: function assignButtonLabelNames() {
             this.button_names.edit = $('#button-edit').text();
             this.button_names.delete = $('#button-delete').text();
+            this.button_names.cancel = $('#button-cancel').text();
+            this.button_names.publish = $('#button-publish').text();
+            this.button_names.update = $('#button-update').text();
+            this.labels.title = $('#task-title').text();
+            this.labels.description = $('#task-description').text();
+            this.labels.technologies = $('#task-technologies').text();
+            this.labels.group_name = $('#task-group-title').text();
         },
         openDiploma: function openDiploma(diploma) {
             return '/diplomas/' + diploma.id;
@@ -2589,7 +2648,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log(response);
             });
         },
-        clearTaskInputs: function clearTaskInputs() {
+        clearNewTaskInputs: function clearNewTaskInputs() {
             this.newTask = {
                 title: '',
                 description: '',
@@ -2612,8 +2671,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log("success");
                 console.log(response);
                 self.diplomas.unshift(response);
-                self.clearTaskInputs();
-                $('#close-modal').click();
+                self.clearNewTaskInputs();
+                $('#close-new-task-modal').click();
             }).fail(function (response) {
                 console.log("error");
                 console.log(response);
@@ -2640,12 +2699,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         deleteWithConfirm: function deleteWithConfirm(diploma) {
             var self = this;
             swal({
-                title: 'Удалить ' + diploma.title + '?',
+                title: self.button_names.delete + ' ' + diploma.title + '?',
                 type: 'warning',
                 showCancelButton: true,
                 closeOnConfirm: true,
                 showLoaderOnConfirm: true,
-                cancelButtonText: "Отмена",
+                cancelButtonText: self.button_names.cancel,
                 confirmButtonText: "Ок",
                 confirmButtonColor: '#3085d6',
                 confirmLoadingButtonColor: '#DD6B55'
@@ -2653,8 +2712,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 $.ajax({
                     url: '/diplomas/' + diploma.id,
                     type: 'DELETE',
-                    dataType: 'json',
-                    data: { param1: 'value1' }
+                    dataType: 'json'
                 }).done(function (response) {
                     console.log("success");
                     self.diplomas.splice(self.diplomas.indexOf(diploma), 1);
@@ -2662,6 +2720,64 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     console.log("error");
                     console.log("response");
                 });
+            });
+        },
+        openUpdateModal: function openUpdateModal(diploma) {
+            this.currTask = {
+                created_at: diploma.created_at,
+                description: diploma.description,
+                group_id: diploma.group_id,
+                id: diploma.id,
+                professor_id: diploma.professor_id,
+                requests: diploma.requests,
+                technologies: diploma.technologies,
+                title: diploma.title,
+                type: diploma.type,
+                updated_at: diploma.updated_at
+            };
+        },
+        clearUpdateTaskInputs: function clearUpdateTaskInputs() {
+            this.currTask = {
+                created_at: '',
+                description: '',
+                group_id: '',
+                id: '',
+                professor_id: '',
+                requests: '',
+                technologies: '',
+                title: '',
+                type: '',
+                updated_at: ''
+            };
+        },
+        updateTask: function updateTask() {
+            var self = this;
+            $.ajax({
+                url: '/diplomas/' + self.currTask.id,
+                type: 'PATCH',
+                dataType: 'json',
+                data: self.currTask
+            }).done(function (response) {
+                console.log("task updated");
+                console.log(response);
+                self.diplomas[self.diplomas.map(function (diploma) {
+                    return diploma.id;
+                }).indexOf(self.currTask.id)] = response;
+                self.clearUpdateTaskInputs();
+                $('#close-update-task-modal').click();
+            }).fail(function (response) {
+                console.log("error");
+                console.log(response);
+                self.errors = response.responseJSON;
+                if (self.errors.hasOwnProperty('title')) {
+                    $('#task-title-block').addClass('has-error');
+                }
+                if (self.errors.hasOwnProperty('description')) {
+                    $('#task-description-block').addClass('has-error');
+                }
+                if (self.errors.hasOwnProperty('technologies')) {
+                    $('#task-technologies-block').addClass('has-error');
+                }
             });
         }
     },
@@ -2672,7 +2788,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 edit: '',
                 delete: '',
                 cancel: '',
-                publish: ''
+                publish: '',
+                update: ''
+            },
+            labels: {
+                title: '',
+                description: '',
+                technologies: '',
+                group_name: ''
             },
             groups: [],
             currGroup: {
@@ -2683,6 +2806,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 title: '',
                 description: '',
                 technologies: ''
+            },
+            currTask: {
+                created_at: '',
+                description: '',
+                group_id: '',
+                id: '',
+                professor_id: '',
+                requests: '',
+                technologies: '',
+                title: '',
+                type: '',
+                updated_at: ''
             },
             errors: {}
         };
@@ -33380,7 +33515,42 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "id": "button-delete",
       "hidden": "true"
     }
-  }, [_vm._t("button-delete")], 2), _vm._v(" "), (_vm.diplomas.length) ? _c('table', {
+  }, [_vm._t("button-delete")], 2), _vm._v(" "), _c('span', {
+    attrs: {
+      "id": "button-cancel",
+      "hidden": "true"
+    }
+  }, [_vm._t("button-cancel")], 2), _vm._v(" "), _c('span', {
+    attrs: {
+      "id": "button-publish",
+      "hidden": "true"
+    }
+  }, [_vm._t("button-publish")], 2), _vm._v(" "), _c('span', {
+    attrs: {
+      "id": "button-update",
+      "hidden": "true"
+    }
+  }, [_vm._t("button-update")], 2), _vm._v(" "), _c('span', {
+    attrs: {
+      "id": "task-title",
+      "hidden": "true"
+    }
+  }, [_vm._t("task-title")], 2), _vm._v(" "), _c('span', {
+    attrs: {
+      "id": "task-description",
+      "hidden": "true"
+    }
+  }, [_vm._t("task-description")], 2), _vm._v(" "), _c('span', {
+    attrs: {
+      "id": "task-technologies",
+      "hidden": "true"
+    }
+  }, [_vm._t("task-technologies")], 2), _vm._v(" "), _c('span', {
+    attrs: {
+      "id": "task-group-title",
+      "hidden": "true"
+    }
+  }, [_vm._t("task-group-title")], 2), _vm._v(" "), (_vm.diplomas.length) ? _c('table', {
     staticClass: "table table-bordered"
   }, [_c('thead', [_c('tr', [_c('th', [_vm._t("title-topic")], 2), _vm._v(" "), _c('th', [_vm._t("title-request")], 2), _vm._v(" "), _c('th', [_vm._t("title-cr_at")], 2), _vm._v(" "), _c('th', [_vm._t("title-actions")], 2)])]), _vm._v(" "), _c('tbody', _vm._l((_vm.diplomas), function(diploma) {
     return _c('professor-diplomas-row', {
@@ -33391,14 +33561,24 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "href": _vm.openDiploma(diploma)
       }
-    }, [_vm._v(_vm._s(diploma.title))])]), _vm._v(" "), _c('template', {
+    }, [_vm._v(_vm._s(diploma.title.length > 10 ?
+      diploma.title.substr(0, 10) + '...' : diploma.title))])]), _vm._v(" "), _c('template', {
       slot: "col-requests"
     }, [_vm._v(_vm._s(diploma.requests))]), _vm._v(" "), _c('template', {
       slot: "col-cr_at"
     }, [_vm._v(_vm._s(diploma.created_at))]), _vm._v(" "), _c('template', {
       slot: "col-actions"
     }, [_c('button', {
-      staticClass: "btn btn-primary btn-sm"
+      staticClass: "btn btn-primary btn-sm",
+      attrs: {
+        "data-toggle": "modal",
+        "data-target": "#update-diploma-modal"
+      },
+      on: {
+        "click": function($event) {
+          _vm.openUpdateModal(diploma)
+        }
+      }
     }, [_vm._v(_vm._s(_vm.button_names.edit))]), _vm._v(" "), _c('button', {
       staticClass: "btn btn-danger btn-sm",
       on: {
@@ -33407,7 +33587,179 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         }
       }
     }, [_vm._v(_vm._s(_vm.button_names.delete))])])], 2)
-  }))]) : _c('div', {
+  })), _vm._v(" "), _c('tfoot', [_c('div', {
+    staticClass: "modal fade",
+    attrs: {
+      "id": "update-diploma-modal",
+      "role": "dialog",
+      "data-backdrop": "static",
+      "data-keyboard": "false"
+    }
+  }, [_c('div', {
+    staticClass: "modal-dialog"
+  }, [_c('div', {
+    staticClass: "modal-content"
+  }, [_c('div', {
+    staticClass: "modal-header"
+  }, [_c('button', {
+    staticClass: "close",
+    attrs: {
+      "type": "button",
+      "data-dismiss": "modal"
+    },
+    on: {
+      "click": _vm.clearNewTaskInputs
+    }
+  }, [_vm._v("×")]), _vm._v(" "), _c('h4', {
+    staticClass: "modal-title"
+  }, [_vm._t("update-diploma-modal-title")], 2)]), _vm._v(" "), _c('div', {
+    staticClass: "modal-body"
+  }, [_c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "task-title-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "task-title"
+    }
+  }, [_vm._v(_vm._s(_vm.labels.title))]), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.currTask.title),
+      expression: "currTask.title"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "id": "task-title",
+      "type": "text"
+    },
+    domProps: {
+      "value": _vm.currTask.title,
+      "value": (_vm.currTask.title)
+    },
+    on: {
+      "keypress": function($event) {
+        _vm.clearErrorMessages('title')
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.currTask.title = $event.target.value
+      }
+    }
+  }), _vm._v(" "), (_vm.errors.hasOwnProperty('title')) ? _c('span', {
+    staticClass: "help-block",
+    attrs: {
+      "id": "title-help-block"
+    }
+  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.title[0]))])]) : _vm._e()]), _vm._v(" "), _c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "task-description-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "task-description"
+    }
+  }, [_vm._v(_vm._s(_vm.labels.description))]), _vm._v(" "), _c('textarea', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.currTask.description),
+      expression: "currTask.description"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "id": "task-description"
+    },
+    domProps: {
+      "value": _vm.currTask.description,
+      "value": (_vm.currTask.description)
+    },
+    on: {
+      "keypress": function($event) {
+        _vm.clearErrorMessages('description')
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.currTask.description = $event.target.value
+      }
+    }
+  }), _vm._v(" "), (_vm.errors.hasOwnProperty('description')) ? _c('span', {
+    staticClass: "help-block",
+    attrs: {
+      "id": "description-help-block"
+    }
+  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.description[0]))])]) : _vm._e()]), _vm._v(" "), _c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "task-technologies-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "task-technologies"
+    }
+  }, [_vm._v(_vm._s(_vm.labels.technologies))]), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.currTask.technologies),
+      expression: "currTask.technologies"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "id": "task-technologies",
+      "type": "text"
+    },
+    domProps: {
+      "value": _vm.currTask.technologies,
+      "value": (_vm.currTask.technologies)
+    },
+    on: {
+      "keypress": function($event) {
+        _vm.clearErrorMessages('technologies')
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.currTask.technologies = $event.target.value
+      }
+    }
+  }), _vm._v(" "), (_vm.errors.hasOwnProperty('technologies')) ? _c('span', {
+    staticClass: "help-block",
+    attrs: {
+      "id": "technologies-help-block"
+    }
+  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.technologies[0]))])]) : _vm._e()]), _vm._v(" "), _c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "task-group-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "task-group"
+    }
+  }, [_vm._v(_vm._s(_vm.labels.group_name))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('i', [_vm._v(_vm._s(_vm.currGroup.name))])])]), _vm._v(" "), _c('div', {
+    staticClass: "modal-footer"
+  }, [_c('button', {
+    staticClass: "btn btn-primary",
+    attrs: {
+      "type": "button"
+    },
+    on: {
+      "click": _vm.updateTask
+    }
+  }, [_vm._v(_vm._s(_vm.button_names.update))]), _vm._v(" "), _c('button', {
+    staticClass: "btn btn-default",
+    attrs: {
+      "id": "close-update-task-modal",
+      "type": "button",
+      "data-dismiss": "modal"
+    },
+    on: {
+      "click": _vm.clearUpdateTaskInputs
+    }
+  }, [_vm._v(_vm._s(_vm.button_names.cancel))])])])])])])], 1) : _c('div', {
     staticClass: "form-group"
   }, [_c('p', [_vm._t("no-diplomas")], 2)])]), _vm._v(" "), _c('div', {
     staticClass: "form-group"
@@ -33439,11 +33791,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "data-dismiss": "modal"
     },
     on: {
-      "click": _vm.clearTaskInputs
+      "click": _vm.clearNewTaskInputs
     }
   }, [_vm._v("×")]), _vm._v(" "), _c('h4', {
     staticClass: "modal-title"
-  }, [_vm._t("modal-title")], 2)]), _vm._v(" "), _c('div', {
+  }, [_vm._t("new-diploma-modal-title")], 2)]), _vm._v(" "), _c('div', {
     staticClass: "modal-body"
   }, [_c('div', {
     staticClass: "form-group",
@@ -33454,7 +33806,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "for": "task-title"
     }
-  }, [_vm._t("task-title")], 2), _vm._v(" "), _c('input', {
+  }, [_vm._v(_vm._s(_vm.labels.title))]), _vm._v(" "), _c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -33493,7 +33845,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "for": "task-description"
     }
-  }, [_vm._t("task-description")], 2), _vm._v(" "), _c('textarea', {
+  }, [_vm._v(_vm._s(_vm.labels.description))]), _vm._v(" "), _c('textarea', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -33531,7 +33883,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "for": "task-technologies"
     }
-  }, [_vm._t("task-technologies")], 2), _vm._v(" "), _c('input', {
+  }, [_vm._v(_vm._s(_vm.labels.technologies))]), _vm._v(" "), _c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -33570,7 +33922,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "for": "task-group"
     }
-  }, [_vm._t("task-group-title")], 2), _vm._v(" "), _c('br'), _vm._v(" "), _c('i', [_vm._v(_vm._s(_vm.currGroup.name))])])]), _vm._v(" "), _c('div', {
+  }, [_vm._v(_vm._s(_vm.labels.group_name))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('i', [_vm._v(_vm._s(_vm.currGroup.name))])])]), _vm._v(" "), _c('div', {
     staticClass: "modal-footer"
   }, [_c('button', {
     staticClass: "btn btn-primary",
@@ -33580,17 +33932,17 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "click": _vm.publishTask
     }
-  }, [_vm._t("publish-task")], 2), _vm._v(" "), _c('button', {
+  }, [_vm._v(_vm._s(_vm.button_names.publish))]), _vm._v(" "), _c('button', {
     staticClass: "btn btn-default",
     attrs: {
-      "id": "close-modal",
+      "id": "close-new-task-modal",
       "type": "button",
       "data-dismiss": "modal"
     },
     on: {
-      "click": _vm.clearTaskInputs
+      "click": _vm.clearNewTaskInputs
     }
-  }, [_vm._t("close-modal")], 2)])])])])])])
+  }, [_vm._v(_vm._s(_vm.button_names.cancel))])])])])])])])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

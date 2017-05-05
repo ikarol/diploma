@@ -16,7 +16,7 @@ class DiplomaController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('ajax')->only('data');
+        $this->middleware('ajax')->except('index');
     }
     /**
      * Display a listing of the resource.
@@ -59,6 +59,7 @@ class DiplomaController extends Controller
      */
     public function store(Request $request)
     {
+        // TODO: Создать отдельный Request с валидацией
         $this->validate($request, [
             'title' => 'required',
             'description' => 'required'
@@ -108,9 +109,23 @@ class DiplomaController extends Controller
      * @param  \App\Models\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Task $task)
+    public function update(Request $request)
     {
-        //
+        // TODO: Создать отдельный Request с валидацией
+        $this->validate($request, [
+            'title' => 'required',
+            'description' => 'required'
+        ]);
+        $updatedTask = Task::find(request('id'));
+        $updatedTask->title = request('title');
+        $updatedTask->description = request('description');
+        $updatedTask->technologies = request('technologies');
+        $updatedTask->updated_at = Carbon::now()->format('Y-d-m');
+        $updatedTask->save();
+        $updatedTask->toArray();
+        $updatedTask['created_at'] = Carbon::parse($updatedTask['created_at'])->format('d.m.Y');
+        $updatedTask['requests'] = count(Task::find($updatedTask['id'])->requests);
+        return Response::json($updatedTask);
     }
 
     /**
