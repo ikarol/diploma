@@ -48,5 +48,11 @@
     "Technologies": "Средства выполнения",
     "Optional": "Необязательно",
     "Update task": "Обновить задание",
-    "Update": "Обновить"
+    "Update": "Обновить",
+    "Requests": "Заявки",
+    "There are no tasks for this group": "Для этой группы отсутствуют задания",
+    "Apply": "Подать заявку",
+    "Request": "Заявка",
+    "Message": "Сообщение",
+    "Empty": "Пусто"
 }

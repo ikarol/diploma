@@ -2,6 +2,8 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\StudentOnly;
+use App\Http\Middleware\ProfessorOnly;
 use App\Http\Middleware\OnlyAjaxRequests;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -57,6 +59,8 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'ajax' => OnlyAjaxRequests::class
+        'ajax' => OnlyAjaxRequests::class,
+        'professor' => ProfessorOnly::class,
+        'student' => StudentOnly::class,
     ];
 }

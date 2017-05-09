@@ -2,33 +2,23 @@
 
 @section('content')
 <div class="container">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h1>@lang('Diploma projects')</h1>
-            <i>@lang('List of tasks')</i>
+    <h1>@lang('Diploma projects')</h1>
+        @if ($userType == 1)
+            <ul class="nav nav-tabs">
+              <router-link tag="li" to="/prof-task-list" exact><a class="lul">@lang('List of tasks')</a></router-link>
+              <router-link tag="li" to="/prof-requests"><a>@lang('Requests')</a></router-link>
+            </ul>
+
+        @elseif ($userType == 2)
+            <ul class="nav nav-tabs">
+              <router-link tag="li" to="/stud-task-list" exact><a>@lang('List of tasks')</a></router-link>
+              <router-link tag="li" to="/stud-requests"><a>@lang('Requests')</a></router-link>
+            </ul>
+        @endif
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <router-view></router-view>
+            </div>
         </div>
-        <div class="panel-body">
-            <professor-diplomas-table>
-                <template slot="title-group">@lang('Group')</template>
-                <template slot='button-edit'>@lang('Edit')</template>
-                <template slot='button-delete'>@lang('Delete')</template>
-                <template slot='button-cancel'>@lang('Cancel')</template>
-                <template slot="button-publish">@lang('Publish')</template>
-                <template slot="button-update">@lang('Update')</template>
-                <template slot='task-title'>@lang('Topic')</template>
-                <template slot='task-description'>@lang('Description')</template>
-                <template slot='task-technologies'>@lang('Technologies')</template>
-                <template slot='task-group-title'>@lang('Group')</template>
-                <template slot='title-topic'>@lang('Topic')</template>
-                <template slot='title-request'>@lang('Number of requests')</template>
-                <template slot='title-cr_at'>@lang('Publication date')</template>
-                <template slot='title-actions'>@lang('Actions')</template>
-                <template slot='no-diplomas'>@lang('You haven\'t published any tasks yet')</template>
-                <template slot="open-diploma-modal">@lang('New task')</template>
-                <template slot='new-diploma-modal-title'>@lang('New task')</template>
-                <template slot='update-diploma-modal-title'>@lang('Update task')</template>
-            </professor-diplomas-table>
-        </div>
-    </div>
 </div>
 @endsection

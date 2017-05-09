@@ -19,7 +19,7 @@ class Request extends Model
     /**
      * @var array
      */
-    protected $fillable = ['status', 'message', 'mark', 'created_at', 'started_at'];
+    protected $fillable = ['task_id', 'status', 'message', 'mark', 'created_at', 'started_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

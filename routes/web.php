@@ -11,9 +11,14 @@
 |
 */
 
-Route::get('/', 'DashboardController@home');
+Route::get('/', 'DashboardController@home')->name('home');
 Route::get('/dashboard', 'DashboardController@index');
 Auth::routes();
-Route::get('diplomas/data', 'DiplomaController@data');
-Route::resource('diplomas', 'DiplomaController');
-Route::get('/groups', 'GroupController@index');
+Route::get('/diplomas/professor/list', 'DiplomaController@diplomaListProfessor');
+Route::get('/diplomas/student/list', 'DiplomaController@diplomasListStudent');
+Route::resource('/diplomas', 'DiplomaController');
+Route::get('/student/groups', 'GroupController@student_groups');
+Route::get('/professor/groups', 'GroupController@professor_groups');
+Route::get('/translation/professor/diplomas/list', 'TranslationController@professor_diplomas_list');
+Route::get('/translation/student/diplomas/list', 'TranslationController@student_diplomas_list');
+Route::post('/diplomas/requests/{id}', 'DiplomaRequestController@store');

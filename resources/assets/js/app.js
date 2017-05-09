@@ -12,10 +12,10 @@ require('./bootstrap');
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-
-Vue.component('professor-diplomas-row', require('./components/ProfessorDiplomasRow.vue'));
-Vue.component('professor-diplomas-table', require('./components/ProfessorDiplomasTable.vue'));
+import router from './routes.js'
 
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+
+    router: router
 });

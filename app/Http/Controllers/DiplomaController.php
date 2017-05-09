@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Group;
+use App\Models\Request as DiplomaRequest;
 use App\Models\Professor;
 use App\Models\Task;
 use Carbon\Carbon;
@@ -13,10 +14,27 @@ use Illuminate\Support\Facades\Response;
 
 class DiplomaController extends Controller
 {
+    public $userType = 0;
+
     public function __construct()
     {
         $this->middleware('auth');
         $this->middleware('ajax')->except('index');
+        $this->middleware('professor')->only([
+            'store',
+            'update',
+            'destroy',
+            'diplomaListProfessor',
+        ]);
+        $this->middleware('student')->only('diplomasListStudent');
+        $this->middleware(function ($request, $next) {
+            if (Auth::user()->professor) {
+                $this->userType = 1;
+            } elseif (Auth::user()->student) {
+                $this->userType = 2;
+            }
+            return $next($request);
+        });
     }
     /**
      * Display a listing of the resource.
@@ -25,20 +43,51 @@ class DiplomaController extends Controller
      */
     public function index()
     {
-        return view('diplomas.index');
+        return view('diplomas.index')->with(['userType' => $this->userType]);
     }
 
-    public function data(Request $request)
+    public function diplomaListProfessor(Request $request)
     {
         $diplomas = Task::where('type', 2)
-            ->where('professor_id', Auth::user()->professor->id)
-            ->where('group_id', request('group_id'))
-            ->get()->toArray();
+            ->where([
+                ['professor_id', Auth::user()->professor->id],
+                ['group_id', request('group_id')]
+            ])->get()->toArray();
         foreach ($diplomas as &$diploma) {
             $diploma['requests'] = count(Task::find($diploma['id'])->requests);
             $diploma['created_at'] = Carbon::parse($diploma['created_at'])->format('d.m.Y');
         }
-        return Response::json($diplomas);
+        return Response::json([
+            'diplomas' => $diplomas,
+        ]);
+    }
+
+    public function diplomasListStudent(Request $request)
+    {
+        $diplomas = Task::where([
+            ['type', 2],
+            ['group_id', request('group_id')]
+        ])->whereDoesntHave((new DiplomaRequest)->getTable(), function ($query) {
+            $query->where([
+                ['student_id', Auth::user()->student->id],
+                ['status', [
+                    0,
+                    1,
+                    2,
+                ]],
+            ])->orWhere([
+                ['status', 1]
+            ]);
+        })->get()->toArray();
+        foreach ($diplomas as &$diploma) {
+            $diploma['professor'] = Task::find($diploma['id'])
+                ->professor->user->surname . ' ' . Task::find($diploma['id'])->professor->user->name;
+            $diploma['created_at'] = Carbon::parse($diploma['created_at'])->format('d.m.Y');
+        }
+        return Response::json([
+            'diplomas' => $diplomas,
+            'student_id' => Auth::user()->student->id,
+        ]);
     }
 
     /**
@@ -136,6 +185,12 @@ class DiplomaController extends Controller
      */
     public function destroy($id)
     {
+        /**
+         * Cascade deleting requests if they exist
+         */
+        if ($requests = DiplomaRequest::where('task_id', $id)) {
+            $requests->delete();
+        }
         Task::destroy($id);
         return Response::json('success');
     }
