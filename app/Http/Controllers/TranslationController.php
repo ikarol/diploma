@@ -65,4 +65,29 @@ class TranslationController extends Controller
             'translations' =>$translations
         ]);
     }
+
+    public function professor_requests_list()
+    {
+        $translations = [
+            'labels' => [
+                'group' => __('Group'),
+                'topic' => __('Topic'),
+                'student' => __('Student'),
+                'status' => __('Status'),
+                'created_at' => __('Publication date'),
+                'actions' => __('Actions'),
+                'no_requests' => __('There are no requests'),
+                'accepted' => __('Accepted'),
+                'pending' => __('Pending'),
+                'declined' => __('Declined'),
+            ],
+            'buttons' => [
+                'accept' => __('Accept'),
+                'decline' => __('Decline'),
+            ]
+        ];
+        return Response::json([
+            'translations' =>$translations
+        ]);
+    }
 }

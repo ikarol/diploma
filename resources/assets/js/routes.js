@@ -6,8 +6,16 @@ var routes = [
         component: require('./components/ProfessorDiplomasTable')
     },
     {
+        path: '/prof-requests',
+        component: require('./components/ProfessorDiplomasRequests')
+    },
+    {
         path: '/stud-task-list',
         component: require('./components/StudentDiplomasTable')
+    },
+    {
+        path: '/stud-requests',
+        component: require('./components/StudentDiplomasRequests')
     }
 ];
 

@@ -5597,8 +5597,14 @@ var routes = [{
     path: '/prof-task-list',
     component: __webpack_require__(50)
 }, {
+    path: '/prof-requests',
+    component: __webpack_require__(68)
+}, {
     path: '/stud-task-list',
     component: __webpack_require__(52)
+}, {
+    path: '/stud-requests',
+    component: __webpack_require__(69)
 }];
 
 /* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]({
@@ -46313,6 +46319,363 @@ module.exports = function(module) {
 __webpack_require__(15);
 module.exports = __webpack_require__(16);
 
+
+/***/ }),
+/* 60 */,
+/* 61 */,
+/* 62 */,
+/* 63 */,
+/* 64 */,
+/* 65 */,
+/* 66 */,
+/* 67 */,
+/* 68 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(5)(
+  /* script */
+  __webpack_require__(70),
+  /* template */
+  __webpack_require__(74),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\ProfessorDiplomasRequests.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] ProfessorDiplomasRequests.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-577c2bac", Component.options)
+  } else {
+    hotAPI.reload("data-v-577c2bac", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 69 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(5)(
+  /* script */
+  null,
+  /* template */
+  null,
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\StudentDiplomasRequests.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 70 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRequestsRow__ = __webpack_require__(72);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRequestsRow___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRequestsRow__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: {
+        ProfessorDiplomasRequestsRow: __WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRequestsRow___default.a
+    },
+    created: function created() {
+        this.getTranslations();
+    },
+    mounted: function mounted() {
+        var self = this;
+        setTimeout(function () {
+            self.getFilteredData();
+        }, 450);
+        console.log('Requests list mounted.');
+    },
+
+    methods: {
+        getTranslations: function getTranslations() {
+            var self = this;
+            $.ajax({
+                url: '/translation/professor/requests/list',
+                type: 'GET',
+                dataType: 'json'
+            }).done(function (response) {
+                console.log("translations loaded");
+                self.translations = response.translations;
+                self.data_ready = true;
+            }).fail(function () {
+                console.log("no translations");
+            });
+        },
+        getFilteredData: function getFilteredData() {
+            var self = this;
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: '/diplomas/professor/requests',
+                type: 'GET',
+                dataType: 'json'
+            }).done(function (response) {
+                console.log('requests list recieved');
+                console.log(response);
+                self.requests = response.requests;
+                self.requests = self.requests.reverse();
+            }).fail(function (response) {
+                console.log('fail');
+                console.log(response);
+                if (response.hasOwnProperty('responseJSON')) {
+                    if (response.responseJSON.hasOwnProperty('redirect')) {
+                        window.location.replace(response.responseJSON.redirect);
+                    }
+                }
+            });
+        },
+        openDiploma: function openDiploma(request) {
+            return '/diplomas/' + request.diploma_id;
+        },
+        acceptRequest: function acceptRequest(request) {
+            var self = this;
+            $.ajax({
+                url: '/diplomas/professor/requests/accept/' + request.student_id + '/' + request.task_id,
+                type: 'PATCH',
+                dataType: 'json',
+                data: request
+            }).done(function (response) {
+                console.log("success");
+                self.requests.splice(self.requests.indexOf(request), 1);
+            }).fail(function (response) {
+                console.log("error");
+                console.log(response);
+            });
+        },
+        declineRequest: function declineRequest(request) {
+            var self = this;
+            $.ajax({
+                url: '/diplomas/professor/requests/decline/' + request.student_id + '/' + request.task_id,
+                type: 'PATCH',
+                dataType: 'json',
+                data: request
+            }).done(function (response) {
+                console.log("success");
+                self.requests.splice(self.requests.indexOf(request), 1);
+            }).fail(function (response) {
+                console.log("error");
+                console.log(response);
+            });
+        },
+        requestStatus: function requestStatus(request) {
+            var self = this;
+            var statusWord = '';
+            switch (request.status) {
+                case '0':
+                    statusWord = self.translations.labels.pending;
+                    break;
+                case '1':
+                    statusWord = self.translations.labels.accepted;
+                    break;
+                case '2':
+                    statusWord = self.translations.labels.declined;
+            }
+            console.log(statusWord);
+            return statusWord;
+        }
+    },
+
+    data: function data() {
+        return {
+            requests: [],
+            translations: [],
+            data_ready: false
+        };
+    }
+});
+
+/***/ }),
+/* 71 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {
+        console.log('request row mounted');
+    }
+});
+
+/***/ }),
+/* 72 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(5)(
+  /* script */
+  __webpack_require__(71),
+  /* template */
+  __webpack_require__(73),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\ProfessorDiplomasRequestsRow.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] ProfessorDiplomasRequestsRow.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-07044e80", Component.options)
+  } else {
+    hotAPI.reload("data-v-07044e80", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 73 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('tr', [_c('td', [_vm._t("col-topic")], 2), _vm._v(" "), _c('td', [_vm._t("col-student")], 2), _vm._v(" "), _c('td', [_vm._t("col-group")], 2), _vm._v(" "), _c('td', [_vm._t("col-status")], 2), _vm._v(" "), _c('td', [_vm._t("col-cr_at")], 2), _vm._v(" "), _c('td', [_vm._t("col-actions")], 2)])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-07044e80", module.exports)
+  }
+}
+
+/***/ }),
+/* 74 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return (_vm.data_ready) ? _c('div', {
+    staticClass: "form-group"
+  }, [_c('div', {
+    staticClass: "table-responsive"
+  }, [(_vm.requests.length) ? _c('table', {
+    staticClass: "table table-bordered"
+  }, [_c('thead', [_c('tr', [_c('th', [_vm._v(_vm._s(_vm.translations.labels.topic))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.student))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.group))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.status))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.created_at))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.actions))])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.requests), function(request) {
+    return _c('professor-diplomas-requests-row', {
+      key: request.id
+    }, [_c('template', {
+      slot: "col-topic"
+    }, [_c('a', {
+      attrs: {
+        "href": _vm.openDiploma(request)
+      }
+    }, [_vm._v(_vm._s(request.task_title.length > 10 ?
+      request.task_title.substr(0, 10) + '...' : request.task_title))])]), _vm._v(" "), _c('template', {
+      slot: "col-student"
+    }, [_vm._v(_vm._s(request.student))]), _vm._v(" "), _c('template', {
+      slot: "col-group"
+    }, [_vm._v(_vm._s(request.group))]), _vm._v(" "), _c('template', {
+      slot: "col-status"
+    }, [_vm._v(_vm._s(_vm.requestStatus(request)))]), _vm._v(" "), _c('template', {
+      slot: "col-cr_at"
+    }, [_vm._v(_vm._s(request.created_at))]), _vm._v(" "), _c('template', {
+      slot: "col-actions"
+    }, [_c('button', {
+      staticClass: "btn btn-primary btn-sm",
+      on: {
+        "click": function($event) {
+          _vm.acceptRequest(request)
+        }
+      }
+    }, [_vm._v(_vm._s(_vm.translations.buttons.accept))]), _vm._v(" "), _c('button', {
+      staticClass: "btn btn-danger btn-sm",
+      on: {
+        "click": function($event) {
+          _vm.declineRequest(request)
+        }
+      }
+    }, [_vm._v(_vm._s(_vm.translations.buttons.decline))])])], 2)
+  }))]) : _c('div', {
+    staticClass: "form-group"
+  }, [_c('p', [_vm._v(_vm._s(_vm.translations.labels.no_requests))])])])]) : _vm._e()
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-577c2bac", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);
