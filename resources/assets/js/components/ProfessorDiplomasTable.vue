@@ -216,7 +216,7 @@ import ProfessorDiplomasRow from './ProfessorDiplomasRow.vue';
             getGroupList() {
                 var self = this;
                 $.ajax({
-                    url: '/professor/groups',
+                    url: '/diplomas/professor/groups',
                     type: 'get',
                     dataType: 'json'
                 })

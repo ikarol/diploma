@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\Models\Group;
+use App\Models\Student;
 use App\Models\Request as DiplomaRequest;
 use App\Models\Professor;
 use App\Models\Task;
@@ -54,10 +56,20 @@ class DiplomaController extends Controller
                 ['group_id', request('group_id')]
             ])->get()->toArray();
         foreach ($diplomas as &$diploma) {
-            $request = DiplomaRequest::where([
-                ['status', 1],
-                ['task_id', $diploma['id']],
-            ])->first();
+            $user = User::whereHas('student', function($query) use ($diploma) {
+                $query->where([
+                    ['group_id', request('group_id')],
+                ])->whereHas((new DiplomaRequest)->getTable(), function ($queryRequest) use ($diploma) {
+                    $queryRequest->where([
+                        ['status', 1],
+                    ])->whereHas('task', function($queryTask) use ($diploma) {
+                        $queryTask->where([
+                            ['task_id', $diploma['id']],
+                            ['type', 2],
+                        ]);
+                    });
+                });
+            })->first(); // fetch first user
             $diploma['requests'] = [
                 'accepted' => count(Task::find($diploma['id'])->requests()->where([
                     ['status', 1],
@@ -69,9 +81,10 @@ class DiplomaController extends Controller
                     ['status', 2],
                 ])->get()),
             ];
-            $diploma['student'] = $request ?
-                $request->student()->first()->user->surname
-                    . ' ' . $request->student()->first()->user->name : null;
+            $diploma['student'] = count($user) ? $user->getFullName() : null;
+            // $request ?
+            //     $request->student()->first()->user->surname
+            //         . ' ' . $request->student()->first()->user->name : null;
             $diploma['created_at'] = Carbon::parse($diploma['created_at'])->format('d.m.Y');
         }
         return Response::json([
@@ -84,16 +97,9 @@ class DiplomaController extends Controller
         $diplomas = Task::where([
             ['type', 2],
             ['group_id', request('group_id')]
-        ])->whereDoesntHave((new DiplomaRequest)->getTable(), function ($query) {
+        ])->whereHas((new DiplomaRequest)->getTable(), function ($query) {
             $query->where([
                 ['student_id', Auth::user()->student->id],
-                ['status', [
-                    0,
-                    1,
-                    2,
-                ]],
-            ])->orWhere([
-                ['status', 1]
             ]);
         })->get()->toArray();
         foreach ($diplomas as &$diploma) {

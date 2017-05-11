@@ -39,16 +39,13 @@ class DiplomaRequestController extends Controller
         ]);
     }
 
-    public function professor_requests_list()
+    public function professor_requests_list(Request $request)
     {
-        $diplomaRequests = DiplomaRequest::where([
-                ['status', [
-                    0
-                ]]
-        ])->whereHas('task', function ($query) {
+        $diplomaRequests = DiplomaRequest::whereHas('task', function ($query) {
             $query->where([
                 ['professor_id', Auth::user()->professor->id],
-                ['type', 2]
+                ['type', 2],
+                ['group_id', request('group_id')],
             ]);
         })->get()->toArray();
         foreach ($diplomaRequests as &$request) {

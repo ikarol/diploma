@@ -164,7 +164,7 @@ export default {
         getGroupList() {
             var self = this;
             $.ajax({
-                url: 'student/groups',
+                url: '/diplomas/student/groups',
                 type: 'get',
                 dataType: 'json'
             })

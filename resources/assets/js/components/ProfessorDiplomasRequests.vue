@@ -1,32 +1,35 @@
 <template>
     <div class="form-group" v-if="data_ready">
+        <div class="form-group">
+            <label for="group" class="control-label">{{ translations.labels.group }}</label>
+            <select name="group" id="group-id" class="form-control" @change="getFilteredData">
+                <option v-for="group in groups" :value="group.id">{{ group.name }}</option>
+            </select>
+        </div>
         <div class="table-responsive">
-            <table v-if="requests.length" class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>{{ translations.labels.topic }}</th>
-                        <th>{{ translations.labels.student }}</th>
-                        <th>{{ translations.labels.group }}</th>
-                        <th>{{ translations.labels.status }}</th>
-                        <th>{{ translations.labels.created_at }}</th>
-                        <th>{{ translations.labels.actions }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <professor-diplomas-requests-row v-for="request in requests" :key="request.id">
-                        <template slot="col-topic"><a :href="openDiploma(request)">{{ request.task_title.length > 10 ?
-                            request.task_title.substr(0,10) + '...' : request.task_title }}</a></template>
-                        <template slot="col-student">{{ request.student }}</template>
-                        <template slot="col-group">{{ request.group }}</template>
-                        <template slot="col-status">{{ requestStatus(request) }}</template>
-                        <template slot="col-cr_at">{{ request.created_at }}</template>
-                        <template slot="col-actions">
-                            <button class="btn btn-primary btn-sm" @click="acceptRequest(request)">{{ translations.buttons.accept }}</button>
-                            <button class="btn btn-danger btn-sm" @click="declineRequest(request)">{{ translations.buttons.decline }}</button>
-                        </template>
-                    </professor-diplomas-requests-row>
-                </tbody>
-            </table>
+            <div v-if="requests.length">
+                <professor-diplomas-requests-panel  v-for="request in requests" :key="request.id" :class="setPanelsColour(request)">
+                    <div slot="task-title" class="form-group">
+                        <h1>{{ request.task_title }}</h1>
+                    </div>
+                    <div slot="request-student" class="form-group">
+                        <label for="request-student">{{ translations.labels.student }}:</label>
+                        <span name="request-student">{{ request.student }}</span>
+                    </div>
+                    <div slot="request-status" class="form-group">
+                        <label for="request-status">{{ translations.labels.status }}:</label>
+                        <span name="request-status">{{ requestStatus(request) }}</span>
+                    </div>
+                    <div slot="request-message" class="form-group">
+                        <label for="request-message">{{ translations.labels.message }}:</label>
+                        <span name="request-message">{{ request.message ? request.message : translations.labels.empty }}</span>
+                    </div>
+                    <div slot="request-footer" class="panel-footer" v-if="request.status === '0'">
+                        <button class="btn btn-primary btn-sm" @click="acceptRequest(request)">{{ translations.buttons.accept }}</button>
+                        <button class="btn btn-danger btn-sm" @click="declineRequest(request)">{{ translations.buttons.decline }}</button>
+                    </div>
+                </professor-diplomas-requests-panel>
+            </div>
             <div v-else class="form-group">
                 <p>{{ translations.labels.no_requests }}</p>
             </div>
@@ -36,14 +39,17 @@
 
 <script>
 
-import ProfessorDiplomasRequestsRow from './ProfessorDiplomasRequestsRow'
+import ProfessorDiplomasRequestsPanel from './ProfessorDiplomasRequestsPanel'
 
 export default {
     components: {
-        ProfessorDiplomasRequestsRow
+        ProfessorDiplomasRequestsPanel
     },
     created() {
         this.getTranslations();
+    },
+    beforeMount() {
+        this.getGroupList();
     },
     mounted() {
         var self = this;
@@ -81,6 +87,9 @@ export default {
                 url: '/diplomas/professor/requests',
                 type: 'GET',
                 dataType: 'json',
+                data: {
+                    group_id: $('#group-id').val()
+                }
             })
             .done(function(response) {
                 console.log('requests list recieved');
@@ -101,6 +110,28 @@ export default {
         openDiploma(request) {
             return '/diplomas/' + request.diploma_id;
         },
+        getGroupList() {
+            var self = this;
+            $.ajax({
+                url: '/diplomas/professor/requests/groups',
+                type: 'get',
+                dataType: 'json'
+            })
+            .done(function(response) {
+                console.log('groups list recieved');
+                console.log(response);
+                self.groups = response;
+            })
+            .fail(function(response) {
+                console.log("error");
+                console.log(response);
+                if (response.hasOwnProperty('responseJSON')) {
+                    if (response.responseJSON.hasOwnProperty('redirect')) {
+                        window.location.replace(response.responseJSON.redirect);
+                    }
+                }
+            });
+        },
         acceptRequest(request) {
             var self = this;
             $.ajax({
@@ -111,7 +142,7 @@ export default {
             })
             .done(function(response) {
                 console.log("success");
-                self.requests.splice(self.requests.indexOf(request), 1);
+                self.requests[self.requests.indexOf(request)].status = '1';
             })
             .fail(function(response) {
                 console.log("error");
@@ -129,7 +160,7 @@ export default {
             })
             .done(function(response) {
                 console.log("success");
-                self.requests.splice(self.requests.indexOf(request), 1);
+                self.requests[self.requests.indexOf(request)].status = '2';
             })
             .fail(function(response) {
                 console.log("error");
@@ -152,12 +183,27 @@ export default {
             console.log(statusWord);
             return statusWord;
         },
+        setPanelsColour(request) {
+            var panel_class = '';
+            switch (request.status) {
+                case '0':
+                    panel_class = 'panel panel-warning';
+                    break;
+                case '1':
+                    panel_class = 'panel panel-success';
+                    break;
+                case '2':
+                    panel_class = 'panel panel-danger';
+            }
+            return panel_class;
+        }
     },
 
     data() {
         return {
             requests: [],
             translations: [],
+            groups: [],
             data_ready: false,
         }
     }

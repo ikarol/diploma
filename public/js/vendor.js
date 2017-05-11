@@ -4849,8 +4849,11 @@ module.exports = function spread(callback) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRequestsRow__ = __webpack_require__(52);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRequestsRow___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRequestsRow__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRequestsPanel__ = __webpack_require__(76);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRequestsPanel___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRequestsPanel__);
+//
+//
+//
 //
 //
 //
@@ -4893,10 +4896,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
-        ProfessorDiplomasRequestsRow: __WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRequestsRow___default.a
+        ProfessorDiplomasRequestsPanel: __WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRequestsPanel___default.a
     },
     created: function created() {
         this.getTranslations();
+    },
+    beforeMount: function beforeMount() {
+        this.getGroupList();
     },
     mounted: function mounted() {
         var self = this;
@@ -4931,7 +4937,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             $.ajax({
                 url: '/diplomas/professor/requests',
                 type: 'GET',
-                dataType: 'json'
+                dataType: 'json',
+                data: {
+                    group_id: $('#group-id').val()
+                }
             }).done(function (response) {
                 console.log('requests list recieved');
                 console.log(response);
@@ -4950,6 +4959,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         openDiploma: function openDiploma(request) {
             return '/diplomas/' + request.diploma_id;
         },
+        getGroupList: function getGroupList() {
+            var self = this;
+            $.ajax({
+                url: '/diplomas/professor/requests/groups',
+                type: 'get',
+                dataType: 'json'
+            }).done(function (response) {
+                console.log('groups list recieved');
+                console.log(response);
+                self.groups = response;
+            }).fail(function (response) {
+                console.log("error");
+                console.log(response);
+                if (response.hasOwnProperty('responseJSON')) {
+                    if (response.responseJSON.hasOwnProperty('redirect')) {
+                        window.location.replace(response.responseJSON.redirect);
+                    }
+                }
+            });
+        },
         acceptRequest: function acceptRequest(request) {
             var self = this;
             $.ajax({
@@ -4959,7 +4988,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 data: request
             }).done(function (response) {
                 console.log("success");
-                self.requests.splice(self.requests.indexOf(request), 1);
+                self.requests[self.requests.indexOf(request)].status = '1';
             }).fail(function (response) {
                 console.log("error");
                 console.log(response);
@@ -4974,7 +5003,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 data: request
             }).done(function (response) {
                 console.log("success");
-                self.requests.splice(self.requests.indexOf(request), 1);
+                self.requests[self.requests.indexOf(request)].status = '2';
             }).fail(function (response) {
                 console.log("error");
                 console.log(response);
@@ -4995,6 +5024,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
             console.log(statusWord);
             return statusWord;
+        },
+        setPanelsColour: function setPanelsColour(request) {
+            var panel_class = '';
+            switch (request.status) {
+                case '0':
+                    panel_class = 'panel panel-warning';
+                    break;
+                case '1':
+                    panel_class = 'panel panel-success';
+                    break;
+                case '2':
+                    panel_class = 'panel panel-danger';
+            }
+            return panel_class;
         }
     },
 
@@ -5002,36 +5045,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             requests: [],
             translations: [],
+            groups: [],
             data_ready: false
         };
     }
 });
 
 /***/ }),
-/* 36 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    mounted: function mounted() {
-        console.log('request row mounted');
-    }
-});
-
-/***/ }),
+/* 36 */,
 /* 37 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -5278,7 +5299,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         getGroupList: function getGroupList() {
             var self = this;
             $.ajax({
-                url: '/professor/groups',
+                url: '/diplomas/professor/groups',
                 type: 'get',
                 dataType: 'json'
             }).done(function (response) {
@@ -5653,7 +5674,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         getGroupList: function getGroupList() {
             var self = this;
             $.ajax({
-                url: 'student/groups',
+                url: '/diplomas/student/groups',
                 type: 'get',
                 dataType: 'json'
             }).done(function (response) {
@@ -36396,40 +36417,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 52 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Component = __webpack_require__(1)(
-  /* script */
-  __webpack_require__(36),
-  /* template */
-  __webpack_require__(59),
-  /* scopeId */
-  null,
-  /* cssModules */
-  null
-)
-Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\ProfessorDiplomasRequestsRow.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] ProfessorDiplomasRequestsRow.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-07044e80", Component.options)
-  } else {
-    hotAPI.reload("data-v-07044e80", Component.options)
-  }
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
+/* 52 */,
 /* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -36601,21 +36589,7 @@ if (false) {
 }
 
 /***/ }),
-/* 59 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('tr', [_c('td', [_vm._t("col-topic")], 2), _vm._v(" "), _c('td', [_vm._t("col-student")], 2), _vm._v(" "), _c('td', [_vm._t("col-group")], 2), _vm._v(" "), _c('td', [_vm._t("col-status")], 2), _vm._v(" "), _c('td', [_vm._t("col-cr_at")], 2), _vm._v(" "), _c('td', [_vm._t("col-actions")], 2)])
-},staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-07044e80", module.exports)
-  }
-}
-
-/***/ }),
+/* 59 */,
 /* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -36834,29 +36808,72 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   return (_vm.data_ready) ? _c('div', {
     staticClass: "form-group"
   }, [_c('div', {
-    staticClass: "table-responsive"
-  }, [(_vm.requests.length) ? _c('table', {
-    staticClass: "table table-bordered"
-  }, [_c('thead', [_c('tr', [_c('th', [_vm._v(_vm._s(_vm.translations.labels.topic))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.student))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.group))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.status))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.created_at))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.actions))])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.requests), function(request) {
-    return _c('professor-diplomas-requests-row', {
-      key: request.id
-    }, [_c('template', {
-      slot: "col-topic"
-    }, [_c('a', {
-      attrs: {
-        "href": _vm.openDiploma(request)
+    staticClass: "form-group"
+  }, [_c('label', {
+    staticClass: "control-label",
+    attrs: {
+      "for": "group"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.group))]), _vm._v(" "), _c('select', {
+    staticClass: "form-control",
+    attrs: {
+      "name": "group",
+      "id": "group-id"
+    },
+    on: {
+      "change": _vm.getFilteredData
+    }
+  }, _vm._l((_vm.groups), function(group) {
+    return _c('option', {
+      domProps: {
+        "value": group.id
       }
-    }, [_vm._v(_vm._s(request.task_title.length > 10 ?
-      request.task_title.substr(0, 10) + '...' : request.task_title))])]), _vm._v(" "), _c('template', {
-      slot: "col-student"
-    }, [_vm._v(_vm._s(request.student))]), _vm._v(" "), _c('template', {
-      slot: "col-group"
-    }, [_vm._v(_vm._s(request.group))]), _vm._v(" "), _c('template', {
-      slot: "col-status"
-    }, [_vm._v(_vm._s(_vm.requestStatus(request)))]), _vm._v(" "), _c('template', {
-      slot: "col-cr_at"
-    }, [_vm._v(_vm._s(request.created_at))]), _vm._v(" "), _c('template', {
-      slot: "col-actions"
+    }, [_vm._v(_vm._s(group.name))])
+  }))]), _vm._v(" "), _c('div', {
+    staticClass: "table-responsive"
+  }, [(_vm.requests.length) ? _c('div', _vm._l((_vm.requests), function(request) {
+    return _c('professor-diplomas-requests-panel', {
+      key: request.id,
+      class: _vm.setPanelsColour(request)
+    }, [_c('div', {
+      staticClass: "form-group",
+      slot: "task-title"
+    }, [_c('h1', [_vm._v(_vm._s(request.task_title))])]), _vm._v(" "), _c('div', {
+      staticClass: "form-group",
+      slot: "request-student"
+    }, [_c('label', {
+      attrs: {
+        "for": "request-student"
+      }
+    }, [_vm._v(_vm._s(_vm.translations.labels.student) + ":")]), _vm._v(" "), _c('span', {
+      attrs: {
+        "name": "request-student"
+      }
+    }, [_vm._v(_vm._s(request.student))])]), _vm._v(" "), _c('div', {
+      staticClass: "form-group",
+      slot: "request-status"
+    }, [_c('label', {
+      attrs: {
+        "for": "request-status"
+      }
+    }, [_vm._v(_vm._s(_vm.translations.labels.status) + ":")]), _vm._v(" "), _c('span', {
+      attrs: {
+        "name": "request-status"
+      }
+    }, [_vm._v(_vm._s(_vm.requestStatus(request)))])]), _vm._v(" "), _c('div', {
+      staticClass: "form-group",
+      slot: "request-message"
+    }, [_c('label', {
+      attrs: {
+        "for": "request-message"
+      }
+    }, [_vm._v(_vm._s(_vm.translations.labels.message) + ":")]), _vm._v(" "), _c('span', {
+      attrs: {
+        "name": "request-message"
+      }
+    }, [_vm._v(_vm._s(request.message ? request.message : _vm.translations.labels.empty))])]), _vm._v(" "), (request.status === '0') ? _c('div', {
+      staticClass: "panel-footer",
+      slot: "request-footer"
     }, [_c('button', {
       staticClass: "btn btn-primary btn-sm",
       on: {
@@ -36871,8 +36888,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.declineRequest(request)
         }
       }
-    }, [_vm._v(_vm._s(_vm.translations.buttons.decline))])])], 2)
-  }))]) : _c('div', {
+    }, [_vm._v(_vm._s(_vm.translations.buttons.decline))])]) : _vm._e()])
+  })) : _c('div', {
     staticClass: "form-group"
   }, [_c('p', [_vm._v(_vm._s(_vm.translations.labels.no_requests))])])])]) : _vm._e()
 },staticRenderFns: []}
@@ -46717,6 +46734,94 @@ module.exports = function(module) {
 __webpack_require__(15);
 module.exports = __webpack_require__(16);
 
+
+/***/ }),
+/* 67 */,
+/* 68 */,
+/* 69 */,
+/* 70 */,
+/* 71 */,
+/* 72 */,
+/* 73 */,
+/* 74 */,
+/* 75 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {
+        console.log('request panel mounted');
+    }
+});
+
+/***/ }),
+/* 76 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(1)(
+  /* script */
+  __webpack_require__(75),
+  /* template */
+  __webpack_require__(77),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\ProfessorDiplomasRequestsPanel.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] ProfessorDiplomasRequestsPanel.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-0166ee2a", Component.options)
+  } else {
+    hotAPI.reload("data-v-0166ee2a", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 77 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', [_c('div', {
+    staticClass: "panel-heading"
+  }, [_vm._t("task-title")], 2), _vm._v(" "), _c('div', {
+    staticClass: "panel-body"
+  }, [_vm._t("request-student"), _vm._v(" "), _vm._t("request-status"), _vm._v(" "), _vm._t("request-message")], 2), _vm._v(" "), _vm._t("request-footer")], 2)
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-0166ee2a", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

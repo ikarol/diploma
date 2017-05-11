@@ -85,6 +85,8 @@ class TranslationController extends Controller
                 'accepted' => __('Accepted'),
                 'pending' => __('Pending'),
                 'declined' => __('Declined'),
+                'message' => __('Message'),
+                'empty' => __('Empty'),
             ],
             'buttons' => [
                 'accept' => __('Accept'),
