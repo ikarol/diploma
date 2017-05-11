@@ -26,6 +26,11 @@ class TranslationController extends Controller
                 'actions' => __('Actions'),
                 'no_tasks' => __('You haven\'t published any tasks yet'),
                 'update_task' => __('Update task'),
+                'accepted' => __('Accepted'),
+                'pending' => __('Pending'),
+                'declined' => __('Declined'),
+                'student' => __('Student'),
+                'empty' => __('Empty'),
             ],
             'buttons' => [
                 'edit' => __('Edit'),

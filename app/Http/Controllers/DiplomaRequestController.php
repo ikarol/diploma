@@ -86,7 +86,6 @@ class DiplomaRequestController extends Controller
             ['task_id', $request]
         ])->update([
             'status' => 2,
-            'started_at' => Carbon::now()->format('Y-d-m'),
         ]);
         return Response::json([
             'request' => $diplomaRequest,

@@ -10,17 +10,26 @@
             <table v-if="diplomas.length" class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>{{ translations.labels.topic }}</th>
-                        <th>{{ translations.labels.number_of_requests }}</th>
-                        <th>{{ translations.labels.created_at }}</th>
-                        <th>{{ translations.labels.actions }}</th>
+                        <th class="col-md-1" rowspan="2">{{ translations.labels.topic }}</th>
+                        <th class="col-md-3" colspan="3">{{ translations.labels.number_of_requests }}
+                        <th class="col-md-3" rowspan="2">{{ translations.labels.student }}</th>
+                        <th class="col-md-2" rowspan="2">{{ translations.labels.created_at }}</th>
+                        <th class="col-md-3" rowspan="2">{{ translations.labels.actions }}</th>
+                    </tr>
+                    <tr>
+                        <th class="col-md-1">{{ translations.labels.accepted }}</th>
+                        <th class="col-md-1">{{ translations.labels.pending }}</th>
+                        <th class="col-md-1">{{ translations.labels.declined }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     <professor-diplomas-row v-for="diploma in diplomas" :key="diploma.id">
                         <template slot="col-topic"><a :href="openDiploma(diploma)">{{ diploma.title.length > 10 ?
                             diploma.title.substr(0,10) + '...' : diploma.title }}</a></template>
-                        <template slot="col-requests">{{ diploma.requests }}</template>
+                        <template slot="col-requests-accepted">{{ diploma.requests.accepted }}</template>
+                        <template slot="col-requests-pending">{{ diploma.requests.pending }}</template>
+                        <template slot="col-requests-denied">{{ diploma.requests.declined }}</template>
+                        <template slot="col-student">{{ diploma.student !== null ? diploma.student : translations.labels.empty }}</template>
                         <template slot="col-cr_at">{{ diploma.created_at }}</template>
                         <template slot="col-actions">
                             <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#update-diploma-modal" @click="openUpdateModal(diploma)">{{ translations.buttons.edit }}</button>

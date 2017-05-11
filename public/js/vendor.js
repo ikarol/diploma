@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 59);
+/******/ 	return __webpack_require__(__webpack_require__.s = 66);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -374,6 +374,63 @@ module.exports = {
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports) {
+
+// this module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle
+
+module.exports = function normalizeComponent (
+  rawScriptExports,
+  compiledTemplate,
+  scopeId,
+  cssModules
+) {
+  var esModule
+  var scriptExports = rawScriptExports = rawScriptExports || {}
+
+  // ES6 modules interop
+  var type = typeof rawScriptExports.default
+  if (type === 'object' || type === 'function') {
+    esModule = rawScriptExports
+    scriptExports = rawScriptExports.default
+  }
+
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (compiledTemplate) {
+    options.render = compiledTemplate.render
+    options.staticRenderFns = compiledTemplate.staticRenderFns
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = scopeId
+  }
+
+  // inject cssModules
+  if (cssModules) {
+    var computed = Object.create(options.computed || null)
+    Object.keys(cssModules).forEach(function (key) {
+      var module = cssModules[key]
+      computed[key] = function () { return module }
+    })
+    options.computed = computed
+  }
+
+  return {
+    esModule: esModule,
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -570,7 +627,7 @@ exports.fireClick = fireClick;
 exports.stopEventPropagation = stopEventPropagation;
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -756,7 +813,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -768,9 +825,9 @@ Object.defineProperty(exports, '__esModule', {
   value: true
 });
 
-var _hexToRgb = __webpack_require__(4);
+var _hexToRgb = __webpack_require__(5);
 
-var _removeClass$getTopMargin$fadeIn$show$addClass = __webpack_require__(1);
+var _removeClass$getTopMargin$fadeIn$show$addClass = __webpack_require__(2);
 
 var _defaultParams = __webpack_require__(12);
 
@@ -780,7 +837,7 @@ var _defaultParams2 = _interopRequireWildcard(_defaultParams);
  * Add modal + overlay to DOM
  */
 
-var _injectedHTML = __webpack_require__(46);
+var _injectedHTML = __webpack_require__(48);
 
 var _injectedHTML2 = _interopRequireWildcard(_injectedHTML);
 
@@ -929,7 +986,7 @@ exports.resetInputError = resetInputError;
 exports.fixVerticalPosition = fixVerticalPosition;
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1006,63 +1063,6 @@ exports.hexToRgb = hexToRgb;
 exports.isIE8 = isIE8;
 exports.logStr = logStr;
 exports.colorLuminance = colorLuminance;
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports) {
-
-// this module is a runtime utility for cleaner component module output and will
-// be included in the final webpack user bundle
-
-module.exports = function normalizeComponent (
-  rawScriptExports,
-  compiledTemplate,
-  scopeId,
-  cssModules
-) {
-  var esModule
-  var scriptExports = rawScriptExports = rawScriptExports || {}
-
-  // ES6 modules interop
-  var type = typeof rawScriptExports.default
-  if (type === 'object' || type === 'function') {
-    esModule = rawScriptExports
-    scriptExports = rawScriptExports.default
-  }
-
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // render functions
-  if (compiledTemplate) {
-    options.render = compiledTemplate.render
-    options.staticRenderFns = compiledTemplate.staticRenderFns
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = scopeId
-  }
-
-  // inject cssModules
-  if (cssModules) {
-    var computed = Object.create(options.computed || null)
-    Object.keys(cssModules).forEach(function (key) {
-      var module = cssModules[key]
-      computed[key] = function () { return module }
-    })
-    options.computed = computed
-  }
-
-  return {
-    esModule: esModule,
-    exports: scriptExports,
-    options: options
-  }
-}
-
 
 /***/ }),
 /* 6 */
@@ -1163,7 +1163,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = defaults;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
 /* 7 */
@@ -1348,7 +1348,7 @@ module.exports = function xhrAdapter(config) {
   });
 };
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
 /* 8 */
@@ -3938,7 +3938,7 @@ if (inBrowser && window.Vue) {
 
 /* harmony default export */ __webpack_exports__["a"] = (VueRouter);
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(3)))
 
 /***/ }),
 /* 14 */
@@ -3973,7 +3973,7 @@ module.exports = g;
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__routes_js__ = __webpack_require__(40);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__routes_js__ = __webpack_require__(42);
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -3981,7 +3981,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-__webpack_require__(39);
+__webpack_require__(41);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -4849,6 +4849,197 @@ module.exports = function spread(callback) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRequestsRow__ = __webpack_require__(52);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRequestsRow___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRequestsRow__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: {
+        ProfessorDiplomasRequestsRow: __WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRequestsRow___default.a
+    },
+    created: function created() {
+        this.getTranslations();
+    },
+    mounted: function mounted() {
+        var self = this;
+        setTimeout(function () {
+            self.getFilteredData();
+        }, 450);
+        console.log('Requests list mounted.');
+    },
+
+    methods: {
+        getTranslations: function getTranslations() {
+            var self = this;
+            $.ajax({
+                url: '/translation/professor/requests/list',
+                type: 'GET',
+                dataType: 'json'
+            }).done(function (response) {
+                console.log("translations loaded");
+                self.translations = response.translations;
+                self.data_ready = true;
+            }).fail(function () {
+                console.log("no translations");
+            });
+        },
+        getFilteredData: function getFilteredData() {
+            var self = this;
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: '/diplomas/professor/requests',
+                type: 'GET',
+                dataType: 'json'
+            }).done(function (response) {
+                console.log('requests list recieved');
+                console.log(response);
+                self.requests = response.requests;
+                self.requests = self.requests.reverse();
+            }).fail(function (response) {
+                console.log('fail');
+                console.log(response);
+                if (response.hasOwnProperty('responseJSON')) {
+                    if (response.responseJSON.hasOwnProperty('redirect')) {
+                        window.location.replace(response.responseJSON.redirect);
+                    }
+                }
+            });
+        },
+        openDiploma: function openDiploma(request) {
+            return '/diplomas/' + request.diploma_id;
+        },
+        acceptRequest: function acceptRequest(request) {
+            var self = this;
+            $.ajax({
+                url: '/diplomas/professor/requests/accept/' + request.student_id + '/' + request.task_id,
+                type: 'PATCH',
+                dataType: 'json',
+                data: request
+            }).done(function (response) {
+                console.log("success");
+                self.requests.splice(self.requests.indexOf(request), 1);
+            }).fail(function (response) {
+                console.log("error");
+                console.log(response);
+            });
+        },
+        declineRequest: function declineRequest(request) {
+            var self = this;
+            $.ajax({
+                url: '/diplomas/professor/requests/decline/' + request.student_id + '/' + request.task_id,
+                type: 'PATCH',
+                dataType: 'json',
+                data: request
+            }).done(function (response) {
+                console.log("success");
+                self.requests.splice(self.requests.indexOf(request), 1);
+            }).fail(function (response) {
+                console.log("error");
+                console.log(response);
+            });
+        },
+        requestStatus: function requestStatus(request) {
+            var self = this;
+            var statusWord = '';
+            switch (request.status) {
+                case '0':
+                    statusWord = self.translations.labels.pending;
+                    break;
+                case '1':
+                    statusWord = self.translations.labels.accepted;
+                    break;
+                case '2':
+                    statusWord = self.translations.labels.declined;
+            }
+            console.log(statusWord);
+            return statusWord;
+        }
+    },
+
+    data: function data() {
+        return {
+            requests: [],
+            translations: [],
+            data_ready: false
+        };
+    }
+});
+
+/***/ }),
+/* 36 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {
+        console.log('request row mounted');
+    }
+});
+
+/***/ }),
+/* 37 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
 //
 //
 //
@@ -4866,13 +5057,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 36 */
+/* 38 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRow_vue__ = __webpack_require__(49);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRow_vue__ = __webpack_require__(53);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRow_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRow_vue__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -5261,7 +5461,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 37 */
+/* 39 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5284,12 +5484,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 38 */
+/* 40 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__StudentDiplomasRow__ = __webpack_require__(51);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__StudentDiplomasRow__ = __webpack_require__(56);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__StudentDiplomasRow___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__StudentDiplomasRow__);
 //
 //
@@ -5530,13 +5730,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 39 */
+/* 41 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_router__ = __webpack_require__(13);
-window._ = __webpack_require__(43);
+window._ = __webpack_require__(45);
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -5544,9 +5744,9 @@ window._ = __webpack_require__(43);
  * code may be modified to fit the specific needs of your application.
  */
 
-window.$ = window.jQuery = __webpack_require__(42);
+window.$ = window.jQuery = __webpack_require__(44);
 
-__webpack_require__(41);
+__webpack_require__(43);
 
 /**
  * Vue is a modern JavaScript library for building interactive web interfaces
@@ -5554,7 +5754,7 @@ __webpack_require__(41);
  * and simple, leaving you to focus on building your next great project.
  */
 
-window.Vue = __webpack_require__(57);
+window.Vue = __webpack_require__(64);
 
 Vue.use(__WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]);
 
@@ -5583,10 +5783,10 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     broadcaster: 'pusher',
 //     key: 'your-pusher-key'
 // });
-window.swal = __webpack_require__(48);
+window.swal = __webpack_require__(50);
 
 /***/ }),
-/* 40 */
+/* 42 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5595,16 +5795,16 @@ window.swal = __webpack_require__(48);
 
 var routes = [{
     path: '/prof-task-list',
-    component: __webpack_require__(50)
+    component: __webpack_require__(54)
 }, {
     path: '/prof-requests',
-    component: __webpack_require__(68)
+    component: __webpack_require__(51)
 }, {
     path: '/stud-task-list',
-    component: __webpack_require__(52)
+    component: __webpack_require__(57)
 }, {
     path: '/stud-requests',
-    component: __webpack_require__(69)
+    component: __webpack_require__(55)
 }];
 
 /* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]({
@@ -5613,7 +5813,7 @@ var routes = [{
 }));
 
 /***/ }),
-/* 41 */
+/* 43 */
 /***/ (function(module, exports) {
 
 /*!
@@ -7996,7 +8196,7 @@ if (typeof jQuery === 'undefined') {
 
 
 /***/ }),
-/* 42 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -18256,7 +18456,7 @@ return jQuery;
 
 
 /***/ }),
-/* 43 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -35345,10 +35545,10 @@ return jQuery;
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(14), __webpack_require__(58)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(14), __webpack_require__(65)(module)))
 
 /***/ }),
-/* 44 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -35358,11 +35558,11 @@ Object.defineProperty(exports, '__esModule', {
   value: true
 });
 
-var _colorLuminance = __webpack_require__(4);
+var _colorLuminance = __webpack_require__(5);
 
-var _getModal = __webpack_require__(3);
+var _getModal = __webpack_require__(4);
 
-var _hasClass$isDescendant = __webpack_require__(1);
+var _hasClass$isDescendant = __webpack_require__(2);
 
 /*
  * User clicked on "Confirm"/"OK" or "Cancel"
@@ -35489,7 +35689,7 @@ exports['default'] = {
 module.exports = exports['default'];
 
 /***/ }),
-/* 45 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -35499,9 +35699,9 @@ Object.defineProperty(exports, '__esModule', {
   value: true
 });
 
-var _stopEventPropagation$fireClick = __webpack_require__(1);
+var _stopEventPropagation$fireClick = __webpack_require__(2);
 
-var _setFocusStyle = __webpack_require__(3);
+var _setFocusStyle = __webpack_require__(4);
 
 var handleKeyDown = function handleKeyDown(event, params, modal) {
   var e = event || window.event;
@@ -35574,7 +35774,7 @@ exports['default'] = handleKeyDown;
 module.exports = exports['default'];
 
 /***/ }),
-/* 46 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -35622,7 +35822,7 @@ exports["default"] = injectedHTML;
 module.exports = exports["default"];
 
 /***/ }),
-/* 47 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -35632,11 +35832,11 @@ Object.defineProperty(exports, '__esModule', {
   value: true
 });
 
-var _isIE8 = __webpack_require__(4);
+var _isIE8 = __webpack_require__(5);
 
-var _getModal$getInput$setFocusStyle = __webpack_require__(3);
+var _getModal$getInput$setFocusStyle = __webpack_require__(4);
 
-var _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide = __webpack_require__(1);
+var _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide = __webpack_require__(2);
 
 var alertTypes = ['error', 'warning', 'info', 'success', 'input', 'prompt'];
 
@@ -35853,7 +36053,7 @@ exports['default'] = setParameters;
 module.exports = exports['default'];
 
 /***/ }),
-/* 48 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -35872,25 +36072,25 @@ Object.defineProperty(exports, '__esModule', {
  * jQuery-like functions for manipulating the DOM
  */
 
-var _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide$isDescendant$getTopMargin$fadeIn$fadeOut$fireClick$stopEventPropagation = __webpack_require__(1);
+var _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide$isDescendant$getTopMargin$fadeIn$fadeOut$fireClick$stopEventPropagation = __webpack_require__(2);
 
 /*
  * Handy utilities
  */
 
-var _extend$hexToRgb$isIE8$logStr$colorLuminance = __webpack_require__(4);
+var _extend$hexToRgb$isIE8$logStr$colorLuminance = __webpack_require__(5);
 
 /*
  *  Handle sweetAlert's DOM elements
  */
 
-var _sweetAlertInitialize$getModal$getOverlay$getInput$setFocusStyle$openModal$resetInput$fixVerticalPosition = __webpack_require__(3);
+var _sweetAlertInitialize$getModal$getOverlay$getInput$setFocusStyle$openModal$resetInput$fixVerticalPosition = __webpack_require__(4);
 
 // Handle button events and keyboard events
 
-var _handleButton$handleConfirm$handleCancel = __webpack_require__(44);
+var _handleButton$handleConfirm$handleCancel = __webpack_require__(46);
 
-var _handleKeyDown = __webpack_require__(45);
+var _handleKeyDown = __webpack_require__(47);
 
 var _handleKeyDown2 = _interopRequireWildcard(_handleKeyDown);
 
@@ -35900,7 +36100,7 @@ var _defaultParams = __webpack_require__(12);
 
 var _defaultParams2 = _interopRequireWildcard(_defaultParams);
 
-var _setParameters = __webpack_require__(47);
+var _setParameters = __webpack_require__(49);
 
 var _setParameters2 = _interopRequireWildcard(_setParameters);
 
@@ -36162,14 +36362,82 @@ if (typeof window !== 'undefined') {
 module.exports = exports['default'];
 
 /***/ }),
-/* 49 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Component = __webpack_require__(5)(
+var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(35),
   /* template */
-  __webpack_require__(54),
+  __webpack_require__(62),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\ProfessorDiplomasRequests.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] ProfessorDiplomasRequests.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-577c2bac", Component.options)
+  } else {
+    hotAPI.reload("data-v-577c2bac", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 52 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(1)(
+  /* script */
+  __webpack_require__(36),
+  /* template */
+  __webpack_require__(59),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\ProfessorDiplomasRequestsRow.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] ProfessorDiplomasRequestsRow.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-07044e80", Component.options)
+  } else {
+    hotAPI.reload("data-v-07044e80", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 53 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(1)(
+  /* script */
+  __webpack_require__(37),
+  /* template */
+  __webpack_require__(60),
   /* scopeId */
   null,
   /* cssModules */
@@ -36196,14 +36464,14 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 50 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Component = __webpack_require__(5)(
+var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(36),
+  __webpack_require__(38),
   /* template */
-  __webpack_require__(56),
+  __webpack_require__(63),
   /* scopeId */
   null,
   /* cssModules */
@@ -36230,14 +36498,34 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 51 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Component = __webpack_require__(5)(
+var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(37),
+  null,
   /* template */
-  __webpack_require__(53),
+  null,
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\StudentDiplomasRequests.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 56 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(1)(
+  /* script */
+  __webpack_require__(39),
+  /* template */
+  __webpack_require__(58),
   /* scopeId */
   null,
   /* cssModules */
@@ -36264,14 +36552,14 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 52 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Component = __webpack_require__(5)(
+var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(38),
+  __webpack_require__(40),
   /* template */
-  __webpack_require__(55),
+  __webpack_require__(61),
   /* scopeId */
   null,
   /* cssModules */
@@ -36298,7 +36586,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 53 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -36313,11 +36601,26 @@ if (false) {
 }
 
 /***/ }),
-/* 54 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('tr', [_c('td', [_vm._t("col-topic")], 2), _vm._v(" "), _c('td', [_vm._t("col-requests")], 2), _vm._v(" "), _c('td', [_vm._t("col-cr_at")], 2), _vm._v(" "), _c('td', [_vm._t("col-actions")], 2)])
+  return _c('tr', [_c('td', [_vm._t("col-topic")], 2), _vm._v(" "), _c('td', [_vm._t("col-student")], 2), _vm._v(" "), _c('td', [_vm._t("col-group")], 2), _vm._v(" "), _c('td', [_vm._t("col-status")], 2), _vm._v(" "), _c('td', [_vm._t("col-cr_at")], 2), _vm._v(" "), _c('td', [_vm._t("col-actions")], 2)])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-07044e80", module.exports)
+  }
+}
+
+/***/ }),
+/* 60 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('tr', [_c('td', [_vm._t("col-topic")], 2), _vm._v(" "), _c('td', [_vm._t("col-requests-accepted")], 2), _vm._v(" "), _c('td', [_vm._t("col-requests-pending")], 2), _vm._v(" "), _c('td', [_vm._t("col-requests-denied")], 2), _vm._v(" "), _c('td', [_vm._t("col-student")], 2), _vm._v(" "), _c('td', [_vm._t("col-cr_at")], 2), _vm._v(" "), _c('td', [_vm._t("col-actions")], 2)])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -36328,7 +36631,7 @@ if (false) {
 }
 
 /***/ }),
-/* 55 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -36524,7 +36827,65 @@ if (false) {
 }
 
 /***/ }),
-/* 56 */
+/* 62 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return (_vm.data_ready) ? _c('div', {
+    staticClass: "form-group"
+  }, [_c('div', {
+    staticClass: "table-responsive"
+  }, [(_vm.requests.length) ? _c('table', {
+    staticClass: "table table-bordered"
+  }, [_c('thead', [_c('tr', [_c('th', [_vm._v(_vm._s(_vm.translations.labels.topic))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.student))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.group))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.status))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.created_at))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.actions))])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.requests), function(request) {
+    return _c('professor-diplomas-requests-row', {
+      key: request.id
+    }, [_c('template', {
+      slot: "col-topic"
+    }, [_c('a', {
+      attrs: {
+        "href": _vm.openDiploma(request)
+      }
+    }, [_vm._v(_vm._s(request.task_title.length > 10 ?
+      request.task_title.substr(0, 10) + '...' : request.task_title))])]), _vm._v(" "), _c('template', {
+      slot: "col-student"
+    }, [_vm._v(_vm._s(request.student))]), _vm._v(" "), _c('template', {
+      slot: "col-group"
+    }, [_vm._v(_vm._s(request.group))]), _vm._v(" "), _c('template', {
+      slot: "col-status"
+    }, [_vm._v(_vm._s(_vm.requestStatus(request)))]), _vm._v(" "), _c('template', {
+      slot: "col-cr_at"
+    }, [_vm._v(_vm._s(request.created_at))]), _vm._v(" "), _c('template', {
+      slot: "col-actions"
+    }, [_c('button', {
+      staticClass: "btn btn-primary btn-sm",
+      on: {
+        "click": function($event) {
+          _vm.acceptRequest(request)
+        }
+      }
+    }, [_vm._v(_vm._s(_vm.translations.buttons.accept))]), _vm._v(" "), _c('button', {
+      staticClass: "btn btn-danger btn-sm",
+      on: {
+        "click": function($event) {
+          _vm.declineRequest(request)
+        }
+      }
+    }, [_vm._v(_vm._s(_vm.translations.buttons.decline))])])], 2)
+  }))]) : _c('div', {
+    staticClass: "form-group"
+  }, [_c('p', [_vm._v(_vm._s(_vm.translations.labels.no_requests))])])])]) : _vm._e()
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-577c2bac", module.exports)
+  }
+}
+
+/***/ }),
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -36556,7 +36917,38 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "table-responsive"
   }, [(_vm.diplomas.length) ? _c('table', {
     staticClass: "table table-bordered"
-  }, [_c('thead', [_c('tr', [_c('th', [_vm._v(_vm._s(_vm.translations.labels.topic))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.number_of_requests))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.created_at))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.actions))])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.diplomas), function(diploma) {
+  }, [_c('thead', [_c('tr', [_c('th', {
+    staticClass: "col-md-1",
+    attrs: {
+      "rowspan": "2"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.topic))]), _vm._v(" "), _c('th', {
+    staticClass: "col-md-3",
+    attrs: {
+      "colspan": "3"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.number_of_requests) + "\n                    ")]), _c('th', {
+    staticClass: "col-md-3",
+    attrs: {
+      "rowspan": "2"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.student))]), _vm._v(" "), _c('th', {
+    staticClass: "col-md-2",
+    attrs: {
+      "rowspan": "2"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.created_at))]), _vm._v(" "), _c('th', {
+    staticClass: "col-md-3",
+    attrs: {
+      "rowspan": "2"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.actions))])]), _vm._v(" "), _c('tr', [_c('th', {
+    staticClass: "col-md-1"
+  }, [_vm._v(_vm._s(_vm.translations.labels.accepted))]), _vm._v(" "), _c('th', {
+    staticClass: "col-md-1"
+  }, [_vm._v(_vm._s(_vm.translations.labels.pending))]), _vm._v(" "), _c('th', {
+    staticClass: "col-md-1"
+  }, [_vm._v(_vm._s(_vm.translations.labels.declined))])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.diplomas), function(diploma) {
     return _c('professor-diplomas-row', {
       key: diploma.id
     }, [_c('template', {
@@ -36567,8 +36959,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }, [_vm._v(_vm._s(diploma.title.length > 10 ?
       diploma.title.substr(0, 10) + '...' : diploma.title))])]), _vm._v(" "), _c('template', {
-      slot: "col-requests"
-    }, [_vm._v(_vm._s(diploma.requests))]), _vm._v(" "), _c('template', {
+      slot: "col-requests-accepted"
+    }, [_vm._v(_vm._s(diploma.requests.accepted))]), _vm._v(" "), _c('template', {
+      slot: "col-requests-pending"
+    }, [_vm._v(_vm._s(diploma.requests.pending))]), _vm._v(" "), _c('template', {
+      slot: "col-requests-denied"
+    }, [_vm._v(_vm._s(diploma.requests.declined))]), _vm._v(" "), _c('template', {
+      slot: "col-student"
+    }, [_vm._v(_vm._s(diploma.student !== null ? diploma.student : _vm.translations.labels.empty))]), _vm._v(" "), _c('template', {
       slot: "col-cr_at"
     }, [_vm._v(_vm._s(diploma.created_at))]), _vm._v(" "), _c('template', {
       slot: "col-actions"
@@ -36957,7 +37355,7 @@ if (false) {
 }
 
 /***/ }),
-/* 57 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -46282,10 +46680,10 @@ Vue$3.compile = compileToFunctions;
 
 module.exports = Vue$3;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(14)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(14)))
 
 /***/ }),
-/* 58 */
+/* 65 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -46313,369 +46711,12 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 59 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(15);
 module.exports = __webpack_require__(16);
 
-
-/***/ }),
-/* 60 */,
-/* 61 */,
-/* 62 */,
-/* 63 */,
-/* 64 */,
-/* 65 */,
-/* 66 */,
-/* 67 */,
-/* 68 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Component = __webpack_require__(5)(
-  /* script */
-  __webpack_require__(70),
-  /* template */
-  __webpack_require__(74),
-  /* scopeId */
-  null,
-  /* cssModules */
-  null
-)
-Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\ProfessorDiplomasRequests.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] ProfessorDiplomasRequests.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-577c2bac", Component.options)
-  } else {
-    hotAPI.reload("data-v-577c2bac", Component.options)
-  }
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 69 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Component = __webpack_require__(5)(
-  /* script */
-  null,
-  /* template */
-  null,
-  /* scopeId */
-  null,
-  /* cssModules */
-  null
-)
-Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\StudentDiplomasRequests.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 70 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRequestsRow__ = __webpack_require__(72);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRequestsRow___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRequestsRow__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    components: {
-        ProfessorDiplomasRequestsRow: __WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRequestsRow___default.a
-    },
-    created: function created() {
-        this.getTranslations();
-    },
-    mounted: function mounted() {
-        var self = this;
-        setTimeout(function () {
-            self.getFilteredData();
-        }, 450);
-        console.log('Requests list mounted.');
-    },
-
-    methods: {
-        getTranslations: function getTranslations() {
-            var self = this;
-            $.ajax({
-                url: '/translation/professor/requests/list',
-                type: 'GET',
-                dataType: 'json'
-            }).done(function (response) {
-                console.log("translations loaded");
-                self.translations = response.translations;
-                self.data_ready = true;
-            }).fail(function () {
-                console.log("no translations");
-            });
-        },
-        getFilteredData: function getFilteredData() {
-            var self = this;
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.ajax({
-                url: '/diplomas/professor/requests',
-                type: 'GET',
-                dataType: 'json'
-            }).done(function (response) {
-                console.log('requests list recieved');
-                console.log(response);
-                self.requests = response.requests;
-                self.requests = self.requests.reverse();
-            }).fail(function (response) {
-                console.log('fail');
-                console.log(response);
-                if (response.hasOwnProperty('responseJSON')) {
-                    if (response.responseJSON.hasOwnProperty('redirect')) {
-                        window.location.replace(response.responseJSON.redirect);
-                    }
-                }
-            });
-        },
-        openDiploma: function openDiploma(request) {
-            return '/diplomas/' + request.diploma_id;
-        },
-        acceptRequest: function acceptRequest(request) {
-            var self = this;
-            $.ajax({
-                url: '/diplomas/professor/requests/accept/' + request.student_id + '/' + request.task_id,
-                type: 'PATCH',
-                dataType: 'json',
-                data: request
-            }).done(function (response) {
-                console.log("success");
-                self.requests.splice(self.requests.indexOf(request), 1);
-            }).fail(function (response) {
-                console.log("error");
-                console.log(response);
-            });
-        },
-        declineRequest: function declineRequest(request) {
-            var self = this;
-            $.ajax({
-                url: '/diplomas/professor/requests/decline/' + request.student_id + '/' + request.task_id,
-                type: 'PATCH',
-                dataType: 'json',
-                data: request
-            }).done(function (response) {
-                console.log("success");
-                self.requests.splice(self.requests.indexOf(request), 1);
-            }).fail(function (response) {
-                console.log("error");
-                console.log(response);
-            });
-        },
-        requestStatus: function requestStatus(request) {
-            var self = this;
-            var statusWord = '';
-            switch (request.status) {
-                case '0':
-                    statusWord = self.translations.labels.pending;
-                    break;
-                case '1':
-                    statusWord = self.translations.labels.accepted;
-                    break;
-                case '2':
-                    statusWord = self.translations.labels.declined;
-            }
-            console.log(statusWord);
-            return statusWord;
-        }
-    },
-
-    data: function data() {
-        return {
-            requests: [],
-            translations: [],
-            data_ready: false
-        };
-    }
-});
-
-/***/ }),
-/* 71 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    mounted: function mounted() {
-        console.log('request row mounted');
-    }
-});
-
-/***/ }),
-/* 72 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Component = __webpack_require__(5)(
-  /* script */
-  __webpack_require__(71),
-  /* template */
-  __webpack_require__(73),
-  /* scopeId */
-  null,
-  /* cssModules */
-  null
-)
-Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\ProfessorDiplomasRequestsRow.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] ProfessorDiplomasRequestsRow.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-07044e80", Component.options)
-  } else {
-    hotAPI.reload("data-v-07044e80", Component.options)
-  }
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 73 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('tr', [_c('td', [_vm._t("col-topic")], 2), _vm._v(" "), _c('td', [_vm._t("col-student")], 2), _vm._v(" "), _c('td', [_vm._t("col-group")], 2), _vm._v(" "), _c('td', [_vm._t("col-status")], 2), _vm._v(" "), _c('td', [_vm._t("col-cr_at")], 2), _vm._v(" "), _c('td', [_vm._t("col-actions")], 2)])
-},staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-07044e80", module.exports)
-  }
-}
-
-/***/ }),
-/* 74 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return (_vm.data_ready) ? _c('div', {
-    staticClass: "form-group"
-  }, [_c('div', {
-    staticClass: "table-responsive"
-  }, [(_vm.requests.length) ? _c('table', {
-    staticClass: "table table-bordered"
-  }, [_c('thead', [_c('tr', [_c('th', [_vm._v(_vm._s(_vm.translations.labels.topic))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.student))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.group))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.status))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.created_at))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.actions))])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.requests), function(request) {
-    return _c('professor-diplomas-requests-row', {
-      key: request.id
-    }, [_c('template', {
-      slot: "col-topic"
-    }, [_c('a', {
-      attrs: {
-        "href": _vm.openDiploma(request)
-      }
-    }, [_vm._v(_vm._s(request.task_title.length > 10 ?
-      request.task_title.substr(0, 10) + '...' : request.task_title))])]), _vm._v(" "), _c('template', {
-      slot: "col-student"
-    }, [_vm._v(_vm._s(request.student))]), _vm._v(" "), _c('template', {
-      slot: "col-group"
-    }, [_vm._v(_vm._s(request.group))]), _vm._v(" "), _c('template', {
-      slot: "col-status"
-    }, [_vm._v(_vm._s(_vm.requestStatus(request)))]), _vm._v(" "), _c('template', {
-      slot: "col-cr_at"
-    }, [_vm._v(_vm._s(request.created_at))]), _vm._v(" "), _c('template', {
-      slot: "col-actions"
-    }, [_c('button', {
-      staticClass: "btn btn-primary btn-sm",
-      on: {
-        "click": function($event) {
-          _vm.acceptRequest(request)
-        }
-      }
-    }, [_vm._v(_vm._s(_vm.translations.buttons.accept))]), _vm._v(" "), _c('button', {
-      staticClass: "btn btn-danger btn-sm",
-      on: {
-        "click": function($event) {
-          _vm.declineRequest(request)
-        }
-      }
-    }, [_vm._v(_vm._s(_vm.translations.buttons.decline))])])], 2)
-  }))]) : _c('div', {
-    staticClass: "form-group"
-  }, [_c('p', [_vm._v(_vm._s(_vm.translations.labels.no_requests))])])])]) : _vm._e()
-},staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-577c2bac", module.exports)
-  }
-}
 
 /***/ })
 /******/ ]);

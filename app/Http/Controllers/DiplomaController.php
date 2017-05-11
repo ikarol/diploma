@@ -54,7 +54,24 @@ class DiplomaController extends Controller
                 ['group_id', request('group_id')]
             ])->get()->toArray();
         foreach ($diplomas as &$diploma) {
-            $diploma['requests'] = count(Task::find($diploma['id'])->requests);
+            $request = DiplomaRequest::where([
+                ['status', 1],
+                ['task_id', $diploma['id']],
+            ])->first();
+            $diploma['requests'] = [
+                'accepted' => count(Task::find($diploma['id'])->requests()->where([
+                    ['status', 1],
+                ])->get()),
+                'pending' => count(Task::find($diploma['id'])->requests()->where([
+                    ['status', 0],
+                ])->get()),
+                'declined' => count(Task::find($diploma['id'])->requests()->where([
+                    ['status', 2],
+                ])->get()),
+            ];
+            $diploma['student'] = $request ?
+                $request->student()->first()->user->surname
+                    . ' ' . $request->student()->first()->user->name : null;
             $diploma['created_at'] = Carbon::parse($diploma['created_at'])->format('d.m.Y');
         }
         return Response::json([
