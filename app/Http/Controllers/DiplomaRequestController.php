@@ -17,6 +17,11 @@ class DiplomaRequestController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('ajax');
+        $this->middleware('professor')->only([
+            'professor_requests_list',
+            'accept',
+            'decline',
+        ]);
     }
 
     public function store(Request $request, $id)
@@ -41,13 +46,42 @@ class DiplomaRequestController extends Controller
 
     public function professor_requests_list(Request $request)
     {
-        $diplomaRequests = DiplomaRequest::whereHas('task', function ($query) {
-            $query->where([
-                ['professor_id', Auth::user()->professor->id],
-                ['type', 2],
-                ['group_id', request('group_id')],
-            ]);
-        })->get()->toArray();
+        if ($request->has('status_type') && isset($request['status_type'])) {
+            $status_type = '';
+            switch ($request['status_type']) {
+                case '0':
+                    $status_type = 0;
+                case '1':
+                    $status_type = 1;
+                    break;
+                case '2':
+                    $status_type = 2;
+                    break;
+                case '3':
+                    $status_type = '';
+                    break;
+            }
+            if ($status_type !== '') {
+                $diplomaRequests = DiplomaRequest::whereHas('task', function ($query) {
+                    $query->where([
+                        ['professor_id', Auth::user()->professor->id],
+                        ['type', 2],
+                        ['group_id', request('group_id')],
+                    ]);
+                })->where([
+                    ['status', $status_type],
+                ])->get()->toArray();
+            } else {
+                $diplomaRequests = DiplomaRequest::whereHas('task', function ($query) {
+                    $query->where([
+                        ['professor_id', Auth::user()->professor->id],
+                        ['type', 2],
+                        ['group_id', request('group_id')],
+                    ]);
+                })->get()->toArray();
+            }
+        }
+
         foreach ($diplomaRequests as &$request) {
             $request['student'] = Student::find($request['student_id'])
                 ->user->surname . ' ' . Student::find($request['student_id'])->user->name;

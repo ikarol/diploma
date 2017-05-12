@@ -6,6 +6,23 @@
                 <option v-for="group in groups" :value="group.id">{{ group.name }}</option>
             </select>
         </div>
+        <div class="form-group">
+            <label>{{ translations.labels.status }}:</label>
+            <div class="btn-group" data-toggle="buttons" id="status_type">
+                <label class="btn btn-primary active">
+                    <input type="radio" name="status_type" id="option1" value="3" autocomplete="off">{{ translations.buttons.all }}
+                </label>
+                <label class="btn btn-primary">
+                    <input type="radio" name="status_type" id="option2" value="0" autocomplete="off">{{ translations.buttons.pending }}
+                </label>
+                <label class="btn btn-primary">
+                    <input type="radio" name="status_type" id="option3" value="1" autocomplete="off">{{ translations.buttons.accepted }}
+                </label>
+                <label class="btn btn-primary">
+                    <input type="radio" name="status_type" id="option3" value="2" autocomplete="off">{{ translations.buttons.declined }}
+                </label>
+            </div>
+        </div>
         <div class="table-responsive">
             <div v-if="requests.length">
                 <professor-diplomas-requests-panel  v-for="request in requests" :key="request.id" :class="setPanelsColour(request)">
@@ -83,19 +100,24 @@ export default {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+            console.log($('input:radio[name =\'status_type\']:checked').val());
             $.ajax({
                 url: '/diplomas/professor/requests',
                 type: 'GET',
                 dataType: 'json',
                 data: {
-                    group_id: $('#group-id').val()
+                    group_id: $('#group-id').val(),
+                    status_type: $('#status_type label.active input').val()
+                        ? $('#status_type label.active input').val() : ''
                 }
             })
             .done(function(response) {
                 console.log('requests list recieved');
                 console.log(response);
                 self.requests = response.requests;
-                self.requests = self.requests.reverse();
+                if (self.requests.length) {
+                    self.requests = self.requests.reverse();
+                }
             })
             .fail(function(response) {
                 console.log('fail');

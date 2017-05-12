@@ -91,6 +91,10 @@ class TranslationController extends Controller
             'buttons' => [
                 'accept' => __('Accept'),
                 'decline' => __('Decline'),
+                'accepted' => __('Accepted'),
+                'declined' => __('Declined'),
+                'pending' => __('Pending'),
+                'all' => __('All'),
             ]
         ];
         return Response::json([
