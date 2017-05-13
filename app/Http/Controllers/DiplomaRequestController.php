@@ -51,6 +51,7 @@ class DiplomaRequestController extends Controller
             switch ($request['status_type']) {
                 case '0':
                     $status_type = 0;
+                    break;
                 case '1':
                     $status_type = 1;
                     break;
@@ -80,6 +81,14 @@ class DiplomaRequestController extends Controller
                     ]);
                 })->get()->toArray();
             }
+        } else {
+            $diplomaRequests = DiplomaRequest::whereHas('task', function ($query) {
+                $query->where([
+                    ['professor_id', Auth::user()->professor->id],
+                    ['type', 2],
+                    ['group_id', request('group_id')],
+                ]);
+            })->get()->toArray();
         }
 
         foreach ($diplomaRequests as &$request) {

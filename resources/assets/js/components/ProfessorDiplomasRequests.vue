@@ -8,7 +8,21 @@
         </div>
         <div class="form-group">
             <label>{{ translations.labels.status }}:</label>
-            <div class="btn-group" data-toggle="buttons" id="status_type">
+            <div class="btn-group"  id="status_type">
+                <label class="btn btn-default" for="one">
+                    <input type="radio"  id="one" value="3" v-model="status_type">{{ translations.buttons.all }}
+                </label>
+                <label class="btn btn-default" for="two">
+                    <input type="radio"  id="two" value="0" v-model="status_type">{{ translations.buttons.pending }}
+                </label>
+                <label class="btn btn-default" for="three">
+                    <input type="radio"  id="three" value="1" v-model="status_type">{{ translations.buttons.accepted }}
+                </label>
+                <label class="btn btn-default" for="four">
+                    <input type="radio"  id="four" value="2" v-model="status_type">{{ translations.buttons.declined }}
+                </label>
+            </div>
+            <!-- <div class="btn-group" data-toggle="buttons" id="status_type" v-radio="status_type">
                 <label class="btn btn-primary active">
                     <input type="radio" name="status_type" id="option1" value="3" autocomplete="off">{{ translations.buttons.all }}
                 </label>
@@ -21,11 +35,12 @@
                 <label class="btn btn-primary">
                     <input type="radio" name="status_type" id="option3" value="2" autocomplete="off">{{ translations.buttons.declined }}
                 </label>
-            </div>
+            </div> -->
+            <!-- <professor-diplomas-requests-status :values="statuses" :selected.sync="status_type" :default="3"></professor-diplomas-requests-status> -->
         </div>
         <div class="table-responsive">
             <div v-if="requests.length">
-                <professor-diplomas-requests-panel  v-for="request in requests" :key="request.id" :class="setPanelsColour(request)">
+                <professor-diplomas-requests-panel v-for="request in requests" :key="request.id" :class="setPanelsColour(request)">
                     <div slot="task-title" class="form-group">
                         <h1>{{ request.task_title }}</h1>
                     </div>
@@ -57,10 +72,57 @@
 <script>
 
 import ProfessorDiplomasRequestsPanel from './ProfessorDiplomasRequestsPanel'
+import ProfessorDiplomasRequestsStatus from './ProfessorDiplomasRequestsStatus'
 
 export default {
     components: {
-        ProfessorDiplomasRequestsPanel
+        ProfessorDiplomasRequestsPanel,
+        ProfessorDiplomasRequestsStatus
+    },
+    computed: {
+        statuses() {
+            return {
+                3: this.translations.buttons.all,
+                0: this.translations.buttons.pending,
+                1: this.translations.buttons.accepted,
+                2: this.translations.buttons.declined,
+            }
+        }
+    },
+    directives: {
+        radio: {
+            twoWay: true,
+            bind: function() {
+                var self = this;
+                var btns = $('#status_type').find('.btn');
+                btns.each(function() {
+                    $(this).on('click', function() {
+                        var v = $(this).find('input').get(0).value
+                        self.set(v);
+                    })
+                });
+            },
+            update: function() {
+                var value = this._watcher.value;
+                if (value) {
+                    this.set(value);
+                    var btns = $(this.el).find('.btn')
+                    btns.each(function() {
+                        $(this).removeClass('active');
+                        var v = $(this).find('input').get(0).value;
+
+                        if (v === value) {
+                            $(this).addClass('active');
+                        }
+                    });
+                } else {
+                    var input = $(this.el).find('.active input').get(0);
+                    if (input) {
+                        this.set(input.value);
+                    }
+                }
+            }
+        }
     },
     created() {
         this.getTranslations();
@@ -100,15 +162,13 @@ export default {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            console.log($('input:radio[name =\'status_type\']:checked').val());
             $.ajax({
                 url: '/diplomas/professor/requests',
                 type: 'GET',
                 dataType: 'json',
                 data: {
                     group_id: $('#group-id').val(),
-                    status_type: $('#status_type label.active input').val()
-                        ? $('#status_type label.active input').val() : ''
+                    status_type: self.status_type
                 }
             })
             .done(function(response) {
@@ -227,8 +287,14 @@ export default {
             translations: [],
             groups: [],
             data_ready: false,
+            status_type: '3',
         }
-    }
+    },
+    watch: {
+        status_type: function() {
+            this.getFilteredData();
+        },
+    },
 
 }
 </script>
