@@ -2,11 +2,11 @@ import VueRouter from 'vue-router';
 
 var routes = [
     {
-        path: '/prof-task-list',
+        path: '/prof-diploma-list',
         component: require('./components/ProfessorDiplomasTable')
     },
     {
-        path: '/prof-requests',
+        path: '/prof-diploma-requests',
         component: require('./components/ProfessorDiplomasRequests')
     },
     {

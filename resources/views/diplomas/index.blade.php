@@ -5,8 +5,8 @@
     <h1>@lang('Diploma projects')</h1>
         @if ($userType == 1)
             <ul class="nav nav-tabs">
-              <router-link tag="li" to="/prof-task-list" exact><a class="lul">@lang('List of tasks')</a></router-link>
-              <router-link tag="li" to="/prof-requests"><a>@lang('Requests')</a></router-link>
+              <router-link tag="li" to="/prof-diploma-list" exact><a class="lul">@lang('List of tasks')</a></router-link>
+              <router-link tag="li" to="/prof-diploma-requests"><a>@lang('Requests')</a></router-link>
             </ul>
 
         @elseif ($userType == 2)

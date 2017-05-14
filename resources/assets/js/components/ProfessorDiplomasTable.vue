@@ -2,7 +2,7 @@
     <div class="form-group" v-if="data_ready">
         <div class="form-group">
             <label for="group" class="control-label">{{ translations.labels.group }}</label>
-            <select name="group" id="group-id" class="form-control" @change="getFilteredData">
+            <select name="group" id="group-id" v-model="currGroup.id" class="form-control" @change="getFilteredData">
                 <option v-for="group in groups" :value="group.id">{{ group.name }}</option>
             </select>
         </div>
@@ -147,14 +147,15 @@ import ProfessorDiplomasRow from './ProfessorDiplomasRow.vue';
             this.getTranslations();
         },
         beforeMount() {
+            var self = this;
             this.getGroupList();
         },
         mounted() {
-            console.log('Diplomas list mounted.');
-            var self = this;
-            setTimeout(function() {
-                self.getFilteredData();
-            }, 450);
+            // console.log('Diplomas list mounted.');
+            // var self = this;
+            // setTimeout(function() {
+            //     self.getFilteredData();
+            // }, 450);
         },
         methods: {
             getTranslations() {
@@ -167,7 +168,6 @@ import ProfessorDiplomasRow from './ProfessorDiplomasRow.vue';
                 .done(function(response) {
                     console.log("translations loaded");
                     self.translations = response.translations;
-                    self.data_ready = true;
                 })
                 .fail(function() {
                     console.log("error");
@@ -176,6 +176,11 @@ import ProfessorDiplomasRow from './ProfessorDiplomasRow.vue';
             },
             getFilteredData() {
                 var self = this;
+                // self.setCurrentGroup();
+                var activeGroup = _.find(this.groups, {id: this.currGroup.id});
+                if (typeof activeGroup !== 'undefined') {
+                    this.currGroup.name = activeGroup.name;
+                }
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -186,15 +191,17 @@ import ProfessorDiplomasRow from './ProfessorDiplomasRow.vue';
                     type: 'GET',
                     dataType: 'json',
                     data: {
-                        group_id: $('#group-id').val()
+                        group_id: self.currGroup.id
                     }
                 })
                 .done(function(response) {
                     console.log('diplomas list recieved');
                     console.log(response);
-                    self.setCurrentGroup();
                     self.diplomas = response.diplomas;
-                    self.diplomas = self.diplomas.reverse();
+                    if (self.diplomas.length) {
+                        self.diplomas = self.diplomas.reverse();
+                    }
+                    self.data_ready = true;
                 })
                 .fail(function(response) {
                     console.log('fail');
@@ -224,6 +231,10 @@ import ProfessorDiplomasRow from './ProfessorDiplomasRow.vue';
                     console.log('groups list recieved');
                     console.log(response);
                     self.groups = response;
+                    self.currGroup = {
+                        'id': self.groups[0].id,
+                        'name': self.groups[0].name,
+                    };
                 })
                 .fail(function(response) {
                     console.log("error");
@@ -408,6 +419,11 @@ import ProfessorDiplomasRow from './ProfessorDiplomasRow.vue';
                 errors: {
 
                 }
+            }
+        },
+        watch: {
+            groups: function() {
+                this.getFilteredData();
             }
         }
     }

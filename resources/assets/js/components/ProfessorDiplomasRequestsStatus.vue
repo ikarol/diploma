@@ -1,6 +1,9 @@
 <template>
     <div class="btn-group">
-    <button type="button" v-for="(key, val) in values" @click="changeSelectVal(val)" :class="['btn', { 'btn-primary': mutableSelected === val, 'btn-default': mutableSelected !== val }]">{{ key }}</button>
+    <button type="button" v-for="(item, index) in values"
+        @click="changeSelectVal(index)"
+        :class="['btn', { 'btn-primary': mutableSelected === index,
+         'btn-default': mutableSelected !== index }]">{{ item }}</button>
   </div>
 </template>
 
@@ -10,11 +13,12 @@ export default {
     mounted () {
         this.mutableSelected = this.default;
         this.$emit('update:selected', this.default);
+        console.log(this.mutableSelected);
     },
     methods: {
-        changeSelectVal: function(val) {
-            this.mutableSelected = val;
-            this.$emit('update:selected', val);
+        changeSelectVal: function(index) {
+            this.mutableSelected = index;
+            this.$emit('update:selected', index);
         }
     },
     data() {

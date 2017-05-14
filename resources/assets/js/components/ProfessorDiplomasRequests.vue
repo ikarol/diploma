@@ -2,13 +2,13 @@
     <div class="form-group" v-if="data_ready">
         <div class="form-group">
             <label for="group" class="control-label">{{ translations.labels.group }}</label>
-            <select name="group" id="group-id" class="form-control" @change="getFilteredData">
+            <select name="group" id="group-id" v-model="currGroup.id" class="form-control" @change="getFilteredData">
                 <option v-for="group in groups" :value="group.id">{{ group.name }}</option>
             </select>
         </div>
         <div class="form-group">
             <label>{{ translations.labels.status }}:</label>
-            <div class="btn-group"  id="status_type">
+            <!-- <div class="btn-group"  id="status_type">
                 <label class="btn btn-default" for="one">
                     <input type="radio"  id="one" value="3" v-model="status_type">{{ translations.buttons.all }}
                 </label>
@@ -21,7 +21,7 @@
                 <label class="btn btn-default" for="four">
                     <input type="radio"  id="four" value="2" v-model="status_type">{{ translations.buttons.declined }}
                 </label>
-            </div>
+            </div> -->
             <!-- <div class="btn-group" data-toggle="buttons" id="status_type" v-radio="status_type">
                 <label class="btn btn-primary active">
                     <input type="radio" name="status_type" id="option1" value="3" autocomplete="off">{{ translations.buttons.all }}
@@ -36,7 +36,9 @@
                     <input type="radio" name="status_type" id="option3" value="2" autocomplete="off">{{ translations.buttons.declined }}
                 </label>
             </div> -->
-            <!-- <professor-diplomas-requests-status :values="statuses" :selected.sync="status_type" :default="3"></professor-diplomas-requests-status> -->
+            <professor-diplomas-requests-status
+                :values="statuses" :selected.sync="status_type" :default="'3'">
+            </professor-diplomas-requests-status>
         </div>
         <div class="table-responsive">
             <div v-if="requests.length">
@@ -131,11 +133,11 @@ export default {
         this.getGroupList();
     },
     mounted() {
-        var self = this;
-        setTimeout(function() {
-            self.getFilteredData();
-        }, 450);
-        console.log('Requests list mounted.');
+        // var self = this;
+        // setTimeout(function() {
+        //     self.getFilteredData();
+        // }, 450);
+        // console.log('Requests list mounted.');
     },
     methods: {
         getTranslations() {
@@ -148,7 +150,6 @@ export default {
             .done(function(response) {
                 console.log("translations loaded");
                 self.translations = response.translations;
-                self.data_ready = true;
             })
             .fail(function() {
                 console.log("no translations");
@@ -157,6 +158,10 @@ export default {
         },
         getFilteredData() {
             var self = this;
+            var activeGroup = _.find(this.groups, {id: this.currGroup.id});
+            if (typeof activeGroup !== 'undefined') {
+                this.currGroup.name = activeGroup.name;
+            }
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -167,7 +172,7 @@ export default {
                 type: 'GET',
                 dataType: 'json',
                 data: {
-                    group_id: $('#group-id').val(),
+                    group_id: self.currGroup.id,
                     status_type: self.status_type
                 }
             })
@@ -203,6 +208,10 @@ export default {
                 console.log('groups list recieved');
                 console.log(response);
                 self.groups = response;
+                self.currGroup = {
+                    'id': self.groups[0].id,
+                    'name': self.groups[0].name,
+                };
             })
             .fail(function(response) {
                 console.log("error");
@@ -262,7 +271,6 @@ export default {
                 case '2':
                     statusWord = self.translations.labels.declined;
             }
-            console.log(statusWord);
             return statusWord;
         },
         setPanelsColour(request) {
@@ -287,12 +295,19 @@ export default {
             translations: [],
             groups: [],
             data_ready: false,
-            status_type: '3',
+            status_type: '',
+            currGroup: {
+                id: '',
+                name: ''
+            },
         }
     },
     watch: {
         status_type: function() {
             this.getFilteredData();
+        },
+        groups: function() {
+            this.data_ready = true;
         },
     },
 

@@ -4753,6 +4753,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 
 
@@ -4815,11 +4817,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.getGroupList();
     },
     mounted: function mounted() {
-        var self = this;
-        setTimeout(function () {
-            self.getFilteredData();
-        }, 450);
-        console.log('Requests list mounted.');
+        // var self = this;
+        // setTimeout(function() {
+        //     self.getFilteredData();
+        // }, 450);
+        // console.log('Requests list mounted.');
     },
 
     methods: {
@@ -4832,13 +4834,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }).done(function (response) {
                 console.log("translations loaded");
                 self.translations = response.translations;
-                self.data_ready = true;
             }).fail(function () {
                 console.log("no translations");
             });
         },
         getFilteredData: function getFilteredData() {
             var self = this;
+            var activeGroup = _.find(this.groups, { id: this.currGroup.id });
+            if (typeof activeGroup !== 'undefined') {
+                this.currGroup.name = activeGroup.name;
+            }
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -4849,7 +4854,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 type: 'GET',
                 dataType: 'json',
                 data: {
-                    group_id: $('#group-id').val(),
+                    group_id: self.currGroup.id,
                     status_type: self.status_type
                 }
             }).done(function (response) {
@@ -4882,6 +4887,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log('groups list recieved');
                 console.log(response);
                 self.groups = response;
+                self.currGroup = {
+                    'id': self.groups[0].id,
+                    'name': self.groups[0].name
+                };
             }).fail(function (response) {
                 console.log("error");
                 console.log(response);
@@ -4935,7 +4944,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 case '2':
                     statusWord = self.translations.labels.declined;
             }
-            console.log(statusWord);
             return statusWord;
         },
         setPanelsColour: function setPanelsColour(request) {
@@ -4960,13 +4968,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             translations: [],
             groups: [],
             data_ready: false,
-            status_type: '3'
+            status_type: '',
+            currGroup: {
+                id: '',
+                name: ''
+            }
         };
     },
 
     watch: {
         status_type: function status_type() {
             this.getFilteredData();
+        },
+        groups: function groups() {
+            this.data_ready = true;
         }
     }
 
@@ -5011,18 +5026,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['values', 'selected', 'default'],
     mounted: function mounted() {
         this.mutableSelected = this.default;
         this.$emit('update:selected', this.default);
+        console.log(this.mutableSelected);
     },
 
     methods: {
-        changeSelectVal: function changeSelectVal(val) {
-            this.mutableSelected = val;
-            this.$emit('update:selected', val);
+        changeSelectVal: function changeSelectVal(index) {
+            this.mutableSelected = index;
+            this.$emit('update:selected', index);
         }
     },
     data: function data() {
@@ -5214,14 +5233,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.getTranslations();
     },
     beforeMount: function beforeMount() {
+        var self = this;
         this.getGroupList();
     },
     mounted: function mounted() {
-        console.log('Diplomas list mounted.');
-        var self = this;
-        setTimeout(function () {
-            self.getFilteredData();
-        }, 450);
+        // console.log('Diplomas list mounted.');
+        // var self = this;
+        // setTimeout(function() {
+        //     self.getFilteredData();
+        // }, 450);
     },
 
     methods: {
@@ -5234,13 +5254,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }).done(function (response) {
                 console.log("translations loaded");
                 self.translations = response.translations;
-                self.data_ready = true;
             }).fail(function () {
                 console.log("error");
             });
         },
         getFilteredData: function getFilteredData() {
             var self = this;
+            // self.setCurrentGroup();
+            var activeGroup = _.find(this.groups, { id: this.currGroup.id });
+            if (typeof activeGroup !== 'undefined') {
+                this.currGroup.name = activeGroup.name;
+            }
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -5251,14 +5275,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 type: 'GET',
                 dataType: 'json',
                 data: {
-                    group_id: $('#group-id').val()
+                    group_id: self.currGroup.id
                 }
             }).done(function (response) {
                 console.log('diplomas list recieved');
                 console.log(response);
-                self.setCurrentGroup();
                 self.diplomas = response.diplomas;
-                self.diplomas = self.diplomas.reverse();
+                if (self.diplomas.length) {
+                    self.diplomas = self.diplomas.reverse();
+                }
+                self.data_ready = true;
             }).fail(function (response) {
                 console.log('fail');
                 console.log(response);
@@ -5286,6 +5312,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log('groups list recieved');
                 console.log(response);
                 self.groups = response;
+                self.currGroup = {
+                    'id': self.groups[0].id,
+                    'name': self.groups[0].name
+                };
             }).fail(function (response) {
                 console.log("error");
                 console.log(response);
@@ -5458,6 +5488,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             data_ready: false,
             errors: {}
         };
+    },
+
+    watch: {
+        groups: function groups() {
+            this.getFilteredData();
+        }
     }
 });
 
@@ -5795,10 +5831,10 @@ window.swal = __webpack_require__(55);
 
 
 var routes = [{
-    path: '/prof-task-list',
+    path: '/prof-diploma-list',
     component: __webpack_require__(60)
 }, {
-    path: '/prof-requests',
+    path: '/prof-diploma-requests',
     component: __webpack_require__(56)
 }, {
     path: '/stud-task-list',
@@ -39081,21 +39117,21 @@ if (false) {
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "btn-group"
-  }, _vm._l((_vm.values), function(key, val) {
+  }, _vm._l((_vm.values), function(item, index) {
     return _c('button', {
       class: ['btn', {
-        'btn-primary': _vm.mutableSelected === val,
-        'btn-default': _vm.mutableSelected !== val
+        'btn-primary': _vm.mutableSelected === index,
+        'btn-default': _vm.mutableSelected !== index
       }],
       attrs: {
         "type": "button"
       },
       on: {
         "click": function($event) {
-          _vm.changeSelectVal(val)
+          _vm.changeSelectVal(index)
         }
       }
-    }, [_vm._v(_vm._s(key))])
+    }, [_vm._v(_vm._s(item))])
   }))
 },staticRenderFns: []}
 module.exports.render._withStripped = true
@@ -39121,13 +39157,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "for": "group"
     }
   }, [_vm._v(_vm._s(_vm.translations.labels.group))]), _vm._v(" "), _c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.currGroup.id),
+      expression: "currGroup.id"
+    }],
     staticClass: "form-control",
     attrs: {
       "name": "group",
       "id": "group-id"
     },
     on: {
-      "change": _vm.getFilteredData
+      "change": [function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.currGroup.id = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }, _vm.getFilteredData]
     }
   }, _vm._l((_vm.groups), function(group) {
     return _c('option', {
@@ -39137,112 +39187,18 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }, [_vm._v(_vm._s(group.name))])
   }))]), _vm._v(" "), _c('div', {
     staticClass: "form-group"
-  }, [_c('label', [_vm._v(_vm._s(_vm.translations.labels.status) + ":")]), _vm._v(" "), _c('div', {
-    staticClass: "btn-group",
+  }, [_c('label', [_vm._v(_vm._s(_vm.translations.labels.status) + ":")]), _vm._v(" "), _c('professor-diplomas-requests-status', {
     attrs: {
-      "id": "status_type"
-    }
-  }, [_c('label', {
-    staticClass: "btn btn-default",
-    attrs: {
-      "for": "one"
-    }
-  }, [_c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.status_type),
-      expression: "status_type"
-    }],
-    attrs: {
-      "type": "radio",
-      "id": "one",
-      "value": "3"
-    },
-    domProps: {
-      "checked": _vm._q(_vm.status_type, "3")
+      "values": _vm.statuses,
+      "selected": _vm.status_type,
+      "default": '3'
     },
     on: {
-      "__c": function($event) {
-        _vm.status_type = "3"
+      "update:selected": function($event) {
+        _vm.status_type = $event
       }
     }
-  }), _vm._v(_vm._s(_vm.translations.buttons.all) + "\n            ")]), _vm._v(" "), _c('label', {
-    staticClass: "btn btn-default",
-    attrs: {
-      "for": "two"
-    }
-  }, [_c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.status_type),
-      expression: "status_type"
-    }],
-    attrs: {
-      "type": "radio",
-      "id": "two",
-      "value": "0"
-    },
-    domProps: {
-      "checked": _vm._q(_vm.status_type, "0")
-    },
-    on: {
-      "__c": function($event) {
-        _vm.status_type = "0"
-      }
-    }
-  }), _vm._v(_vm._s(_vm.translations.buttons.pending) + "\n            ")]), _vm._v(" "), _c('label', {
-    staticClass: "btn btn-default",
-    attrs: {
-      "for": "three"
-    }
-  }, [_c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.status_type),
-      expression: "status_type"
-    }],
-    attrs: {
-      "type": "radio",
-      "id": "three",
-      "value": "1"
-    },
-    domProps: {
-      "checked": _vm._q(_vm.status_type, "1")
-    },
-    on: {
-      "__c": function($event) {
-        _vm.status_type = "1"
-      }
-    }
-  }), _vm._v(_vm._s(_vm.translations.buttons.accepted) + "\n            ")]), _vm._v(" "), _c('label', {
-    staticClass: "btn btn-default",
-    attrs: {
-      "for": "four"
-    }
-  }, [_c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.status_type),
-      expression: "status_type"
-    }],
-    attrs: {
-      "type": "radio",
-      "id": "four",
-      "value": "2"
-    },
-    domProps: {
-      "checked": _vm._q(_vm.status_type, "2")
-    },
-    on: {
-      "__c": function($event) {
-        _vm.status_type = "2"
-      }
-    }
-  }), _vm._v(_vm._s(_vm.translations.buttons.declined) + "\n            ")])])]), _vm._v(" "), _c('div', {
+  })], 1), _vm._v(" "), _c('div', {
     staticClass: "table-responsive"
   }, [(_vm.requests.length) ? _c('div', _vm._l((_vm.requests), function(request) {
     return _c('professor-diplomas-requests-panel', {
@@ -39329,13 +39285,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "for": "group"
     }
   }, [_vm._v(_vm._s(_vm.translations.labels.group))]), _vm._v(" "), _c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.currGroup.id),
+      expression: "currGroup.id"
+    }],
     staticClass: "form-control",
     attrs: {
       "name": "group",
       "id": "group-id"
     },
     on: {
-      "change": _vm.getFilteredData
+      "change": [function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.currGroup.id = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }, _vm.getFilteredData]
     }
   }, _vm._l((_vm.groups), function(group) {
     return _c('option', {
