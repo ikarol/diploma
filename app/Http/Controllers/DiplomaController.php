@@ -145,9 +145,35 @@ class DiplomaController extends Controller
             'group_id' => request('group_id'),
             'created_at' => Carbon::now()->format('Y-d-m'),
         ]))->toArray();
-        $diploma['requests'] = count(Task::find($diploma['id'])->requests);
+        $user = User::whereHas('student', function($query) use ($diploma) {
+            $query->where([
+                ['group_id', request('group_id')],
+            ])->whereHas((new DiplomaRequest)->getTable(), function ($queryRequest) use ($diploma) {
+                $queryRequest->where([
+                    ['status', 1],
+                ])->whereHas('task', function($queryTask) use ($diploma) {
+                    $queryTask->where([
+                        ['task_id', $diploma['id']],
+                        ['type', 2],
+                    ]);
+                });
+            });
+        })->first(); // fetch first user
+        $diploma['requests'] = [
+            'accepted' => count(Task::find($diploma['id'])->requests()->where([
+                ['status', 1],
+            ])->get()),
+            'pending' => count(Task::find($diploma['id'])->requests()->where([
+                ['status', 0],
+            ])->get()),
+            'declined' => count(Task::find($diploma['id'])->requests()->where([
+                ['status', 2],
+            ])->get()),
+        ];
+        $diploma['student'] = count($user) ? $user->getFullName() : null;
         // TODO: Дата отображается неверно
-        $diploma['created_at'] = Carbon::parse($diploma['created_at'])->format('m.d.Y');
+        // Не работает
+        $diploma['created_at'] = Carbon::createFromFormat('Y-d-m', $diploma['created_at'])->format('d.m.Y');
         $diploma['updated_at'] = null;
         return Response::json($diploma);
     }
@@ -195,8 +221,33 @@ class DiplomaController extends Controller
         $updatedTask->updated_at = Carbon::now()->format('Y-d-m');
         $updatedTask->save();
         $updatedTask->toArray();
+        $user = User::whereHas('student', function($query) use ($updatedTask) {
+            $query->where([
+                ['group_id', request('group_id')],
+            ])->whereHas((new DiplomaRequest)->getTable(), function ($queryRequest) use ($updatedTask) {
+                $queryRequest->where([
+                    ['status', 1],
+                ])->whereHas('task', function($queryTask) use ($updatedTask) {
+                    $queryTask->where([
+                        ['task_id', $updatedTask['id']],
+                        ['type', 2],
+                    ]);
+                });
+            });
+        })->first(); // fetch first user
+        $updatedTask['requests'] = [
+            'accepted' => count(Task::find($updatedTask['id'])->requests()->where([
+                ['status', 1],
+            ])->get()),
+            'pending' => count(Task::find($updatedTask['id'])->requests()->where([
+                ['status', 0],
+            ])->get()),
+            'declined' => count(Task::find($updatedTask['id'])->requests()->where([
+                ['status', 2],
+            ])->get()),
+        ];
+        $updatedTask['student'] = count($user) ? $user->getFullName() : null;
         $updatedTask['created_at'] = Carbon::parse($updatedTask['created_at'])->format('d.m.Y');
-        $updatedTask['requests'] = count(Task::find($updatedTask['id'])->requests);
         return Response::json($updatedTask);
     }
 
