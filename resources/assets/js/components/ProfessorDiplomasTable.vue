@@ -12,9 +12,10 @@
                     <tr>
                         <th class="col-md-1" rowspan="2">{{ translations.labels.topic }}</th>
                         <th class="col-md-3" colspan="3">{{ translations.labels.number_of_requests }}
-                        <th class="col-md-3" rowspan="2">{{ translations.labels.student }}</th>
+                        <th class="col-md-2" rowspan="2">{{ translations.labels.student }}</th>
                         <th class="col-md-2" rowspan="2">{{ translations.labels.created_at }}</th>
-                        <th class="col-md-3" rowspan="2">{{ translations.labels.actions }}</th>
+                        <th class="col-md-2" rowspan="2">{{ translations.labels.updated_at }}</th>
+                        <th class="col-md-2" rowspan="2">{{ translations.labels.actions }}</th>
                     </tr>
                     <tr>
                         <th class="col-md-1">{{ translations.labels.accepted }}</th>
@@ -31,6 +32,7 @@
                         <template slot="col-requests-denied">{{ diploma.requests.declined }}</template>
                         <template slot="col-student">{{ diploma.student !== null ? diploma.student : translations.labels.empty }}</template>
                         <template slot="col-cr_at">{{ diploma.created_at }}</template>
+                        <template slot="col-upd_at">{{ diploma.updated_at !== null ? diploma.updated_at : translations.labels.empty }}</template>
                         <template slot="col-actions">
                             <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#update-diploma-modal" @click="openUpdateModal(diploma)">{{ translations.buttons.edit }}</button>
                             <button class="btn btn-danger btn-sm" @click="deleteWithConfirm(diploma)">{{ translations.buttons.delete }}</button>
@@ -46,28 +48,28 @@
                                     <h4 class="modal-title">{{ translations.labels.update_task }}</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <div id="task-title-block" class="form-group">
+                                    <div id="update-diploma-task-title-block" class="form-group">
                                         <label for="task-title">{{ translations.labels.topic }}</label>
-                                        <input id="task-title" type="text" class="form-control" v-model="currTask.title" :value="currTask.title" @keypress="clearErrorMessages('title')">
+                                        <input id="task-title" type="text" class="form-control" v-model="currTask.title" :value="currTask.title" @keypress="clearErrorMessages('update-diploma', 'title')">
                                         <span id="title-help-block" class="help-block" v-if="errors.hasOwnProperty('title')">
                                             <strong>{{ errors.title[0] }}</strong>
                                         </span>
                                     </div>
-                                    <div id="task-description-block" class="form-group">
+                                    <div id="update-diploma-task-description-block" class="form-group">
                                         <label for="task-description">{{ translations.labels.description }}</label>
-                                        <textarea id="task-description" class="form-control" v-model="currTask.description" :value="currTask.description" @keypress="clearErrorMessages('description')"></textarea>
+                                        <textarea id="task-description" class="form-control" v-model="currTask.description" :value="currTask.description" @keypress="clearErrorMessages('update-diploma', 'description')"></textarea>
                                         <span id="description-help-block" class="help-block" v-if="errors.hasOwnProperty('description')">
                                             <strong>{{ errors.description[0] }}</strong>
                                         </span>
                                     </div>
-                                    <div id="task-technologies-block" class="form-group">
+                                    <div id="update-diploma-task-technologies-block" class="form-group">
                                         <label for="task-technologies">{{ translations.labels.technologies }}</label>
-                                        <input id="task-technologies" type="text" class="form-control" v-model="currTask.technologies" :value="currTask.technologies" @keypress="clearErrorMessages('technologies')">
+                                        <input id="task-technologies" type="text" class="form-control" v-model="currTask.technologies" :value="currTask.technologies" @keypress="clearErrorMessages('update-diploma', 'technologies')">
                                         <span id="technologies-help-block" class="help-block" v-if="errors.hasOwnProperty('technologies')">
                                             <strong>{{ errors.technologies[0] }}</strong>
                                         </span>
                                     </div>
-                                    <div id="task-group-block" class="form-group">
+                                    <div id="update-diploma-task-group-block" class="form-group">
                                         <label for="task-group">{{ translations.labels.group }}</label>
                                         <br>
                                         <i>{{ currGroup.name }}</i>
@@ -96,28 +98,28 @@
                             <h4 class="modal-title">{{ translations.buttons.new_task }}</h4>
                         </div>
                         <div class="modal-body">
-                            <div id="task-title-block" class="form-group">
+                            <div id="new-diploma-task-title-block" class="form-group">
                                 <label for="task-title">{{ translations.labels.topic }}</label>
-                                <input id="task-title" type="text" class="form-control" v-model="newTask.title" :value="newTask.title" @keypress="clearErrorMessages('title')">
+                                <input id="task-title" type="text" class="form-control" v-model="newTask.title" :value="newTask.title" @keypress="clearErrorMessages('new-diploma', 'title')">
                                 <span id="title-help-block" class="help-block" v-if="errors.hasOwnProperty('title')">
                                     <strong>{{ errors.title[0] }}</strong>
                                 </span>
                             </div>
-                            <div id="task-description-block" class="form-group">
+                            <div id="new-diploma-task-description-block" class="form-group">
                                 <label for="task-description">{{ translations.labels.description }}</label>
-                                <textarea id="task-description" class="form-control" v-model="newTask.description" :value="newTask.description" @keypress="clearErrorMessages('description')"></textarea>
+                                <textarea id="task-description" class="form-control" v-model="newTask.description" :value="newTask.description" @keypress="clearErrorMessages('new-diploma', 'description')"></textarea>
                                 <span id="description-help-block" class="help-block" v-if="errors.hasOwnProperty('description')">
                                     <strong>{{ errors.description[0] }}</strong>
                                 </span>
                             </div>
-                            <div id="task-technologies-block" class="form-group">
+                            <div id="new-diploma-task-technologies-block" class="form-group">
                                 <label for="task-technologies">{{ translations.labels.technologies }}</label>
-                                <input id="task-technologies" type="text" class="form-control" v-model="newTask.technologies" :value="newTask.technologies" @keypress="clearErrorMessages('technologies')">
+                                <input id="task-technologies" type="text" class="form-control" v-model="newTask.technologies" :value="newTask.technologies" @keypress="clearErrorMessages('new-diploma', 'technologies')">
                                 <span id="technologies-help-block" class="help-block" v-if="errors.hasOwnProperty('technologies')">
                                     <strong>{{ errors.technologies[0] }}</strong>
                                 </span>
                             </div>
-                            <div id="task-group-block" class="form-group">
+                            <div id="new-diploma-task-group-block" class="form-group">
                                 <label for="task-group">{{ translations.labels.group }}</label>
                                 <br>
                                 <i>{{ currGroup.name }}</i>
@@ -247,6 +249,10 @@ import ProfessorDiplomasRow from './ProfessorDiplomasRow.vue';
                 });
             },
             clearNewTaskInputs() {
+                var self = this;
+                $.each(this.errors, function(index, value) {
+                    self.clearErrorMessages('new-diploma', index);
+                });
                 this.newTask = {
                     title: '',
                     description: '',
@@ -278,21 +284,21 @@ import ProfessorDiplomasRow from './ProfessorDiplomasRow.vue';
                     console.log(response);
                     self.errors = response.responseJSON;
                     if (self.errors.hasOwnProperty('title')) {
-                        $('#task-title-block').addClass('has-error');
+                        $('#new-diploma-task-title-block').addClass('has-error');
                     }
                     if (self.errors.hasOwnProperty('description')) {
-                        $('#task-description-block').addClass('has-error');
+                        $('#new-diploma-task-description-block').addClass('has-error');
                     }
                     if (self.errors.hasOwnProperty('technologies')) {
-                        $('#task-technologies-block').addClass('has-error');
+                        $('#new-diploma-task-technologies-block').addClass('has-error');
                     }
                 });
             },
-            clearErrorMessages(fieldName) {
+            clearErrorMessages(modalName, fieldName) {
                 console.log('clearing..');
                 var self = this;
                 if (self.errors.hasOwnProperty(fieldName)) {
-                    $('#task-' + fieldName + '-block').removeClass('has-error');
+                    $('#' + modalName + '-task-' + fieldName + '-block').removeClass('has-error');
                     delete self.errors[fieldName];
                 }
             },
@@ -340,6 +346,10 @@ import ProfessorDiplomasRow from './ProfessorDiplomasRow.vue';
                 };
             },
             clearUpdateTaskInputs() {
+                var self = this;
+                $.each(this.errors, function(index, value) {
+                    self.clearErrorMessages('update-diploma', index);
+                });
                 this.currTask = {
                     created_at: '',
                     description: '',
@@ -377,13 +387,13 @@ import ProfessorDiplomasRow from './ProfessorDiplomasRow.vue';
                     console.log(response);
                     self.errors = response.responseJSON;
                     if (self.errors.hasOwnProperty('title')) {
-                        $('#task-title-block').addClass('has-error');
+                        $('#update-diploma-task-title-block').addClass('has-error');
                     }
                     if (self.errors.hasOwnProperty('description')) {
-                        $('#task-description-block').addClass('has-error');
+                        $('#update-diploma-task-description-block').addClass('has-error');
                     }
                     if (self.errors.hasOwnProperty('technologies')) {
-                        $('#task-technologies-block').addClass('has-error');
+                        $('#update-diploma-task-technologies-block').addClass('has-error');
                     }
                 });
 

@@ -58,6 +58,10 @@
                         <label for="request-message">{{ translations.labels.message }}:</label>
                         <span name="request-message">{{ request.message ? request.message : translations.labels.empty }}</span>
                     </div>
+                    <div slot="request-cr_at" class="form-group">
+                        <label for="request-cr_at">{{ translations.labels.created_at }}:</label>
+                        <span name="request-cr_at">{{ request.created_at }}</span>
+                    </div>
                     <div slot="request-footer" class="panel-footer" v-if="request.status === '0'">
                         <button class="btn btn-primary btn-sm" @click="acceptRequest(request)">{{ translations.buttons.accept }}</button>
                         <button class="btn btn-danger btn-sm" @click="declineRequest(request)">{{ translations.buttons.decline }}</button>

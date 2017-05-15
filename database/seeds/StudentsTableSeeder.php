@@ -5,6 +5,7 @@ use App\Models\Student;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class StudentsTableSeeder extends Seeder
 {
@@ -20,21 +21,21 @@ class StudentsTableSeeder extends Seeder
             User::create([
                 'name' => str_random(10),
                 'surname' => str_random(10),
-                'email' => str_random(5).'@gmail.com',
+                'email' => str_random(5) . '@gmail.com',
                 'password' => bcrypt('123456'),
                 'created_at' => Carbon::now()->format('Y-d-m'),
             ])->student()->save(new Student([
-                'group_id' => mt_rand($groups->first()->id, $groups->last()->id),
+                'group_id' => $groups->random()->id,
             ]));
         } catch (\Illuminate\Database\QueryException $e) {
             User::create([
                 'name' => str_random(10),
                 'surname' => str_random(10),
-                'email' => str_random(5).'@gmail.com',
+                'email' => str_random(5) . '@gmail.com',
                 'password' => bcrypt('123456'),
                 'created_at' => Carbon::now()->format('Y-m-d'),
             ])->student()->save(new Student([
-                'group_id' => mt_rand($groups->first()->id, $groups->last()->id),
+                'group_id' =>  $groups->random()->id,
             ]));
         }
     }

@@ -4755,6 +4755,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -5007,6 +5011,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
@@ -5069,6 +5074,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
@@ -5084,6 +5090,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRow_vue__ = __webpack_require__(59);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRow_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRow_vue__);
+//
+//
 //
 //
 //
@@ -5327,6 +5335,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         clearNewTaskInputs: function clearNewTaskInputs() {
+            var self = this;
+            $.each(this.errors, function (index, value) {
+                self.clearErrorMessages('new-diploma', index);
+            });
             this.newTask = {
                 title: '',
                 description: '',
@@ -5356,21 +5368,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log(response);
                 self.errors = response.responseJSON;
                 if (self.errors.hasOwnProperty('title')) {
-                    $('#task-title-block').addClass('has-error');
+                    $('#new-diploma-task-title-block').addClass('has-error');
                 }
                 if (self.errors.hasOwnProperty('description')) {
-                    $('#task-description-block').addClass('has-error');
+                    $('#new-diploma-task-description-block').addClass('has-error');
                 }
                 if (self.errors.hasOwnProperty('technologies')) {
-                    $('#task-technologies-block').addClass('has-error');
+                    $('#new-diploma-task-technologies-block').addClass('has-error');
                 }
             });
         },
-        clearErrorMessages: function clearErrorMessages(fieldName) {
+        clearErrorMessages: function clearErrorMessages(modalName, fieldName) {
             console.log('clearing..');
             var self = this;
             if (self.errors.hasOwnProperty(fieldName)) {
-                $('#task-' + fieldName + '-block').removeClass('has-error');
+                $('#' + modalName + '-task-' + fieldName + '-block').removeClass('has-error');
                 delete self.errors[fieldName];
             }
         },
@@ -5415,6 +5427,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             };
         },
         clearUpdateTaskInputs: function clearUpdateTaskInputs() {
+            var self = this;
+            $.each(this.errors, function (index, value) {
+                self.clearErrorMessages('update-diploma', index);
+            });
             this.currTask = {
                 created_at: '',
                 description: '',
@@ -5448,13 +5464,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log(response);
                 self.errors = response.responseJSON;
                 if (self.errors.hasOwnProperty('title')) {
-                    $('#task-title-block').addClass('has-error');
+                    $('#update-diploma-task-title-block').addClass('has-error');
                 }
                 if (self.errors.hasOwnProperty('description')) {
-                    $('#task-description-block').addClass('has-error');
+                    $('#update-diploma-task-description-block').addClass('has-error');
                 }
                 if (self.errors.hasOwnProperty('technologies')) {
-                    $('#task-technologies-block').addClass('has-error');
+                    $('#update-diploma-task-technologies-block').addClass('has-error');
                 }
             });
         }
@@ -38874,7 +38890,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "panel-heading"
   }, [_vm._t("task-title")], 2), _vm._v(" "), _c('div', {
     staticClass: "panel-body"
-  }, [_vm._t("request-student"), _vm._v(" "), _vm._t("request-status"), _vm._v(" "), _vm._t("request-message")], 2), _vm._v(" "), _vm._t("request-footer")], 2)
+  }, [_vm._t("request-student"), _vm._v(" "), _vm._t("request-status"), _vm._v(" "), _vm._t("request-message"), _vm._v(" "), _vm._t("request-cr_at")], 2), _vm._v(" "), _vm._t("request-footer")], 2)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -38904,7 +38920,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('tr', [_c('td', [_vm._t("col-topic")], 2), _vm._v(" "), _c('td', [_vm._t("col-requests-accepted")], 2), _vm._v(" "), _c('td', [_vm._t("col-requests-pending")], 2), _vm._v(" "), _c('td', [_vm._t("col-requests-denied")], 2), _vm._v(" "), _c('td', [_vm._t("col-student")], 2), _vm._v(" "), _c('td', [_vm._t("col-cr_at")], 2), _vm._v(" "), _c('td', [_vm._t("col-actions")], 2)])
+  return _c('tr', [_c('td', [_vm._t("col-topic")], 2), _vm._v(" "), _c('td', [_vm._t("col-requests-accepted")], 2), _vm._v(" "), _c('td', [_vm._t("col-requests-pending")], 2), _vm._v(" "), _c('td', [_vm._t("col-requests-denied")], 2), _vm._v(" "), _c('td', [_vm._t("col-student")], 2), _vm._v(" "), _c('td', [_vm._t("col-cr_at")], 2), _vm._v(" "), _c('td', [_vm._t("col-upd_at")], 2), _vm._v(" "), _c('td', [_vm._t("col-actions")], 2)])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -39240,7 +39256,18 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "name": "request-message"
       }
-    }, [_vm._v(_vm._s(request.message ? request.message : _vm.translations.labels.empty))])]), _vm._v(" "), (request.status === '0') ? _c('div', {
+    }, [_vm._v(_vm._s(request.message ? request.message : _vm.translations.labels.empty))])]), _vm._v(" "), _c('div', {
+      staticClass: "form-group",
+      slot: "request-cr_at"
+    }, [_c('label', {
+      attrs: {
+        "for": "request-cr_at"
+      }
+    }, [_vm._v(_vm._s(_vm.translations.labels.created_at) + ":")]), _vm._v(" "), _c('span', {
+      attrs: {
+        "name": "request-cr_at"
+      }
+    }, [_vm._v(_vm._s(request.created_at))])]), _vm._v(" "), (request.status === '0') ? _c('div', {
       staticClass: "panel-footer",
       slot: "request-footer"
     }, [_c('button', {
@@ -39328,7 +39355,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "colspan": "3"
     }
   }, [_vm._v(_vm._s(_vm.translations.labels.number_of_requests) + "\n                    ")]), _c('th', {
-    staticClass: "col-md-3",
+    staticClass: "col-md-2",
     attrs: {
       "rowspan": "2"
     }
@@ -39338,7 +39365,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "rowspan": "2"
     }
   }, [_vm._v(_vm._s(_vm.translations.labels.created_at))]), _vm._v(" "), _c('th', {
-    staticClass: "col-md-3",
+    staticClass: "col-md-2",
+    attrs: {
+      "rowspan": "2"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.updated_at))]), _vm._v(" "), _c('th', {
+    staticClass: "col-md-2",
     attrs: {
       "rowspan": "2"
     }
@@ -39369,6 +39401,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }, [_vm._v(_vm._s(diploma.student !== null ? diploma.student : _vm.translations.labels.empty))]), _vm._v(" "), _c('template', {
       slot: "col-cr_at"
     }, [_vm._v(_vm._s(diploma.created_at))]), _vm._v(" "), _c('template', {
+      slot: "col-upd_at"
+    }, [_vm._v(_vm._s(diploma.updated_at !== null ? diploma.updated_at : _vm.translations.labels.empty))]), _vm._v(" "), _c('template', {
       slot: "col-actions"
     }, [_c('button', {
       staticClass: "btn btn-primary btn-sm",
@@ -39419,7 +39453,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('div', {
     staticClass: "form-group",
     attrs: {
-      "id": "task-title-block"
+      "id": "update-diploma-task-title-block"
     }
   }, [_c('label', {
     attrs: {
@@ -39443,7 +39477,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "keypress": function($event) {
-        _vm.clearErrorMessages('title')
+        _vm.clearErrorMessages('update-diploma', 'title')
       },
       "input": function($event) {
         if ($event.target.composing) { return; }
@@ -39458,7 +39492,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('strong', [_vm._v(_vm._s(_vm.errors.title[0]))])]) : _vm._e()]), _vm._v(" "), _c('div', {
     staticClass: "form-group",
     attrs: {
-      "id": "task-description-block"
+      "id": "update-diploma-task-description-block"
     }
   }, [_c('label', {
     attrs: {
@@ -39481,7 +39515,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "keypress": function($event) {
-        _vm.clearErrorMessages('description')
+        _vm.clearErrorMessages('update-diploma', 'description')
       },
       "input": function($event) {
         if ($event.target.composing) { return; }
@@ -39496,7 +39530,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('strong', [_vm._v(_vm._s(_vm.errors.description[0]))])]) : _vm._e()]), _vm._v(" "), _c('div', {
     staticClass: "form-group",
     attrs: {
-      "id": "task-technologies-block"
+      "id": "update-diploma-task-technologies-block"
     }
   }, [_c('label', {
     attrs: {
@@ -39520,7 +39554,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "keypress": function($event) {
-        _vm.clearErrorMessages('technologies')
+        _vm.clearErrorMessages('update-diploma', 'technologies')
       },
       "input": function($event) {
         if ($event.target.composing) { return; }
@@ -39535,7 +39569,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('strong', [_vm._v(_vm._s(_vm.errors.technologies[0]))])]) : _vm._e()]), _vm._v(" "), _c('div', {
     staticClass: "form-group",
     attrs: {
-      "id": "task-group-block"
+      "id": "update-diploma-task-group-block"
     }
   }, [_c('label', {
     attrs: {
@@ -39602,7 +39636,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('div', {
     staticClass: "form-group",
     attrs: {
-      "id": "task-title-block"
+      "id": "new-diploma-task-title-block"
     }
   }, [_c('label', {
     attrs: {
@@ -39626,7 +39660,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "keypress": function($event) {
-        _vm.clearErrorMessages('title')
+        _vm.clearErrorMessages('new-diploma', 'title')
       },
       "input": function($event) {
         if ($event.target.composing) { return; }
@@ -39641,7 +39675,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('strong', [_vm._v(_vm._s(_vm.errors.title[0]))])]) : _vm._e()]), _vm._v(" "), _c('div', {
     staticClass: "form-group",
     attrs: {
-      "id": "task-description-block"
+      "id": "new-diploma-task-description-block"
     }
   }, [_c('label', {
     attrs: {
@@ -39664,7 +39698,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "keypress": function($event) {
-        _vm.clearErrorMessages('description')
+        _vm.clearErrorMessages('new-diploma', 'description')
       },
       "input": function($event) {
         if ($event.target.composing) { return; }
@@ -39679,7 +39713,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('strong', [_vm._v(_vm._s(_vm.errors.description[0]))])]) : _vm._e()]), _vm._v(" "), _c('div', {
     staticClass: "form-group",
     attrs: {
-      "id": "task-technologies-block"
+      "id": "new-diploma-task-technologies-block"
     }
   }, [_c('label', {
     attrs: {
@@ -39703,7 +39737,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "keypress": function($event) {
-        _vm.clearErrorMessages('technologies')
+        _vm.clearErrorMessages('new-diploma', 'technologies')
       },
       "input": function($event) {
         if ($event.target.composing) { return; }
@@ -39718,7 +39752,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('strong', [_vm._v(_vm._s(_vm.errors.technologies[0]))])]) : _vm._e()]), _vm._v(" "), _c('div', {
     staticClass: "form-group",
     attrs: {
-      "id": "task-group-block"
+      "id": "new-diploma-task-group-block"
     }
   }, [_c('label', {
     attrs: {

@@ -7,6 +7,7 @@
             <slot name="request-student"></slot>
             <slot name="request-status"></slot>
             <slot name="request-message"></slot>
+            <slot name="request-cr_at"></slot>
         </div>
         <slot name="request-footer"></slot>
     </div>

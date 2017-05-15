@@ -86,6 +86,9 @@ class DiplomaController extends Controller
             //     $request->student()->first()->user->surname
             //         . ' ' . $request->student()->first()->user->name : null;
             $diploma['created_at'] = Carbon::parse($diploma['created_at'])->format('d.m.Y');
+            if (is_null($diploma['updated_at']) === false) {
+                $diploma['updated_at'] = Carbon::parse($diploma['updated_at'])->format('d.m.Y');
+            }
         }
         return Response::json([
             'diplomas' => $diplomas,
@@ -97,7 +100,7 @@ class DiplomaController extends Controller
         $diplomas = Task::where([
             ['type', 2],
             ['group_id', request('group_id')]
-        ])->whereHas((new DiplomaRequest)->getTable(), function ($query) {
+        ])->whereDoesntHave((new DiplomaRequest)->getTable(), function ($query) {
             $query->where([
                 ['student_id', Auth::user()->student->id],
             ]);
@@ -248,6 +251,7 @@ class DiplomaController extends Controller
         ];
         $updatedTask['student'] = count($user) ? $user->getFullName() : null;
         $updatedTask['created_at'] = Carbon::parse($updatedTask['created_at'])->format('d.m.Y');
+        $updatedTask['updated_at'] = Carbon::createFromFormat('Y-d-m', $updatedTask['updated_at'])->format('d.m.Y');
         return Response::json($updatedTask);
     }
 

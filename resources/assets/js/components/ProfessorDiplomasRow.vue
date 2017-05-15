@@ -6,6 +6,7 @@
         <td><slot name="col-requests-denied"></slot></td>
         <td><slot name="col-student"></slot></td>
         <td><slot name="col-cr_at"></slot></td>
+        <td><slot name="col-upd_at"></slot></td>
         <td><slot name="col-actions"></slot></td>
     </tr>
 </template>
