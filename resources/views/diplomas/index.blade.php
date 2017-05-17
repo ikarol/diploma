@@ -12,7 +12,7 @@
         @elseif ($userType == 2)
             <ul class="nav nav-tabs">
               <router-link tag="li" to="/stud-task-list" exact><a>@lang('List of tasks')</a></router-link>
-              <router-link tag="li" to="/stud-requests"><a>@lang('Requests')</a></router-link>
+              {{-- <router-link tag="li" to="/stud-requests"><a>@lang('Requests')</a></router-link> --}}
             </ul>
         @endif
         <div class="panel panel-default">

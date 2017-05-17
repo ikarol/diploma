@@ -64,5 +64,9 @@
     "Declined": "Отказано",
     "All": "Все",
     "Date of update": "Дата обновления",
-    "Published": "Опубликовано"
+    "Published": "Опубликовано",
+    "Resend request": "Переотправить заявку",
+    "Delete request": "Удалить заявку",
+    "Show tasks": "Показать задания",
+    "Delete request on": "Удалить запрос на"
 }

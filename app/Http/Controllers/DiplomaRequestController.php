@@ -39,8 +39,9 @@ class DiplomaRequestController extends Controller
                 'created_at' => Carbon::now()->format('Y-d-m'),
             ])
         )->toArray();
+        $diplomaStatus = $diplomaRequest['status'];
         return Response::json([
-            'request' => $diplomaRequest,
+            'diplomaStatus' => $diplomaStatus,
         ]);
     }
 
@@ -130,5 +131,14 @@ class DiplomaRequestController extends Controller
         return Response::json([
             'request' => $diplomaRequest,
         ]);
+    }
+
+    public function delete($id)
+    {
+        DiplomaRequest::where([
+            ['student_id', Auth::user()->student->id],
+            ['task_id', $id],
+        ])->delete();
+        return Response::json('success');
     }
 }

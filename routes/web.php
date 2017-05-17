@@ -22,6 +22,7 @@ Route::get('/diplomas/professor/groups', 'GroupController@professor_groups');
 Route::get('/translation/professor/diplomas/list', 'TranslationController@professor_diplomas_list');
 Route::get('/translation/student/diplomas/list', 'TranslationController@student_diplomas_list');
 Route::post('/diplomas/requests/{id}', 'DiplomaRequestController@store');
+Route::delete('/diplomas/{id}/requests', 'DiplomaRequestController@delete');
 Route::get('/translation/professor/requests/list', 'TranslationController@professor_requests_list');
 Route::get('/diplomas/professor/requests', 'DiplomaRequestController@professor_requests_list');
 Route::patch('/diplomas/professor/requests/decline/{student}/{request}', 'DiplomaRequestController@decline');

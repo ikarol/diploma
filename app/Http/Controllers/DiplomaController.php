@@ -102,12 +102,18 @@ class DiplomaController extends Controller
             ['group_id', request('group_id')]
         ])->whereDoesntHave((new DiplomaRequest)->getTable(), function ($query) {
             $query->where([
-                ['student_id', Auth::user()->student->id],
+                ['student_id', '<>', Auth::user()->student->id],
+                ['status', 1],
             ]);
         })->get()->toArray();
         foreach ($diplomas as &$diploma) {
+            $diplomaRequest = DiplomaRequest::where([
+                ['task_id', $diploma['id']],
+                ['student_id', Auth::user()->student->id],
+            ])->first();
             $diploma['professor'] = Task::find($diploma['id'])
                 ->professor->user->surname . ' ' . Task::find($diploma['id'])->professor->user->name;
+            $diploma['status'] = $diplomaRequest ? $diplomaRequest->status : null;
             $diploma['created_at'] = Carbon::parse($diploma['created_at'])->format('d.m.Y');
         }
         return Response::json([

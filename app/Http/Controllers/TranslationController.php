@@ -54,6 +54,7 @@ class TranslationController extends Controller
                 'group' => __('Group'),
                 'topic' => __('Topic'),
                 'technologies' => __('Technologies'),
+                'description' => __('Description'),
                 'professor' => __('Professor'),
                 'created_at' => __('Publication date'),
                 'actions' => __('Actions'),
@@ -61,10 +62,18 @@ class TranslationController extends Controller
                 'request' => __('Request'),
                 'message' => __('Message'),
                 'empty' => __('Empty'),
+                'status' => __('Status'),
+                'accepted' => __('Accepted'),
+                'pending' => __('Pending'),
+                'declined' => __('Declined'),
+                'delete_request' => __('Delete request on'),
             ],
             'buttons' => [
                 'apply' => __('Apply'),
                 'cancel' => __('Cancel'),
+                'resend_request' => __('Resend request'),
+                'show_tasks' => __('Show tasks'),
+                'delete_request' => __('Delete request'),
             ]
         ];
         return Response::json([

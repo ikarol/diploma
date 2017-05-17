@@ -4947,6 +4947,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     break;
                 case '2':
                     statusWord = self.translations.labels.declined;
+                    break;
             }
             return statusWord;
         },
@@ -5529,6 +5530,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
@@ -5628,6 +5630,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -5643,11 +5655,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.getGroupList();
     },
     mounted: function mounted() {
-        console.log('Diplomas list mounted.');
-        var self = this;
-        setTimeout(function () {
-            self.getFilteredData();
-        }, 450);
+        // console.log('Diplomas list mounted.');
+        // var self = this;
+        // setTimeout(function() {
+        //     self.getFilteredData();
+        // }, 450);
     },
 
     methods: {
@@ -5660,13 +5672,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }).done(function (response) {
                 console.log("translations loaded");
                 self.translations = response.translations;
-                self.data_ready = true;
             }).fail(function () {
                 console.log("error");
             });
         },
         getFilteredData: function getFilteredData() {
             var self = this;
+            var activeGroup = _.find(this.groups, { id: this.currGroup.id });
+            if (typeof activeGroup !== 'undefined') {
+                this.currGroup.name = activeGroup.name;
+            }
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -5677,15 +5692,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 type: 'GET',
                 dataType: 'json',
                 data: {
-                    group_id: $('#group-id').val()
+                    group_id: self.currGroup.id
                 }
             }).done(function (response) {
                 console.log('diplomas list recieved');
                 console.log(response);
-                self.setCurrentGroup();
                 self.diplomas = response.diplomas;
-                self.diplomas = self.diplomas.reverse();
+                if (self.diplomas.length) {
+                    self.diplomas = self.diplomas.reverse();
+                }
                 self.student_id = response.student_id;
+                self.data_ready = true;
             }).fail(function (response) {
                 console.log('fail');
                 console.log(response);
@@ -5713,6 +5730,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log('groups list recieved');
                 console.log(response);
                 self.groups = response;
+                self.currGroup = {
+                    'id': self.groups[0].id,
+                    'name': self.groups[0].name
+                };
             }).fail(function (response) {
                 console.log("error");
                 console.log(response);
@@ -5733,9 +5754,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 type: 'POST',
                 dataType: 'json',
                 data: self.currTask
-            }).done(function () {
+            }).done(function (response) {
                 console.log("success");
-                self.diplomas.splice(self.currTask.index, 1);
+                self.diplomas[self.diplomas.map(function (diploma) {
+                    return diploma.id;
+                }).indexOf(self.currTask.id)].status = response.diplomaStatus.toString();
                 self.clearRequestInputs();
                 $('#close-request-modal').click();
             }).fail(function (response) {
@@ -5748,13 +5771,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         openRequestModal: function openRequestModal(diploma) {
             var self = this;
-            this.setCurrentGroup();
             this.currTask = {
                 id: diploma.id,
                 title: diploma.title,
                 technologies: diploma.technologies ? diploma.technologies : self.translations.labels.empty,
                 professor: diploma.professor,
                 group: self.currGroup.name,
+                description: diploma.description,
                 message: '',
                 index: self.diplomas.indexOf(diploma)
             };
@@ -5766,6 +5789,49 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 $('#task-' + fieldName + '-block').removeClass('has-error');
                 delete self.errors[fieldName];
             }
+        },
+        diplomaStatus: function diplomaStatus(diploma) {
+            var self = this;
+            var statusWord = '';
+            switch (diploma.status) {
+                case '0':
+                    statusWord = self.translations.labels.pending;
+                    break;
+                case '1':
+                    statusWord = self.translations.labels.accepted;
+                    break;
+                case '2':
+                    statusWord = self.translations.labels.declined;
+                    break;
+            }
+
+            return statusWord;
+        },
+        deleteRequest: function deleteRequest(diploma) {
+            var self = this;
+            swal({
+                title: self.translations.labels.delete_request + ' ' + diploma.title + '?',
+                type: 'warning',
+                showCancelButton: true,
+                closeOnConfirm: true,
+                showLoaderOnConfirm: true,
+                cancelButtonText: self.translations.buttons.cancel,
+                confirmButtonText: "Ок",
+                confirmButtonColor: '#3085d6',
+                confirmLoadingButtonColor: '#DD6B55'
+            }, function () {
+                $.ajax({
+                    url: '/diplomas/' + diploma.id + '/requests',
+                    type: 'DELETE',
+                    dataType: 'json'
+                }).done(function (response) {
+                    console.log("success");
+                    diploma.status = null;
+                }).fail(function (response) {
+                    console.log("error");
+                    console.log("response");
+                });
+            });
         }
     },
     data: function data() {
@@ -5775,11 +5841,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             translations: [],
             groups: [],
             errors: [],
-            currGroup: {},
+            currGroup: {
+                id: '',
+                name: ''
+            },
             currTask: {},
             data_ready: false
         };
+    },
+
+    watch: {
+        groups: function groups() {
+            this.getFilteredData();
+        }
     }
+
 });
 
 /***/ }),
@@ -38905,7 +38981,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('tr', [_c('td', [_vm._t("col-topic")], 2), _vm._v(" "), _c('td', [_vm._t("col-professor")], 2), _vm._v(" "), _c('td', [_vm._t("col-technologies")], 2), _vm._v(" "), _c('td', [_vm._t("col-cr_at")], 2), _vm._v(" "), _c('td', [_vm._t("col-actions")], 2)])
+  return _c('tr', [_c('td', [_vm._t("col-topic")], 2), _vm._v(" "), _c('td', [_vm._t("col-professor")], 2), _vm._v(" "), _c('td', [_vm._t("col-technologies")], 2), _vm._v(" "), _c('td', [_vm._t("col-status")], 2), _vm._v(" "), _c('td', [_vm._t("col-cr_at")], 2), _vm._v(" "), _c('td', [_vm._t("col-actions")], 2)])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -38945,13 +39021,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "for": "group"
     }
   }, [_vm._v(_vm._s(_vm.translations.labels.group))]), _vm._v(" "), _c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.currGroup.id),
+      expression: "currGroup.id"
+    }],
     staticClass: "form-control",
     attrs: {
       "name": "group",
       "id": "group-id"
     },
     on: {
-      "change": _vm.getFilteredData
+      "change": [function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.currGroup.id = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }, _vm.getFilteredData]
     }
   }, _vm._l((_vm.groups), function(group) {
     return _c('option', {
@@ -38963,7 +39053,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "table-responsive"
   }, [(_vm.diplomas.length) ? _c('table', {
     staticClass: "table table-bordered"
-  }, [_c('thead', [_c('tr', [_c('th', [_vm._v(_vm._s(_vm.translations.labels.topic))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.professor))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.technologies))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.created_at))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.actions))])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.diplomas), function(diploma) {
+  }, [_c('thead', [_c('tr', [_c('th', [_vm._v(_vm._s(_vm.translations.labels.topic))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.professor))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.technologies))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.status))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.created_at))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.actions))])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.diplomas), function(diploma) {
     return _c('student-diplomas-row', {
       key: diploma.id
     }, [_c('template', {
@@ -38978,10 +39068,23 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }, [_vm._v(_vm._s(diploma.professor))]), _vm._v(" "), _c('template', {
       slot: "col-technologies"
     }, [_vm._v(_vm._s(diploma.technologies ? diploma.technologies : _vm.translations.labels.empty))]), _vm._v(" "), _c('template', {
+      slot: "col-status"
+    }, [_vm._v(_vm._s(diploma.status ? _vm.diplomaStatus(diploma) : _vm.translations.labels.empty))]), _vm._v(" "), _c('template', {
       slot: "col-cr_at"
     }, [_vm._v(_vm._s(diploma.created_at))]), _vm._v(" "), _c('template', {
       slot: "col-actions"
-    }, [_c('button', {
+    }, [(diploma.status === '0') ? _c('button', {
+      staticClass: "btn btn-danger btn-sm",
+      on: {
+        "click": function($event) {
+          _vm.deleteRequest(diploma)
+        }
+      }
+    }, [_vm._v(_vm._s(_vm.translations.buttons.delete_request))]) : (diploma.status === '2') ? _c('button', {
+      staticClass: "btn btn-warning btn-sm"
+    }, [_vm._v(_vm._s(_vm.translations.buttons.resend_request))]) : (diploma.status === '1') ? _c('button', {
+      staticClass: "btn btn-info btn-sm"
+    }, [_vm._v(_vm._s(_vm.translations.buttons.show_tasks))]) : _c('button', {
       staticClass: "btn btn-primary btn-sm",
       attrs: {
         "data-toggle": "modal",
@@ -39032,15 +39135,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_vm._v(_vm._s(_vm.translations.labels.topic))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('i', [_vm._v(_vm._s(_vm.currTask.title))])]), _vm._v(" "), _c('div', {
     staticClass: "form-group",
     attrs: {
-      "id": "task-technologies-block"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "task-group"
-    }
-  }, [_vm._v(_vm._s(_vm.translations.labels.technologies))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('i', [_vm._v(_vm._s(_vm.currTask.technologies))])]), _vm._v(" "), _c('div', {
-    staticClass: "form-group",
-    attrs: {
       "id": "task-professor-block"
     }
   }, [_c('label', {
@@ -39048,6 +39142,24 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "for": "task-group"
     }
   }, [_vm._v(_vm._s(_vm.translations.labels.professor))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('i', [_vm._v(_vm._s(_vm.currTask.professor))])]), _vm._v(" "), _c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "task-description-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "task-group"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.description))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('i', [_vm._v(_vm._s(_vm.currTask.description))])]), _vm._v(" "), _c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "task-technologies-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "task-group"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.technologies))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('i', [_vm._v(_vm._s(_vm.currTask.technologies))])]), _vm._v(" "), _c('div', {
     staticClass: "form-group",
     attrs: {
       "id": "task-group-block"

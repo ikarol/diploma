@@ -274,6 +274,7 @@ export default {
                     break;
                 case '2':
                     statusWord = self.translations.labels.declined;
+                    break;
             }
             return statusWord;
         },
