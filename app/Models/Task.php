@@ -16,6 +16,7 @@ use App\Models\Model;
  * @property string $updated_at
  * @property Professor $professor
  * @property Group $group
+ * @property Job[] $jobs
  * @property Request[] $requests
  * @property Discipline[] $disciplines
  */
@@ -40,6 +41,14 @@ class Task extends Model
     public function group()
     {
         return $this->belongsTo('App\Models\Group');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function jobs()
+    {
+        return $this->hasMany('App\Models\Job');
     }
 
     /**

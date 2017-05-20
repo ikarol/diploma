@@ -19,23 +19,23 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <student-diplomas-row v-for="diploma in diplomas" :key="diploma.id">
+                    <row v-for="diploma in diplomas" :key="diploma.id">
                         <template slot="col-topic"><a :href="openDiploma(diploma)">{{ diploma.title.length > 10 ?
                             diploma.title.substr(0,10) + '...' : diploma.title }}</a></template>
                         <template slot="col-professor">{{ diploma.professor }}</template>
-                        <template slot="col-technologies">{{ diploma.technologies ? diploma.technologies : translations.labels.empty }}</template>
-                        <template slot="col-status">{{ diploma.status ? diplomaStatus(diploma) : translations.labels.empty }}</template>
+                        <template slot="col-technologies">{{ diploma.technologies ? diploma.technologies : '-' }}</template>
+                        <template slot="col-status">{{ diploma.status ? diplomaStatus(diploma) : '-' }}</template>
                         <template slot="col-cr_at">{{ diploma.created_at }}</template>
                         <template slot="col-actions">
                             <button v-if="diploma.status === '0'" class="btn btn-danger btn-sm" @click="deleteRequest(diploma)">{{ translations.buttons.delete_request }}</button>
-                            <button v-else-if="diploma.status === '2'" class="btn btn-warning btn-sm" >{{ translations.buttons.resend_request }}</button>
-                            <button v-else-if="diploma.status === '1'" class="btn btn-info btn-sm" >{{ translations.buttons.show_tasks }}</button>
-                            <button v-else class="btn btn-primary btn-sm" data-toggle="modal" data-target="#diploma-request-modal" @click="openRequestModal(diploma)">{{ translations.buttons.apply }}</button>
+                            <button v-else-if="diploma.status === '2'" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#diploma-resend-request-modal" @click="openRequestModal(diploma)">{{ translations.buttons.resend_request }}</button>
+                            <a v-else-if="diploma.status === '1'" :href="showJobs(diploma)" class="btn btn-info btn-sm" >{{ translations.buttons.show_tasks }}</a>
+                            <button v-else class="btn btn-primary btn-sm" data-toggle="modal" data-target="#diploma-send-request-modal" @click="openRequestModal(diploma)">{{ translations.buttons.apply }}</button>
                         </template>
-                    </student-diplomas-row>
+                    </row>
                 </tbody>
                 <tfoot>
-                    <div id="diploma-request-modal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+                    <div id="diploma-send-request-modal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -43,34 +43,34 @@
                                     <h4 class="modal-title">{{ translations.labels.request }}</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <div id="task-title-block" class="form-group">
-                                        <label for="task-title">{{ translations.labels.topic }}</label>
+                                    <div id="diploma-send-request-task-title-block" class="form-group">
+                                        <label for="diploma-send-request-task-title">{{ translations.labels.topic }}</label>
                                         <br>
                                         <i>{{ currTask.title }}</i>
                                     </div>
-                                    <div id="task-professor-block" class="form-group">
-                                        <label for="task-group">{{ translations.labels.professor }}</label>
+                                    <div id="diploma-send-request-task-professor-block" class="form-group">
+                                        <label for="diploma-send-request-task-group">{{ translations.labels.professor }}</label>
                                         <br>
                                         <i>{{ currTask.professor }}</i>
                                     </div>
-                                    <div id="task-description-block" class="form-group">
-                                        <label for="task-group">{{ translations.labels.description }}</label>
+                                    <div id="diploma-send-request-task-description-block" class="form-group">
+                                        <label for="diploma-send-request-task-group">{{ translations.labels.description }}</label>
                                         <br>
                                         <i>{{ currTask.description }}</i>
                                     </div>
-                                    <div id="task-technologies-block" class="form-group">
-                                        <label for="task-group">{{ translations.labels.technologies }}</label>
+                                    <div id="diploma-send-request-task-technologies-block" class="form-group">
+                                        <label for="diploma-send-request-task-group">{{ translations.labels.technologies }}</label>
                                         <br>
                                         <i>{{ currTask.technologies }}</i>
                                     </div>
-                                    <div id="task-group-block" class="form-group">
-                                        <label for="task-group">{{ translations.labels.group }}</label>
+                                    <div id="diploma-send-request-task-group-block" class="form-group">
+                                        <label for="diploma-send-request-task-group">{{ translations.labels.group }}</label>
                                         <br>
                                         <i>{{ currTask.group }}</i>
                                     </div>
-                                    <div id="task-message-block" class="form-group">
-                                        <label for="task-message">{{ translations.labels.message }}</label>
-                                        <textarea id="task-message" class="form-control" v-model="currTask.message" :value="currTask.message" @keypress="clearErrorMessages('message')"></textarea>
+                                    <div id="diploma-send-request-task-message-block" class="form-group">
+                                        <label for="diploma-send-request-task-message">{{ translations.labels.message }}</label>
+                                        <textarea id="diploma-send-request-task-message" class="form-control" v-model="currTask.message" :value="currTask.message" @keypress="clearErrorMessages('diploma-send-request', 'message')"></textarea>
                                         <span id="message-help-block" class="help-block" v-if="errors.hasOwnProperty('message')">
                                             <strong>{{ errors.message[0] }}</strong>
                                         </span>
@@ -79,6 +79,54 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-primary" @click="sendRequest">{{ translations.buttons.apply }}</button>
                                     <button id="close-request-modal" type="button" class="btn btn-default" data-dismiss="modal" @click="clearRequestInputs">{{ translations.buttons.cancel }}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="diploma-resend-request-modal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" @click="clearRequestInputs">&times;</button>
+                                    <h4 class="modal-title">{{ translations.labels.request }}</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div id="diploma-resend-request-task-title-block" class="form-group">
+                                        <label for="diploma-resend-request-task-title">{{ translations.labels.topic }}</label>
+                                        <br>
+                                        <i>{{ currTask.title }}</i>
+                                    </div>
+                                    <div id="diploma-resend-request-task-professor-block" class="form-group">
+                                        <label for="diploma-resend-request-task-group">{{ translations.labels.professor }}</label>
+                                        <br>
+                                        <i>{{ currTask.professor }}</i>
+                                    </div>
+                                    <div id="diploma-resend-request-task-description-block" class="form-group">
+                                        <label for="diploma-resend-request-task-group">{{ translations.labels.description }}</label>
+                                        <br>
+                                        <i>{{ currTask.description }}</i>
+                                    </div>
+                                    <div id="diploma-resend-request-task-technologies-block" class="form-group">
+                                        <label for="diploma-resend-request-task-group">{{ translations.labels.technologies }}</label>
+                                        <br>
+                                        <i>{{ currTask.technologies }}</i>
+                                    </div>
+                                    <div id="diploma-resend-request-task-group-block" class="form-group">
+                                        <label for="diploma-resend-request-task-group">{{ translations.labels.group }}</label>
+                                        <br>
+                                        <i>{{ currTask.group }}</i>
+                                    </div>
+                                    <div id="diploma-resend-request-task-message-block" class="form-group">
+                                        <label for="diploma-resend-request-task-message">{{ translations.labels.message }}</label>
+                                        <textarea id="diploma-resend-request-task-message" class="form-control" v-model="currTask.message" :value="currTask.message" @keypress="clearErrorMessages('diploma-resend-request', 'message')"></textarea>
+                                        <span id="diploma-resend-request-message-help-block" class="help-block" v-if="errors.hasOwnProperty('message')">
+                                            <strong>{{ errors.message[0] }}</strong>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" @click="resendRequest">{{ translations.buttons.apply }}</button>
+                                    <button id="close-resend-request-modal" type="button" class="btn btn-default" data-dismiss="modal" @click="clearRequestInputs">{{ translations.buttons.cancel }}</button>
                                 </div>
                             </div>
                         </div>
@@ -94,11 +142,11 @@
 
 <script>
 
-import StudentDiplomasRow from './StudentDiplomasRow'
+import Row from './Row'
 
 export default {
     components: {
-        StudentDiplomasRow
+        Row
     },
     created() {
         this.getTranslations();
@@ -176,6 +224,9 @@ export default {
         openDiploma(diploma) {
             return '/diplomas/' + diploma.id;
         },
+        showJobs(diploma) {
+            return '/diplomas/jobs/' + diploma.id;
+        },
         getGroupList() {
             var self = this;
             $.ajax({
@@ -203,6 +254,10 @@ export default {
             });
         },
         clearRequestInputs() {
+            var self = this;
+            $.each(this.errors, function(index, value) {
+                self.clearErrorMessages('diploma-send-request', index);
+            });
             this.currTask = {};
         },
         sendRequest() {
@@ -232,12 +287,38 @@ export default {
             });
 
         },
+        resendRequest() {
+            var self = this;
+            $.ajax({
+                url: '/diplomas/requests/' + self.student_id,
+                type: 'PATCH',
+                dataType: 'json',
+                data: self.currTask
+            })
+            .done(function(response) {
+                console.log("success");
+                self.diplomas[
+                    self.diplomas.map(function(diploma) {
+                        return diploma.id;
+                    }).indexOf(self.currTask.id)
+                ].status = response.diplomaStatus.toString();
+                self.clearRequestInputs();
+                $('#close-resend-request-modal').click();
+            })
+            .fail(function(response) {
+                console.log("error");
+                self.errors = response.responseJSON;
+                if (self.errors.hasOwnProperty('message')) {
+                    $('#task-message-block').addClass('has-error');
+                }
+            });
+        },
         openRequestModal(diploma) {
             var self = this;
             this.currTask = {
                 id: diploma.id,
                 title: diploma.title,
-                technologies: diploma.technologies ? diploma.technologies : self.translations.labels.empty,
+                technologies: diploma.technologies ? diploma.technologies : '-',
                 professor: diploma.professor,
                 group: self.currGroup.name,
                 description: diploma.description,
@@ -249,7 +330,7 @@ export default {
             console.log('clearing..');
             var self = this;
             if (self.errors.hasOwnProperty(fieldName)) {
-                $('#task-' + fieldName + '-block').removeClass('has-error');
+                $('#' + modalName + '-task-' + fieldName + '-block').removeClass('has-error');
                 delete self.errors[fieldName];
             }
         },
@@ -303,7 +384,6 @@ export default {
     data() {
         return {
             diplomas: [],
-            student_int: '',
             translations: [],
             groups: [],
             errors: [],

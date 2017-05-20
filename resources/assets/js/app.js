@@ -13,6 +13,7 @@ require('./bootstrap');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 import router from './routes.js'
+Vue.component('diploma-jobs', require('./components/professor/diploma/jobs/Jobs'));
 
 const app = new Vue({
     el: '#app',

@@ -141,4 +141,22 @@ class DiplomaRequestController extends Controller
         ])->delete();
         return Response::json('success');
     }
+
+    public function resend(Request $request, $id)
+    {
+        // TODO: Создать отдельный Request с валидацией
+        $this->validate($request, [
+            'message' => 'max:255',
+        ]);
+        $diplomaRequest = DiplomaRequest::where([
+            ['student_id', $id],
+            ['task_id', $request['id']]
+        ])->update([
+            'status' => 0,
+            'message' => $request['message'],
+        ]);
+        return Response::json([
+            'diplomaStatus' => 0,
+        ]);
+    }
 }

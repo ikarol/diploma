@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 73);
+/******/ 	return __webpack_require__(__webpack_require__.s = 75);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -384,7 +384,7 @@ module.exports = {
   trim: trim
 };
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(45).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(46).Buffer))
 
 /***/ }),
 /* 1 */
@@ -665,7 +665,7 @@ var _defaultParams2 = _interopRequireWildcard(_defaultParams);
  * Add modal + overlay to DOM
  */
 
-var _injectedHTML = __webpack_require__(53);
+var _injectedHTML = __webpack_require__(54);
 
 var _injectedHTML2 = _interopRequireWildcard(_injectedHTML);
 
@@ -990,7 +990,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = defaults;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(50)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(51)))
 
 /***/ }),
 /* 6 */
@@ -3800,7 +3800,7 @@ if (inBrowser && window.Vue) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__routes_js__ = __webpack_require__(42);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__routes_js__ = __webpack_require__(43);
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -3808,7 +3808,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-__webpack_require__(41);
+__webpack_require__(42);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -3816,6 +3816,7 @@ __webpack_require__(41);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+Vue.component('diploma-jobs', __webpack_require__(88));
 
 var app = new Vue({
   el: '#app',
@@ -4673,1199 +4674,21 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 34 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRequestsPanel__ = __webpack_require__(57);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRequestsPanel___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRequestsPanel__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ProfessorDiplomasRequestsStatus__ = __webpack_require__(58);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ProfessorDiplomasRequestsStatus___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__ProfessorDiplomasRequestsStatus__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    components: {
-        ProfessorDiplomasRequestsPanel: __WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRequestsPanel___default.a,
-        ProfessorDiplomasRequestsStatus: __WEBPACK_IMPORTED_MODULE_1__ProfessorDiplomasRequestsStatus___default.a
-    },
-    computed: {
-        statuses: function statuses() {
-            return {
-                3: this.translations.buttons.all,
-                0: this.translations.buttons.pending,
-                1: this.translations.buttons.accepted,
-                2: this.translations.buttons.declined
-            };
-        }
-    },
-    directives: {
-        radio: {
-            twoWay: true,
-            bind: function bind() {
-                var self = this;
-                var btns = $('#status_type').find('.btn');
-                btns.each(function () {
-                    $(this).on('click', function () {
-                        var v = $(this).find('input').get(0).value;
-                        self.set(v);
-                    });
-                });
-            },
-            update: function update() {
-                var value = this._watcher.value;
-                if (value) {
-                    this.set(value);
-                    var btns = $(this.el).find('.btn');
-                    btns.each(function () {
-                        $(this).removeClass('active');
-                        var v = $(this).find('input').get(0).value;
-
-                        if (v === value) {
-                            $(this).addClass('active');
-                        }
-                    });
-                } else {
-                    var input = $(this.el).find('.active input').get(0);
-                    if (input) {
-                        this.set(input.value);
-                    }
-                }
-            }
-        }
-    },
-    created: function created() {
-        this.getTranslations();
-    },
-    beforeMount: function beforeMount() {
-        this.getGroupList();
-    },
-    mounted: function mounted() {
-        // var self = this;
-        // setTimeout(function() {
-        //     self.getFilteredData();
-        // }, 450);
-        // console.log('Requests list mounted.');
-    },
-
-    methods: {
-        getTranslations: function getTranslations() {
-            var self = this;
-            $.ajax({
-                url: '/translation/professor/requests/list',
-                type: 'GET',
-                dataType: 'json'
-            }).done(function (response) {
-                console.log("translations loaded");
-                self.translations = response.translations;
-            }).fail(function () {
-                console.log("no translations");
-            });
-        },
-        getFilteredData: function getFilteredData() {
-            var self = this;
-            var activeGroup = _.find(this.groups, { id: this.currGroup.id });
-            if (typeof activeGroup !== 'undefined') {
-                this.currGroup.name = activeGroup.name;
-            }
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.ajax({
-                url: '/diplomas/professor/requests',
-                type: 'GET',
-                dataType: 'json',
-                data: {
-                    group_id: self.currGroup.id,
-                    status_type: self.status_type
-                }
-            }).done(function (response) {
-                console.log('requests list recieved');
-                console.log(response);
-                self.requests = response.requests;
-                if (self.requests.length) {
-                    self.requests = self.requests.reverse();
-                }
-            }).fail(function (response) {
-                console.log('fail');
-                console.log(response);
-                if (response.hasOwnProperty('responseJSON')) {
-                    if (response.responseJSON.hasOwnProperty('redirect')) {
-                        window.location.replace(response.responseJSON.redirect);
-                    }
-                }
-            });
-        },
-        openDiploma: function openDiploma(request) {
-            return '/diplomas/' + request.diploma_id;
-        },
-        getGroupList: function getGroupList() {
-            var self = this;
-            $.ajax({
-                url: '/diplomas/professor/requests/groups',
-                type: 'get',
-                dataType: 'json'
-            }).done(function (response) {
-                console.log('groups list recieved');
-                console.log(response);
-                self.groups = response;
-                self.currGroup = {
-                    'id': self.groups[0].id,
-                    'name': self.groups[0].name
-                };
-            }).fail(function (response) {
-                console.log("error");
-                console.log(response);
-                if (response.hasOwnProperty('responseJSON')) {
-                    if (response.responseJSON.hasOwnProperty('redirect')) {
-                        window.location.replace(response.responseJSON.redirect);
-                    }
-                }
-            });
-        },
-        acceptRequest: function acceptRequest(request) {
-            var self = this;
-            $.ajax({
-                url: '/diplomas/professor/requests/accept/' + request.student_id + '/' + request.task_id,
-                type: 'PATCH',
-                dataType: 'json',
-                data: request
-            }).done(function (response) {
-                console.log("success");
-                self.requests[self.requests.indexOf(request)].status = '1';
-            }).fail(function (response) {
-                console.log("error");
-                console.log(response);
-            });
-        },
-        declineRequest: function declineRequest(request) {
-            var self = this;
-            $.ajax({
-                url: '/diplomas/professor/requests/decline/' + request.student_id + '/' + request.task_id,
-                type: 'PATCH',
-                dataType: 'json',
-                data: request
-            }).done(function (response) {
-                console.log("success");
-                self.requests[self.requests.indexOf(request)].status = '2';
-            }).fail(function (response) {
-                console.log("error");
-                console.log(response);
-            });
-        },
-        requestStatus: function requestStatus(request) {
-            var self = this;
-            var statusWord = '';
-            switch (request.status) {
-                case '0':
-                    statusWord = self.translations.labels.pending;
-                    break;
-                case '1':
-                    statusWord = self.translations.labels.accepted;
-                    break;
-                case '2':
-                    statusWord = self.translations.labels.declined;
-                    break;
-            }
-            return statusWord;
-        },
-        setPanelsColour: function setPanelsColour(request) {
-            var panel_class = '';
-            switch (request.status) {
-                case '0':
-                    panel_class = 'panel panel-warning';
-                    break;
-                case '1':
-                    panel_class = 'panel panel-success';
-                    break;
-                case '2':
-                    panel_class = 'panel panel-danger';
-            }
-            return panel_class;
-        }
-    },
-
-    data: function data() {
-        return {
-            requests: [],
-            translations: [],
-            groups: [],
-            data_ready: false,
-            status_type: '',
-            currGroup: {
-                id: '',
-                name: ''
-            }
-        };
-    },
-
-    watch: {
-        status_type: function status_type() {
-            this.getFilteredData();
-        },
-        groups: function groups() {
-            this.data_ready = true;
-        }
-    }
-
-});
-
-/***/ }),
-/* 35 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    mounted: function mounted() {
-        console.log('request panel mounted');
-    }
-});
-
-/***/ }),
-/* 36 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['values', 'selected', 'default'],
-    mounted: function mounted() {
-        this.mutableSelected = this.default;
-        this.$emit('update:selected', this.default);
-        console.log(this.mutableSelected);
-    },
-
-    methods: {
-        changeSelectVal: function changeSelectVal(index) {
-            this.mutableSelected = index;
-            this.$emit('update:selected', index);
-        }
-    },
-    data: function data() {
-        return {
-            mutableSelected: this.selected
-        };
-    }
-});
-
-/***/ }),
-/* 37 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    mounted: function mounted() {
-        console.log('task row mounted');
-    }
-});
-
-/***/ }),
-/* 38 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRow_vue__ = __webpack_require__(59);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRow_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRow_vue__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    components: {
-        ProfessorDiplomasRow: __WEBPACK_IMPORTED_MODULE_0__ProfessorDiplomasRow_vue___default.a
-    },
-    created: function created() {
-        this.getTranslations();
-    },
-    beforeMount: function beforeMount() {
-        var self = this;
-        this.getGroupList();
-    },
-    mounted: function mounted() {
-        // console.log('Diplomas list mounted.');
-        // var self = this;
-        // setTimeout(function() {
-        //     self.getFilteredData();
-        // }, 450);
-    },
-
-    methods: {
-        getTranslations: function getTranslations() {
-            var self = this;
-            $.ajax({
-                url: '/translation/professor/diplomas/list',
-                type: 'GET',
-                dataType: 'json'
-            }).done(function (response) {
-                console.log("translations loaded");
-                self.translations = response.translations;
-            }).fail(function () {
-                console.log("error");
-            });
-        },
-        getFilteredData: function getFilteredData() {
-            var self = this;
-            // self.setCurrentGroup();
-            var activeGroup = _.find(this.groups, { id: this.currGroup.id });
-            if (typeof activeGroup !== 'undefined') {
-                this.currGroup.name = activeGroup.name;
-            }
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.ajax({
-                url: '/diplomas/professor/list',
-                type: 'GET',
-                dataType: 'json',
-                data: {
-                    group_id: self.currGroup.id
-                }
-            }).done(function (response) {
-                console.log('diplomas list recieved');
-                console.log(response);
-                self.diplomas = response.diplomas;
-                if (self.diplomas.length) {
-                    self.diplomas = self.diplomas.reverse();
-                }
-                self.data_ready = true;
-            }).fail(function (response) {
-                console.log('fail');
-                console.log(response);
-                if (response.hasOwnProperty('responseJSON')) {
-                    if (response.responseJSON.hasOwnProperty('redirect')) {
-                        window.location.replace(response.responseJSON.redirect);
-                    }
-                }
-            });
-        },
-        openDiploma: function openDiploma(diploma) {
-            return '/diplomas/' + diploma.id;
-        },
-        setCurrentGroup: function setCurrentGroup() {
-            this.currGroup.id = $('#group-id').val();
-            this.currGroup.name = $('#group-id option:selected').text();
-        },
-        getGroupList: function getGroupList() {
-            var self = this;
-            $.ajax({
-                url: '/diplomas/professor/groups',
-                type: 'get',
-                dataType: 'json'
-            }).done(function (response) {
-                console.log('groups list recieved');
-                console.log(response);
-                self.groups = response;
-                self.currGroup = {
-                    'id': self.groups[0].id,
-                    'name': self.groups[0].name
-                };
-            }).fail(function (response) {
-                console.log("error");
-                console.log(response);
-                if (response.hasOwnProperty('responseJSON')) {
-                    if (response.responseJSON.hasOwnProperty('redirect')) {
-                        window.location.replace(response.responseJSON.redirect);
-                    }
-                }
-            });
-        },
-        clearNewTaskInputs: function clearNewTaskInputs() {
-            var self = this;
-            $.each(this.errors, function (index, value) {
-                self.clearErrorMessages('new-diploma', index);
-            });
-            this.newTask = {
-                title: '',
-                description: '',
-                technologies: ''
-            };
-        },
-        publishTask: function publishTask() {
-            var self = this;
-            $.ajax({
-                url: '/diplomas',
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    title: self.newTask.title,
-                    description: self.newTask.description,
-                    technologies: self.newTask.technologies ? self.newTask.technologies : '',
-                    group_id: self.currGroup.id
-                }
-            }).done(function (response) {
-                console.log("success");
-                console.log(response);
-                self.diplomas.unshift(response);
-                self.clearNewTaskInputs();
-                $('#close-new-task-modal').click();
-            }).fail(function (response) {
-                console.log("error");
-                console.log(response);
-                self.errors = response.responseJSON;
-                if (self.errors.hasOwnProperty('title')) {
-                    $('#new-diploma-task-title-block').addClass('has-error');
-                }
-                if (self.errors.hasOwnProperty('description')) {
-                    $('#new-diploma-task-description-block').addClass('has-error');
-                }
-                if (self.errors.hasOwnProperty('technologies')) {
-                    $('#new-diploma-task-technologies-block').addClass('has-error');
-                }
-            });
-        },
-        clearErrorMessages: function clearErrorMessages(modalName, fieldName) {
-            console.log('clearing..');
-            var self = this;
-            if (self.errors.hasOwnProperty(fieldName)) {
-                $('#' + modalName + '-task-' + fieldName + '-block').removeClass('has-error');
-                delete self.errors[fieldName];
-            }
-        },
-        deleteWithConfirm: function deleteWithConfirm(diploma) {
-            var self = this;
-            swal({
-                title: self.translations.buttons.delete + ' ' + diploma.title + '?',
-                type: 'warning',
-                showCancelButton: true,
-                closeOnConfirm: true,
-                showLoaderOnConfirm: true,
-                cancelButtonText: self.translations.buttons.cancel,
-                confirmButtonText: "Ок",
-                confirmButtonColor: '#3085d6',
-                confirmLoadingButtonColor: '#DD6B55'
-            }, function () {
-                $.ajax({
-                    url: '/diplomas/' + diploma.id,
-                    type: 'DELETE',
-                    dataType: 'json'
-                }).done(function (response) {
-                    console.log("success");
-                    self.diplomas.splice(self.diplomas.indexOf(diploma), 1);
-                }).fail(function (response) {
-                    console.log("error");
-                    console.log("response");
-                });
-            });
-        },
-        openUpdateModal: function openUpdateModal(diploma) {
-            this.currTask = {
-                created_at: diploma.created_at,
-                description: diploma.description,
-                group_id: diploma.group_id,
-                id: diploma.id,
-                professor_id: diploma.professor_id,
-                requests: diploma.requests,
-                technologies: diploma.technologies,
-                title: diploma.title,
-                type: diploma.type,
-                updated_at: diploma.updated_at
-            };
-        },
-        clearUpdateTaskInputs: function clearUpdateTaskInputs() {
-            var self = this;
-            $.each(this.errors, function (index, value) {
-                self.clearErrorMessages('update-diploma', index);
-            });
-            this.currTask = {
-                created_at: '',
-                description: '',
-                group_id: '',
-                id: '',
-                professor_id: '',
-                requests: '',
-                technologies: '',
-                title: '',
-                type: '',
-                updated_at: ''
-            };
-        },
-        updateTask: function updateTask() {
-            var self = this;
-            $.ajax({
-                url: '/diplomas/' + self.currTask.id,
-                type: 'PATCH',
-                dataType: 'json',
-                data: self.currTask
-            }).done(function (response) {
-                console.log("task updated");
-                console.log(response);
-                self.diplomas[self.diplomas.map(function (diploma) {
-                    return diploma.id;
-                }).indexOf(self.currTask.id)] = response;
-                self.clearUpdateTaskInputs();
-                $('#close-update-task-modal').click();
-            }).fail(function (response) {
-                console.log("error");
-                console.log(response);
-                self.errors = response.responseJSON;
-                if (self.errors.hasOwnProperty('title')) {
-                    $('#update-diploma-task-title-block').addClass('has-error');
-                }
-                if (self.errors.hasOwnProperty('description')) {
-                    $('#update-diploma-task-description-block').addClass('has-error');
-                }
-                if (self.errors.hasOwnProperty('technologies')) {
-                    $('#update-diploma-task-technologies-block').addClass('has-error');
-                }
-            });
-        }
-    },
-    data: function data() {
-        return {
-            diplomas: [],
-            translations: [],
-            groups: [],
-            currGroup: {
-                id: '',
-                name: ''
-            },
-            newTask: {
-                title: '',
-                description: '',
-                technologies: ''
-            },
-            currTask: {
-                created_at: '',
-                description: '',
-                group_id: '',
-                id: '',
-                professor_id: '',
-                requests: '',
-                technologies: '',
-                title: '',
-                type: '',
-                updated_at: ''
-            },
-            data_ready: false,
-            errors: {}
-        };
-    },
-
-    watch: {
-        groups: function groups() {
-            this.getFilteredData();
-        }
-    }
-});
-
-/***/ }),
-/* 39 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    mounted: function mounted() {
-        console.log('task row mounted');
-    }
-});
-
-/***/ }),
-/* 40 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__StudentDiplomasRow__ = __webpack_require__(62);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__StudentDiplomasRow___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__StudentDiplomasRow__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    components: {
-        StudentDiplomasRow: __WEBPACK_IMPORTED_MODULE_0__StudentDiplomasRow___default.a
-    },
-    created: function created() {
-        this.getTranslations();
-    },
-    beforeMount: function beforeMount() {
-        this.getGroupList();
-    },
-    mounted: function mounted() {
-        // console.log('Diplomas list mounted.');
-        // var self = this;
-        // setTimeout(function() {
-        //     self.getFilteredData();
-        // }, 450);
-    },
-
-    methods: {
-        getTranslations: function getTranslations() {
-            var self = this;
-            $.ajax({
-                url: '/translation/student/diplomas/list',
-                type: 'GET',
-                dataType: 'json'
-            }).done(function (response) {
-                console.log("translations loaded");
-                self.translations = response.translations;
-            }).fail(function () {
-                console.log("error");
-            });
-        },
-        getFilteredData: function getFilteredData() {
-            var self = this;
-            var activeGroup = _.find(this.groups, { id: this.currGroup.id });
-            if (typeof activeGroup !== 'undefined') {
-                this.currGroup.name = activeGroup.name;
-            }
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.ajax({
-                url: '/diplomas/student/list',
-                type: 'GET',
-                dataType: 'json',
-                data: {
-                    group_id: self.currGroup.id
-                }
-            }).done(function (response) {
-                console.log('diplomas list recieved');
-                console.log(response);
-                self.diplomas = response.diplomas;
-                if (self.diplomas.length) {
-                    self.diplomas = self.diplomas.reverse();
-                }
-                self.student_id = response.student_id;
-                self.data_ready = true;
-            }).fail(function (response) {
-                console.log('fail');
-                console.log(response);
-                if (response.hasOwnProperty('responseJSON')) {
-                    if (response.responseJSON.hasOwnProperty('redirect')) {
-                        window.location.replace(response.responseJSON.redirect);
-                    }
-                }
-            });
-        },
-        setCurrentGroup: function setCurrentGroup() {
-            this.currGroup.id = $('#group-id').val();
-            this.currGroup.name = $('#group-id option:selected').text();
-        },
-        openDiploma: function openDiploma(diploma) {
-            return '/diplomas/' + diploma.id;
-        },
-        getGroupList: function getGroupList() {
-            var self = this;
-            $.ajax({
-                url: '/diplomas/student/groups',
-                type: 'get',
-                dataType: 'json'
-            }).done(function (response) {
-                console.log('groups list recieved');
-                console.log(response);
-                self.groups = response;
-                self.currGroup = {
-                    'id': self.groups[0].id,
-                    'name': self.groups[0].name
-                };
-            }).fail(function (response) {
-                console.log("error");
-                console.log(response);
-                if (response.hasOwnProperty('responseJSON')) {
-                    if (response.responseJSON.hasOwnProperty('redirect')) {
-                        window.location.replace(response.responseJSON.redirect);
-                    }
-                }
-            });
-        },
-        clearRequestInputs: function clearRequestInputs() {
-            this.currTask = {};
-        },
-        sendRequest: function sendRequest() {
-            var self = this;
-            $.ajax({
-                url: '/diplomas/requests/' + self.student_id,
-                type: 'POST',
-                dataType: 'json',
-                data: self.currTask
-            }).done(function (response) {
-                console.log("success");
-                self.diplomas[self.diplomas.map(function (diploma) {
-                    return diploma.id;
-                }).indexOf(self.currTask.id)].status = response.diplomaStatus.toString();
-                self.clearRequestInputs();
-                $('#close-request-modal').click();
-            }).fail(function (response) {
-                console.log("error");
-                self.errors = response.responseJSON;
-                if (self.errors.hasOwnProperty('message')) {
-                    $('#task-message-block').addClass('has-error');
-                }
-            });
-        },
-        openRequestModal: function openRequestModal(diploma) {
-            var self = this;
-            this.currTask = {
-                id: diploma.id,
-                title: diploma.title,
-                technologies: diploma.technologies ? diploma.technologies : self.translations.labels.empty,
-                professor: diploma.professor,
-                group: self.currGroup.name,
-                description: diploma.description,
-                message: '',
-                index: self.diplomas.indexOf(diploma)
-            };
-        },
-        clearErrorMessages: function clearErrorMessages(fieldName) {
-            console.log('clearing..');
-            var self = this;
-            if (self.errors.hasOwnProperty(fieldName)) {
-                $('#task-' + fieldName + '-block').removeClass('has-error');
-                delete self.errors[fieldName];
-            }
-        },
-        diplomaStatus: function diplomaStatus(diploma) {
-            var self = this;
-            var statusWord = '';
-            switch (diploma.status) {
-                case '0':
-                    statusWord = self.translations.labels.pending;
-                    break;
-                case '1':
-                    statusWord = self.translations.labels.accepted;
-                    break;
-                case '2':
-                    statusWord = self.translations.labels.declined;
-                    break;
-            }
-
-            return statusWord;
-        },
-        deleteRequest: function deleteRequest(diploma) {
-            var self = this;
-            swal({
-                title: self.translations.labels.delete_request + ' ' + diploma.title + '?',
-                type: 'warning',
-                showCancelButton: true,
-                closeOnConfirm: true,
-                showLoaderOnConfirm: true,
-                cancelButtonText: self.translations.buttons.cancel,
-                confirmButtonText: "Ок",
-                confirmButtonColor: '#3085d6',
-                confirmLoadingButtonColor: '#DD6B55'
-            }, function () {
-                $.ajax({
-                    url: '/diplomas/' + diploma.id + '/requests',
-                    type: 'DELETE',
-                    dataType: 'json'
-                }).done(function (response) {
-                    console.log("success");
-                    diploma.status = null;
-                }).fail(function (response) {
-                    console.log("error");
-                    console.log("response");
-                });
-            });
-        }
-    },
-    data: function data() {
-        return {
-            diplomas: [],
-            student_int: '',
-            translations: [],
-            groups: [],
-            errors: [],
-            currGroup: {
-                id: '',
-                name: ''
-            },
-            currTask: {},
-            data_ready: false
-        };
-    },
-
-    watch: {
-        groups: function groups() {
-            this.getFilteredData();
-        }
-    }
-
-});
-
-/***/ }),
-/* 41 */
+/* 34 */,
+/* 35 */,
+/* 36 */,
+/* 37 */,
+/* 38 */,
+/* 39 */,
+/* 40 */,
+/* 41 */,
+/* 42 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_router__ = __webpack_require__(13);
-window._ = __webpack_require__(49);
+window._ = __webpack_require__(50);
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -5873,9 +4696,9 @@ window._ = __webpack_require__(49);
  * code may be modified to fit the specific needs of your application.
  */
 
-window.$ = window.jQuery = __webpack_require__(48);
+window.$ = window.jQuery = __webpack_require__(49);
 
-__webpack_require__(44);
+__webpack_require__(45);
 
 /**
  * Vue is a modern JavaScript library for building interactive web interfaces
@@ -5883,7 +4706,7 @@ __webpack_require__(44);
  * and simple, leaving you to focus on building your next great project.
  */
 
-window.Vue = __webpack_require__(71);
+window.Vue = __webpack_require__(73);
 
 Vue.use(__WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]);
 
@@ -5912,10 +4735,10 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     broadcaster: 'pusher',
 //     key: 'your-pusher-key'
 // });
-window.swal = __webpack_require__(55);
+window.swal = __webpack_require__(56);
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5924,16 +4747,13 @@ window.swal = __webpack_require__(55);
 
 var routes = [{
     path: '/prof-diploma-list',
-    component: __webpack_require__(60)
+    component: __webpack_require__(98)
 }, {
     path: '/prof-diploma-requests',
-    component: __webpack_require__(56)
+    component: __webpack_require__(100)
 }, {
-    path: '/stud-task-list',
-    component: __webpack_require__(63)
-}, {
-    path: '/stud-requests',
-    component: __webpack_require__(61)
+    path: '/stud-diploma-list',
+    component: __webpack_require__(103)
 }];
 
 /* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]({
@@ -5942,7 +4762,7 @@ var routes = [{
 }));
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6063,7 +4883,7 @@ function fromByteArray (uint8) {
 
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports) {
 
 /*!
@@ -8446,7 +7266,7 @@ if (typeof jQuery === 'undefined') {
 
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8460,9 +7280,9 @@ if (typeof jQuery === 'undefined') {
 
 
 
-var base64 = __webpack_require__(43)
-var ieee754 = __webpack_require__(46)
-var isArray = __webpack_require__(47)
+var base64 = __webpack_require__(44)
+var ieee754 = __webpack_require__(47)
+var isArray = __webpack_require__(48)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -10243,7 +9063,7 @@ function isnan (val) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -10333,7 +9153,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -10344,7 +9164,7 @@ module.exports = Array.isArray || function (arr) {
 
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -20604,7 +19424,7 @@ return jQuery;
 
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -37693,10 +36513,10 @@ return jQuery;
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(72)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(74)(module)))
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -37886,7 +36706,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38027,7 +36847,7 @@ exports['default'] = {
 module.exports = exports['default'];
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38112,7 +36932,7 @@ exports['default'] = handleKeyDown;
 module.exports = exports['default'];
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38160,7 +36980,7 @@ exports["default"] = injectedHTML;
 module.exports = exports["default"];
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38391,7 +37211,7 @@ exports['default'] = setParameters;
 module.exports = exports['default'];
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38426,9 +37246,9 @@ var _sweetAlertInitialize$getModal$getOverlay$getInput$setFocusStyle$openModal$r
 
 // Handle button events and keyboard events
 
-var _handleButton$handleConfirm$handleCancel = __webpack_require__(51);
+var _handleButton$handleConfirm$handleCancel = __webpack_require__(52);
 
-var _handleKeyDown = __webpack_require__(52);
+var _handleKeyDown = __webpack_require__(53);
 
 var _handleKeyDown2 = _interopRequireWildcard(_handleKeyDown);
 
@@ -38438,7 +37258,7 @@ var _defaultParams = __webpack_require__(12);
 
 var _defaultParams2 = _interopRequireWildcard(_defaultParams);
 
-var _setParameters = __webpack_require__(54);
+var _setParameters = __webpack_require__(55);
 
 var _setParameters2 = _interopRequireWildcard(_setParameters);
 
@@ -38700,1208 +37520,23 @@ if (typeof window !== 'undefined') {
 module.exports = exports['default'];
 
 /***/ }),
-/* 56 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Component = __webpack_require__(1)(
-  /* script */
-  __webpack_require__(34),
-  /* template */
-  __webpack_require__(69),
-  /* scopeId */
-  null,
-  /* cssModules */
-  null
-)
-Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\ProfessorDiplomasRequests.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] ProfessorDiplomasRequests.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-577c2bac", Component.options)
-  } else {
-    hotAPI.reload("data-v-577c2bac", Component.options)
-  }
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 57 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Component = __webpack_require__(1)(
-  /* script */
-  __webpack_require__(35),
-  /* template */
-  __webpack_require__(64),
-  /* scopeId */
-  null,
-  /* cssModules */
-  null
-)
-Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\ProfessorDiplomasRequestsPanel.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] ProfessorDiplomasRequestsPanel.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-0166ee2a", Component.options)
-  } else {
-    hotAPI.reload("data-v-0166ee2a", Component.options)
-  }
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 58 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Component = __webpack_require__(1)(
-  /* script */
-  __webpack_require__(36),
-  /* template */
-  __webpack_require__(68),
-  /* scopeId */
-  null,
-  /* cssModules */
-  null
-)
-Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\ProfessorDiplomasRequestsStatus.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] ProfessorDiplomasRequestsStatus.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-21065088", Component.options)
-  } else {
-    hotAPI.reload("data-v-21065088", Component.options)
-  }
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 59 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Component = __webpack_require__(1)(
-  /* script */
-  __webpack_require__(37),
-  /* template */
-  __webpack_require__(66),
-  /* scopeId */
-  null,
-  /* cssModules */
-  null
-)
-Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\ProfessorDiplomasRow.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] ProfessorDiplomasRow.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-0b412ce4", Component.options)
-  } else {
-    hotAPI.reload("data-v-0b412ce4", Component.options)
-  }
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 60 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Component = __webpack_require__(1)(
-  /* script */
-  __webpack_require__(38),
-  /* template */
-  __webpack_require__(70),
-  /* scopeId */
-  null,
-  /* cssModules */
-  null
-)
-Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\ProfessorDiplomasTable.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] ProfessorDiplomasTable.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-6887ff50", Component.options)
-  } else {
-    hotAPI.reload("data-v-6887ff50", Component.options)
-  }
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 61 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Component = __webpack_require__(1)(
-  /* script */
-  null,
-  /* template */
-  null,
-  /* scopeId */
-  null,
-  /* cssModules */
-  null
-)
-Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\StudentDiplomasRequests.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 62 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Component = __webpack_require__(1)(
-  /* script */
-  __webpack_require__(39),
-  /* template */
-  __webpack_require__(65),
-  /* scopeId */
-  null,
-  /* cssModules */
-  null
-)
-Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\StudentDiplomasRow.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] StudentDiplomasRow.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-025b37d0", Component.options)
-  } else {
-    hotAPI.reload("data-v-025b37d0", Component.options)
-  }
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 63 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Component = __webpack_require__(1)(
-  /* script */
-  __webpack_require__(40),
-  /* template */
-  __webpack_require__(67),
-  /* scopeId */
-  null,
-  /* cssModules */
-  null
-)
-Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\StudentDiplomasTable.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] StudentDiplomasTable.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-1fdc3a8c", Component.options)
-  } else {
-    hotAPI.reload("data-v-1fdc3a8c", Component.options)
-  }
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 64 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [_c('div', {
-    staticClass: "panel-heading"
-  }, [_vm._t("task-title")], 2), _vm._v(" "), _c('div', {
-    staticClass: "panel-body"
-  }, [_vm._t("request-student"), _vm._v(" "), _vm._t("request-status"), _vm._v(" "), _vm._t("request-message"), _vm._v(" "), _vm._t("request-cr_at")], 2), _vm._v(" "), _vm._t("request-footer")], 2)
-},staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-0166ee2a", module.exports)
-  }
-}
-
-/***/ }),
-/* 65 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('tr', [_c('td', [_vm._t("col-topic")], 2), _vm._v(" "), _c('td', [_vm._t("col-professor")], 2), _vm._v(" "), _c('td', [_vm._t("col-technologies")], 2), _vm._v(" "), _c('td', [_vm._t("col-status")], 2), _vm._v(" "), _c('td', [_vm._t("col-cr_at")], 2), _vm._v(" "), _c('td', [_vm._t("col-actions")], 2)])
-},staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-025b37d0", module.exports)
-  }
-}
-
-/***/ }),
-/* 66 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('tr', [_c('td', [_vm._t("col-topic")], 2), _vm._v(" "), _c('td', [_vm._t("col-requests-accepted")], 2), _vm._v(" "), _c('td', [_vm._t("col-requests-pending")], 2), _vm._v(" "), _c('td', [_vm._t("col-requests-denied")], 2), _vm._v(" "), _c('td', [_vm._t("col-student")], 2), _vm._v(" "), _c('td', [_vm._t("col-cr_at")], 2), _vm._v(" "), _c('td', [_vm._t("col-upd_at")], 2), _vm._v(" "), _c('td', [_vm._t("col-actions")], 2)])
-},staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-0b412ce4", module.exports)
-  }
-}
-
-/***/ }),
-/* 67 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return (_vm.data_ready) ? _c('div', {
-    staticClass: "form-group"
-  }, [_c('div', {
-    staticClass: "form-group"
-  }, [_c('label', {
-    staticClass: "control-label",
-    attrs: {
-      "for": "group"
-    }
-  }, [_vm._v(_vm._s(_vm.translations.labels.group))]), _vm._v(" "), _c('select', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.currGroup.id),
-      expression: "currGroup.id"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      "name": "group",
-      "id": "group-id"
-    },
-    on: {
-      "change": [function($event) {
-        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
-          return o.selected
-        }).map(function(o) {
-          var val = "_value" in o ? o._value : o.value;
-          return val
-        });
-        _vm.currGroup.id = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-      }, _vm.getFilteredData]
-    }
-  }, _vm._l((_vm.groups), function(group) {
-    return _c('option', {
-      domProps: {
-        "value": group.id
-      }
-    }, [_vm._v(_vm._s(group.name))])
-  }))]), _vm._v(" "), _c('div', {
-    staticClass: "table-responsive"
-  }, [(_vm.diplomas.length) ? _c('table', {
-    staticClass: "table table-bordered"
-  }, [_c('thead', [_c('tr', [_c('th', [_vm._v(_vm._s(_vm.translations.labels.topic))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.professor))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.technologies))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.status))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.created_at))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.actions))])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.diplomas), function(diploma) {
-    return _c('student-diplomas-row', {
-      key: diploma.id
-    }, [_c('template', {
-      slot: "col-topic"
-    }, [_c('a', {
-      attrs: {
-        "href": _vm.openDiploma(diploma)
-      }
-    }, [_vm._v(_vm._s(diploma.title.length > 10 ?
-      diploma.title.substr(0, 10) + '...' : diploma.title))])]), _vm._v(" "), _c('template', {
-      slot: "col-professor"
-    }, [_vm._v(_vm._s(diploma.professor))]), _vm._v(" "), _c('template', {
-      slot: "col-technologies"
-    }, [_vm._v(_vm._s(diploma.technologies ? diploma.technologies : _vm.translations.labels.empty))]), _vm._v(" "), _c('template', {
-      slot: "col-status"
-    }, [_vm._v(_vm._s(diploma.status ? _vm.diplomaStatus(diploma) : _vm.translations.labels.empty))]), _vm._v(" "), _c('template', {
-      slot: "col-cr_at"
-    }, [_vm._v(_vm._s(diploma.created_at))]), _vm._v(" "), _c('template', {
-      slot: "col-actions"
-    }, [(diploma.status === '0') ? _c('button', {
-      staticClass: "btn btn-danger btn-sm",
-      on: {
-        "click": function($event) {
-          _vm.deleteRequest(diploma)
-        }
-      }
-    }, [_vm._v(_vm._s(_vm.translations.buttons.delete_request))]) : (diploma.status === '2') ? _c('button', {
-      staticClass: "btn btn-warning btn-sm"
-    }, [_vm._v(_vm._s(_vm.translations.buttons.resend_request))]) : (diploma.status === '1') ? _c('button', {
-      staticClass: "btn btn-info btn-sm"
-    }, [_vm._v(_vm._s(_vm.translations.buttons.show_tasks))]) : _c('button', {
-      staticClass: "btn btn-primary btn-sm",
-      attrs: {
-        "data-toggle": "modal",
-        "data-target": "#diploma-request-modal"
-      },
-      on: {
-        "click": function($event) {
-          _vm.openRequestModal(diploma)
-        }
-      }
-    }, [_vm._v(_vm._s(_vm.translations.buttons.apply))])])], 2)
-  })), _vm._v(" "), _c('tfoot', [_c('div', {
-    staticClass: "modal fade",
-    attrs: {
-      "id": "diploma-request-modal",
-      "role": "dialog",
-      "data-backdrop": "static",
-      "data-keyboard": "false"
-    }
-  }, [_c('div', {
-    staticClass: "modal-dialog"
-  }, [_c('div', {
-    staticClass: "modal-content"
-  }, [_c('div', {
-    staticClass: "modal-header"
-  }, [_c('button', {
-    staticClass: "close",
-    attrs: {
-      "type": "button",
-      "data-dismiss": "modal"
-    },
-    on: {
-      "click": _vm.clearRequestInputs
-    }
-  }, [_vm._v("×")]), _vm._v(" "), _c('h4', {
-    staticClass: "modal-title"
-  }, [_vm._v(_vm._s(_vm.translations.labels.request))])]), _vm._v(" "), _c('div', {
-    staticClass: "modal-body"
-  }, [_c('div', {
-    staticClass: "form-group",
-    attrs: {
-      "id": "task-title-block"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "task-title"
-    }
-  }, [_vm._v(_vm._s(_vm.translations.labels.topic))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('i', [_vm._v(_vm._s(_vm.currTask.title))])]), _vm._v(" "), _c('div', {
-    staticClass: "form-group",
-    attrs: {
-      "id": "task-professor-block"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "task-group"
-    }
-  }, [_vm._v(_vm._s(_vm.translations.labels.professor))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('i', [_vm._v(_vm._s(_vm.currTask.professor))])]), _vm._v(" "), _c('div', {
-    staticClass: "form-group",
-    attrs: {
-      "id": "task-description-block"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "task-group"
-    }
-  }, [_vm._v(_vm._s(_vm.translations.labels.description))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('i', [_vm._v(_vm._s(_vm.currTask.description))])]), _vm._v(" "), _c('div', {
-    staticClass: "form-group",
-    attrs: {
-      "id": "task-technologies-block"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "task-group"
-    }
-  }, [_vm._v(_vm._s(_vm.translations.labels.technologies))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('i', [_vm._v(_vm._s(_vm.currTask.technologies))])]), _vm._v(" "), _c('div', {
-    staticClass: "form-group",
-    attrs: {
-      "id": "task-group-block"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "task-group"
-    }
-  }, [_vm._v(_vm._s(_vm.translations.labels.group))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('i', [_vm._v(_vm._s(_vm.currTask.group))])]), _vm._v(" "), _c('div', {
-    staticClass: "form-group",
-    attrs: {
-      "id": "task-message-block"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "task-message"
-    }
-  }, [_vm._v(_vm._s(_vm.translations.labels.message))]), _vm._v(" "), _c('textarea', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.currTask.message),
-      expression: "currTask.message"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      "id": "task-message"
-    },
-    domProps: {
-      "value": _vm.currTask.message,
-      "value": (_vm.currTask.message)
-    },
-    on: {
-      "keypress": function($event) {
-        _vm.clearErrorMessages('message')
-      },
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.currTask.message = $event.target.value
-      }
-    }
-  }), _vm._v(" "), (_vm.errors.hasOwnProperty('message')) ? _c('span', {
-    staticClass: "help-block",
-    attrs: {
-      "id": "message-help-block"
-    }
-  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.message[0]))])]) : _vm._e()])]), _vm._v(" "), _c('div', {
-    staticClass: "modal-footer"
-  }, [_c('button', {
-    staticClass: "btn btn-primary",
-    attrs: {
-      "type": "button"
-    },
-    on: {
-      "click": _vm.sendRequest
-    }
-  }, [_vm._v(_vm._s(_vm.translations.buttons.apply))]), _vm._v(" "), _c('button', {
-    staticClass: "btn btn-default",
-    attrs: {
-      "id": "close-request-modal",
-      "type": "button",
-      "data-dismiss": "modal"
-    },
-    on: {
-      "click": _vm.clearRequestInputs
-    }
-  }, [_vm._v(_vm._s(_vm.translations.buttons.cancel))])])])])])])], 1) : _c('div', {
-    staticClass: "form-group"
-  }, [_c('p', [_vm._v(_vm._s(_vm.translations.labels.no_tasks))])])])]) : _vm._e()
-},staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-1fdc3a8c", module.exports)
-  }
-}
-
-/***/ }),
-/* 68 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "btn-group"
-  }, _vm._l((_vm.values), function(item, index) {
-    return _c('button', {
-      class: ['btn', {
-        'btn-primary': _vm.mutableSelected === index,
-        'btn-default': _vm.mutableSelected !== index
-      }],
-      attrs: {
-        "type": "button"
-      },
-      on: {
-        "click": function($event) {
-          _vm.changeSelectVal(index)
-        }
-      }
-    }, [_vm._v(_vm._s(item))])
-  }))
-},staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-21065088", module.exports)
-  }
-}
-
-/***/ }),
-/* 69 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return (_vm.data_ready) ? _c('div', {
-    staticClass: "form-group"
-  }, [_c('div', {
-    staticClass: "form-group"
-  }, [_c('label', {
-    staticClass: "control-label",
-    attrs: {
-      "for": "group"
-    }
-  }, [_vm._v(_vm._s(_vm.translations.labels.group))]), _vm._v(" "), _c('select', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.currGroup.id),
-      expression: "currGroup.id"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      "name": "group",
-      "id": "group-id"
-    },
-    on: {
-      "change": [function($event) {
-        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
-          return o.selected
-        }).map(function(o) {
-          var val = "_value" in o ? o._value : o.value;
-          return val
-        });
-        _vm.currGroup.id = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-      }, _vm.getFilteredData]
-    }
-  }, _vm._l((_vm.groups), function(group) {
-    return _c('option', {
-      domProps: {
-        "value": group.id
-      }
-    }, [_vm._v(_vm._s(group.name))])
-  }))]), _vm._v(" "), _c('div', {
-    staticClass: "form-group"
-  }, [_c('label', [_vm._v(_vm._s(_vm.translations.labels.status) + ":")]), _vm._v(" "), _c('professor-diplomas-requests-status', {
-    attrs: {
-      "values": _vm.statuses,
-      "selected": _vm.status_type,
-      "default": '3'
-    },
-    on: {
-      "update:selected": function($event) {
-        _vm.status_type = $event
-      }
-    }
-  })], 1), _vm._v(" "), _c('div', {
-    staticClass: "table-responsive"
-  }, [(_vm.requests.length) ? _c('div', _vm._l((_vm.requests), function(request) {
-    return _c('professor-diplomas-requests-panel', {
-      key: request.id,
-      class: _vm.setPanelsColour(request)
-    }, [_c('div', {
-      staticClass: "form-group",
-      slot: "task-title"
-    }, [_c('h1', [_vm._v(_vm._s(request.task_title))])]), _vm._v(" "), _c('div', {
-      staticClass: "form-group",
-      slot: "request-student"
-    }, [_c('label', {
-      attrs: {
-        "for": "request-student"
-      }
-    }, [_vm._v(_vm._s(_vm.translations.labels.student) + ":")]), _vm._v(" "), _c('span', {
-      attrs: {
-        "name": "request-student"
-      }
-    }, [_vm._v(_vm._s(request.student))])]), _vm._v(" "), _c('div', {
-      staticClass: "form-group",
-      slot: "request-status"
-    }, [_c('label', {
-      attrs: {
-        "for": "request-status"
-      }
-    }, [_vm._v(_vm._s(_vm.translations.labels.status) + ":")]), _vm._v(" "), _c('span', {
-      attrs: {
-        "name": "request-status"
-      }
-    }, [_vm._v(_vm._s(_vm.requestStatus(request)))])]), _vm._v(" "), _c('div', {
-      staticClass: "form-group",
-      slot: "request-message"
-    }, [_c('label', {
-      attrs: {
-        "for": "request-message"
-      }
-    }, [_vm._v(_vm._s(_vm.translations.labels.message) + ":")]), _vm._v(" "), _c('span', {
-      attrs: {
-        "name": "request-message"
-      }
-    }, [_vm._v(_vm._s(request.message ? request.message : _vm.translations.labels.empty))])]), _vm._v(" "), _c('div', {
-      staticClass: "form-group",
-      slot: "request-cr_at"
-    }, [_c('label', {
-      attrs: {
-        "for": "request-cr_at"
-      }
-    }, [_vm._v(_vm._s(_vm.translations.labels.created_at) + ":")]), _vm._v(" "), _c('span', {
-      attrs: {
-        "name": "request-cr_at"
-      }
-    }, [_vm._v(_vm._s(request.created_at))])]), _vm._v(" "), (request.status === '0') ? _c('div', {
-      staticClass: "panel-footer",
-      slot: "request-footer"
-    }, [_c('button', {
-      staticClass: "btn btn-primary btn-sm",
-      on: {
-        "click": function($event) {
-          _vm.acceptRequest(request)
-        }
-      }
-    }, [_vm._v(_vm._s(_vm.translations.buttons.accept))]), _vm._v(" "), _c('button', {
-      staticClass: "btn btn-danger btn-sm",
-      on: {
-        "click": function($event) {
-          _vm.declineRequest(request)
-        }
-      }
-    }, [_vm._v(_vm._s(_vm.translations.buttons.decline))])]) : _vm._e()])
-  })) : _c('div', {
-    staticClass: "form-group"
-  }, [_c('p', [_vm._v(_vm._s(_vm.translations.labels.no_requests))])])])]) : _vm._e()
-},staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-577c2bac", module.exports)
-  }
-}
-
-/***/ }),
-/* 70 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return (_vm.data_ready) ? _c('div', {
-    staticClass: "form-group"
-  }, [_c('div', {
-    staticClass: "form-group"
-  }, [_c('label', {
-    staticClass: "control-label",
-    attrs: {
-      "for": "group"
-    }
-  }, [_vm._v(_vm._s(_vm.translations.labels.group))]), _vm._v(" "), _c('select', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.currGroup.id),
-      expression: "currGroup.id"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      "name": "group",
-      "id": "group-id"
-    },
-    on: {
-      "change": [function($event) {
-        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
-          return o.selected
-        }).map(function(o) {
-          var val = "_value" in o ? o._value : o.value;
-          return val
-        });
-        _vm.currGroup.id = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-      }, _vm.getFilteredData]
-    }
-  }, _vm._l((_vm.groups), function(group) {
-    return _c('option', {
-      domProps: {
-        "value": group.id
-      }
-    }, [_vm._v(_vm._s(group.name))])
-  }))]), _vm._v(" "), _c('div', {
-    staticClass: "table-responsive"
-  }, [(_vm.diplomas.length) ? _c('table', {
-    staticClass: "table table-bordered"
-  }, [_c('thead', [_c('tr', [_c('th', {
-    staticClass: "col-md-1",
-    attrs: {
-      "rowspan": "2"
-    }
-  }, [_vm._v(_vm._s(_vm.translations.labels.topic))]), _vm._v(" "), _c('th', {
-    staticClass: "col-md-3",
-    attrs: {
-      "colspan": "3"
-    }
-  }, [_vm._v(_vm._s(_vm.translations.labels.number_of_requests) + "\n                    ")]), _c('th', {
-    staticClass: "col-md-2",
-    attrs: {
-      "rowspan": "2"
-    }
-  }, [_vm._v(_vm._s(_vm.translations.labels.student))]), _vm._v(" "), _c('th', {
-    staticClass: "col-md-2",
-    attrs: {
-      "rowspan": "2"
-    }
-  }, [_vm._v(_vm._s(_vm.translations.labels.created_at))]), _vm._v(" "), _c('th', {
-    staticClass: "col-md-2",
-    attrs: {
-      "rowspan": "2"
-    }
-  }, [_vm._v(_vm._s(_vm.translations.labels.updated_at))]), _vm._v(" "), _c('th', {
-    staticClass: "col-md-2",
-    attrs: {
-      "rowspan": "2"
-    }
-  }, [_vm._v(_vm._s(_vm.translations.labels.actions))])]), _vm._v(" "), _c('tr', [_c('th', {
-    staticClass: "col-md-1"
-  }, [_vm._v(_vm._s(_vm.translations.labels.accepted))]), _vm._v(" "), _c('th', {
-    staticClass: "col-md-1"
-  }, [_vm._v(_vm._s(_vm.translations.labels.pending))]), _vm._v(" "), _c('th', {
-    staticClass: "col-md-1"
-  }, [_vm._v(_vm._s(_vm.translations.labels.declined))])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.diplomas), function(diploma) {
-    return _c('professor-diplomas-row', {
-      key: diploma.id
-    }, [_c('template', {
-      slot: "col-topic"
-    }, [_c('a', {
-      attrs: {
-        "href": _vm.openDiploma(diploma)
-      }
-    }, [_vm._v(_vm._s(diploma.title.length > 10 ?
-      diploma.title.substr(0, 10) + '...' : diploma.title))])]), _vm._v(" "), _c('template', {
-      slot: "col-requests-accepted"
-    }, [_vm._v(_vm._s(diploma.requests.accepted))]), _vm._v(" "), _c('template', {
-      slot: "col-requests-pending"
-    }, [_vm._v(_vm._s(diploma.requests.pending))]), _vm._v(" "), _c('template', {
-      slot: "col-requests-denied"
-    }, [_vm._v(_vm._s(diploma.requests.declined))]), _vm._v(" "), _c('template', {
-      slot: "col-student"
-    }, [_vm._v(_vm._s(diploma.student !== null ? diploma.student : _vm.translations.labels.empty))]), _vm._v(" "), _c('template', {
-      slot: "col-cr_at"
-    }, [_vm._v(_vm._s(diploma.created_at))]), _vm._v(" "), _c('template', {
-      slot: "col-upd_at"
-    }, [_vm._v(_vm._s(diploma.updated_at !== null ? diploma.updated_at : _vm.translations.labels.empty))]), _vm._v(" "), _c('template', {
-      slot: "col-actions"
-    }, [_c('button', {
-      staticClass: "btn btn-primary btn-sm",
-      attrs: {
-        "data-toggle": "modal",
-        "data-target": "#update-diploma-modal"
-      },
-      on: {
-        "click": function($event) {
-          _vm.openUpdateModal(diploma)
-        }
-      }
-    }, [_vm._v(_vm._s(_vm.translations.buttons.edit))]), _vm._v(" "), _c('button', {
-      staticClass: "btn btn-danger btn-sm",
-      on: {
-        "click": function($event) {
-          _vm.deleteWithConfirm(diploma)
-        }
-      }
-    }, [_vm._v(_vm._s(_vm.translations.buttons.delete))])])], 2)
-  })), _vm._v(" "), _c('tfoot', [_c('div', {
-    staticClass: "modal fade",
-    attrs: {
-      "id": "update-diploma-modal",
-      "role": "dialog",
-      "data-backdrop": "static",
-      "data-keyboard": "false"
-    }
-  }, [_c('div', {
-    staticClass: "modal-dialog"
-  }, [_c('div', {
-    staticClass: "modal-content"
-  }, [_c('div', {
-    staticClass: "modal-header"
-  }, [_c('button', {
-    staticClass: "close",
-    attrs: {
-      "type": "button",
-      "data-dismiss": "modal"
-    },
-    on: {
-      "click": _vm.clearNewTaskInputs
-    }
-  }, [_vm._v("×")]), _vm._v(" "), _c('h4', {
-    staticClass: "modal-title"
-  }, [_vm._v(_vm._s(_vm.translations.labels.update_task))])]), _vm._v(" "), _c('div', {
-    staticClass: "modal-body"
-  }, [_c('div', {
-    staticClass: "form-group",
-    attrs: {
-      "id": "update-diploma-task-title-block"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "task-title"
-    }
-  }, [_vm._v(_vm._s(_vm.translations.labels.topic))]), _vm._v(" "), _c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.currTask.title),
-      expression: "currTask.title"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      "id": "task-title",
-      "type": "text"
-    },
-    domProps: {
-      "value": _vm.currTask.title,
-      "value": (_vm.currTask.title)
-    },
-    on: {
-      "keypress": function($event) {
-        _vm.clearErrorMessages('update-diploma', 'title')
-      },
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.currTask.title = $event.target.value
-      }
-    }
-  }), _vm._v(" "), (_vm.errors.hasOwnProperty('title')) ? _c('span', {
-    staticClass: "help-block",
-    attrs: {
-      "id": "title-help-block"
-    }
-  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.title[0]))])]) : _vm._e()]), _vm._v(" "), _c('div', {
-    staticClass: "form-group",
-    attrs: {
-      "id": "update-diploma-task-description-block"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "task-description"
-    }
-  }, [_vm._v(_vm._s(_vm.translations.labels.description))]), _vm._v(" "), _c('textarea', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.currTask.description),
-      expression: "currTask.description"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      "id": "task-description"
-    },
-    domProps: {
-      "value": _vm.currTask.description,
-      "value": (_vm.currTask.description)
-    },
-    on: {
-      "keypress": function($event) {
-        _vm.clearErrorMessages('update-diploma', 'description')
-      },
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.currTask.description = $event.target.value
-      }
-    }
-  }), _vm._v(" "), (_vm.errors.hasOwnProperty('description')) ? _c('span', {
-    staticClass: "help-block",
-    attrs: {
-      "id": "description-help-block"
-    }
-  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.description[0]))])]) : _vm._e()]), _vm._v(" "), _c('div', {
-    staticClass: "form-group",
-    attrs: {
-      "id": "update-diploma-task-technologies-block"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "task-technologies"
-    }
-  }, [_vm._v(_vm._s(_vm.translations.labels.technologies))]), _vm._v(" "), _c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.currTask.technologies),
-      expression: "currTask.technologies"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      "id": "task-technologies",
-      "type": "text"
-    },
-    domProps: {
-      "value": _vm.currTask.technologies,
-      "value": (_vm.currTask.technologies)
-    },
-    on: {
-      "keypress": function($event) {
-        _vm.clearErrorMessages('update-diploma', 'technologies')
-      },
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.currTask.technologies = $event.target.value
-      }
-    }
-  }), _vm._v(" "), (_vm.errors.hasOwnProperty('technologies')) ? _c('span', {
-    staticClass: "help-block",
-    attrs: {
-      "id": "technologies-help-block"
-    }
-  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.technologies[0]))])]) : _vm._e()]), _vm._v(" "), _c('div', {
-    staticClass: "form-group",
-    attrs: {
-      "id": "update-diploma-task-group-block"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "task-group"
-    }
-  }, [_vm._v(_vm._s(_vm.translations.labels.group))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('i', [_vm._v(_vm._s(_vm.currGroup.name))])])]), _vm._v(" "), _c('div', {
-    staticClass: "modal-footer"
-  }, [_c('button', {
-    staticClass: "btn btn-primary",
-    attrs: {
-      "type": "button"
-    },
-    on: {
-      "click": _vm.updateTask
-    }
-  }, [_vm._v(_vm._s(_vm.translations.buttons.update))]), _vm._v(" "), _c('button', {
-    staticClass: "btn btn-default",
-    attrs: {
-      "id": "close-update-task-modal",
-      "type": "button",
-      "data-dismiss": "modal"
-    },
-    on: {
-      "click": _vm.clearUpdateTaskInputs
-    }
-  }, [_vm._v(_vm._s(_vm.translations.buttons.cancel))])])])])])])], 1) : _c('div', {
-    staticClass: "form-group"
-  }, [_c('p', [_vm._v(_vm._s(_vm.translations.labels.no_tasks))])])]), _vm._v(" "), _c('div', {
-    staticClass: "form-group"
-  }, [_c('button', {
-    staticClass: "btn btn-primary",
-    attrs: {
-      "type": "button",
-      "data-toggle": "modal",
-      "data-target": "#new-diploma-modal"
-    }
-  }, [_vm._v(_vm._s(_vm.translations.buttons.new_task))]), _vm._v(" "), _c('div', {
-    staticClass: "modal fade",
-    attrs: {
-      "id": "new-diploma-modal",
-      "role": "dialog",
-      "data-backdrop": "static",
-      "data-keyboard": "false"
-    }
-  }, [_c('div', {
-    staticClass: "modal-dialog"
-  }, [_c('div', {
-    staticClass: "modal-content"
-  }, [_c('div', {
-    staticClass: "modal-header"
-  }, [_c('button', {
-    staticClass: "close",
-    attrs: {
-      "type": "button",
-      "data-dismiss": "modal"
-    },
-    on: {
-      "click": _vm.clearNewTaskInputs
-    }
-  }, [_vm._v("×")]), _vm._v(" "), _c('h4', {
-    staticClass: "modal-title"
-  }, [_vm._v(_vm._s(_vm.translations.buttons.new_task))])]), _vm._v(" "), _c('div', {
-    staticClass: "modal-body"
-  }, [_c('div', {
-    staticClass: "form-group",
-    attrs: {
-      "id": "new-diploma-task-title-block"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "task-title"
-    }
-  }, [_vm._v(_vm._s(_vm.translations.labels.topic))]), _vm._v(" "), _c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.newTask.title),
-      expression: "newTask.title"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      "id": "task-title",
-      "type": "text"
-    },
-    domProps: {
-      "value": _vm.newTask.title,
-      "value": (_vm.newTask.title)
-    },
-    on: {
-      "keypress": function($event) {
-        _vm.clearErrorMessages('new-diploma', 'title')
-      },
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.newTask.title = $event.target.value
-      }
-    }
-  }), _vm._v(" "), (_vm.errors.hasOwnProperty('title')) ? _c('span', {
-    staticClass: "help-block",
-    attrs: {
-      "id": "title-help-block"
-    }
-  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.title[0]))])]) : _vm._e()]), _vm._v(" "), _c('div', {
-    staticClass: "form-group",
-    attrs: {
-      "id": "new-diploma-task-description-block"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "task-description"
-    }
-  }, [_vm._v(_vm._s(_vm.translations.labels.description))]), _vm._v(" "), _c('textarea', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.newTask.description),
-      expression: "newTask.description"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      "id": "task-description"
-    },
-    domProps: {
-      "value": _vm.newTask.description,
-      "value": (_vm.newTask.description)
-    },
-    on: {
-      "keypress": function($event) {
-        _vm.clearErrorMessages('new-diploma', 'description')
-      },
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.newTask.description = $event.target.value
-      }
-    }
-  }), _vm._v(" "), (_vm.errors.hasOwnProperty('description')) ? _c('span', {
-    staticClass: "help-block",
-    attrs: {
-      "id": "description-help-block"
-    }
-  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.description[0]))])]) : _vm._e()]), _vm._v(" "), _c('div', {
-    staticClass: "form-group",
-    attrs: {
-      "id": "new-diploma-task-technologies-block"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "task-technologies"
-    }
-  }, [_vm._v(_vm._s(_vm.translations.labels.technologies))]), _vm._v(" "), _c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.newTask.technologies),
-      expression: "newTask.technologies"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      "id": "task-technologies",
-      "type": "text"
-    },
-    domProps: {
-      "value": _vm.newTask.technologies,
-      "value": (_vm.newTask.technologies)
-    },
-    on: {
-      "keypress": function($event) {
-        _vm.clearErrorMessages('new-diploma', 'technologies')
-      },
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.newTask.technologies = $event.target.value
-      }
-    }
-  }), _vm._v(" "), (_vm.errors.hasOwnProperty('technologies')) ? _c('span', {
-    staticClass: "help-block",
-    attrs: {
-      "id": "technologies-help-block"
-    }
-  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.technologies[0]))])]) : _vm._e()]), _vm._v(" "), _c('div', {
-    staticClass: "form-group",
-    attrs: {
-      "id": "new-diploma-task-group-block"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "task-group"
-    }
-  }, [_vm._v(_vm._s(_vm.translations.labels.group))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('i', [_vm._v(_vm._s(_vm.currGroup.name))])])]), _vm._v(" "), _c('div', {
-    staticClass: "modal-footer"
-  }, [_c('button', {
-    staticClass: "btn btn-primary",
-    attrs: {
-      "type": "button"
-    },
-    on: {
-      "click": _vm.publishTask
-    }
-  }, [_vm._v(_vm._s(_vm.translations.buttons.publish))]), _vm._v(" "), _c('button', {
-    staticClass: "btn btn-default",
-    attrs: {
-      "id": "close-new-task-modal",
-      "type": "button",
-      "data-dismiss": "modal"
-    },
-    on: {
-      "click": _vm.clearNewTaskInputs
-    }
-  }, [_vm._v(_vm._s(_vm.translations.buttons.cancel))])])])])])])]) : _vm._e()
-},staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-6887ff50", module.exports)
-  }
-}
-
-/***/ }),
-/* 71 */
+/* 57 */,
+/* 58 */,
+/* 59 */,
+/* 60 */,
+/* 61 */,
+/* 62 */,
+/* 63 */,
+/* 64 */,
+/* 65 */,
+/* 66 */,
+/* 67 */,
+/* 68 */,
+/* 69 */,
+/* 70 */,
+/* 71 */,
+/* 72 */,
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -49599,7 +47234,7 @@ module.exports = Vue$3;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ }),
-/* 72 */
+/* 74 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -49627,12 +47262,3256 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 73 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(14);
 module.exports = __webpack_require__(15);
 
+
+/***/ }),
+/* 76 */,
+/* 77 */,
+/* 78 */,
+/* 79 */,
+/* 80 */,
+/* 81 */,
+/* 82 */,
+/* 83 */,
+/* 84 */,
+/* 85 */,
+/* 86 */,
+/* 87 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['diploma'],
+    created: function created() {
+        this.getTranslations();
+        this.diplomaId = this.diploma;
+        var date = new Date();
+        date.setHours(0, 0, 0, 0);
+        this.dateNow = date.toISOString().substring(0, 10);
+    },
+    mounted: function mounted() {
+        this.getJobs();
+    },
+
+    methods: {
+        getTranslations: function getTranslations() {
+            var self = this;
+            $.ajax({
+                url: '/translation/professor/diplomas/jobs',
+                type: 'GET',
+                dataType: 'json'
+            }).done(function (response) {
+                console.log("translations loaded");
+                self.translations = response.translations;
+            }).fail(function () {
+                console.log("error");
+            });
+        },
+        getJobs: function getJobs() {
+            var self = this;
+            $.ajax({
+                url: '/diplomas/jobs/' + self.diplomaId,
+                type: 'GET',
+                dataType: 'json'
+            }).done(function (response) {
+                console.log("success");
+                console.log(response);
+                self.jobs = response.jobs;
+            }).fail(function (response) {
+                console.log("error");
+            });
+        },
+        publishJob: function publishJob() {
+            var self = this;
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: '/diplomas/jobs/' + self.diplomaId,
+                type: 'POST',
+                dataType: 'json',
+                data: self.newJob
+            }).done(function (response) {
+                console.log("success");
+                console.log(response);
+                self.jobs.push(response.job);
+                self.clearNewJobInputs();
+                $('#close-new-job-modal').click();
+            }).fail(function (response) {
+                console.log("error");
+                console.log(response);
+                self.errors = response.responseJSON;
+                if (self.errors.hasOwnProperty('description')) {
+                    $('#new-job-description-block').addClass('has-error');
+                }
+                if (self.errors.hasOwnProperty('deadline')) {
+                    $('#new-job-deadline-block').addClass('has-error');
+                }
+            });
+        },
+        clearNewJobInputs: function clearNewJobInputs() {
+            var self = this;
+            $.each(this.errors, function (index, value) {
+                self.clearErrorMessages('new-job', index);
+            });
+            this.newJob = {
+                description: '',
+                deadline: ''
+            };
+        },
+        clearErrorMessages: function clearErrorMessages(modalName, fieldName) {
+            console.log('clearing..');
+            var self = this;
+            if (self.errors.hasOwnProperty(fieldName)) {
+                console.log('#' + modalName + '-' + fieldName + '-block');
+                $('#' + modalName + '-' + fieldName + '-block').removeClass('has-error');
+                delete self.errors[fieldName];
+            }
+        },
+        deleteWithConfirm: function deleteWithConfirm(job) {
+            var self = this;
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            swal({
+                title: self.translations.buttons.delete + ' ?',
+                type: 'warning',
+                showCancelButton: true,
+                closeOnConfirm: true,
+                showLoaderOnConfirm: true,
+                cancelButtonText: self.translations.buttons.cancel,
+                confirmButtonText: "Ок",
+                confirmButtonColor: '#3085d6',
+                confirmLoadingButtonColor: '#DD6B55'
+            }, function () {
+                $.ajax({
+                    url: '/diplomas/jobs/' + job.id,
+                    type: 'DELETE',
+                    dataType: 'json'
+                }).done(function (response) {
+                    console.log("success");
+                    self.jobs.splice(self.jobs.indexOf(job), 1);
+                }).fail(function (response) {
+                    console.log("error");
+                    console.log(response);
+                });
+            });
+        },
+        clearUpdateJobInputs: function clearUpdateJobInputs() {
+            var self = this;
+            $.each(this.errors, function (index, value) {
+                self.clearErrorMessages('update-job', index);
+            });
+            this.curJob = {
+                description: '',
+                deadline: ''
+            };
+        },
+        updateJob: function updateJob() {
+            var self = this;
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: '/diplomas/jobs/' + self.curJob.id,
+                type: 'PATCH',
+                dataType: 'json',
+                data: self.curJob
+            }).done(function (response) {
+                console.log("success");
+                console.log(response);
+                self.jobs[self.jobs.map(function (job) {
+                    return job.id;
+                }).indexOf(self.curJob.id)] = response.updatedJob;
+                self.clearUpdateJobInputs();
+                $('#close-update-job-modal').click();
+            }).fail(function (response) {
+                console.log("error");
+                console.log(response);
+                self.errors = response.responseJSON;
+                if (self.errors.hasOwnProperty('description')) {
+                    $('#update-job-description-block').addClass('has-error');
+                }
+                if (self.errors.hasOwnProperty('deadline')) {
+                    $('#update-job-deadline-block').addClass('has-error');
+                }
+            });
+        },
+        openUpdateModal: function openUpdateModal(job) {
+            this.curJob = {
+                id: job.id,
+                description: job.description,
+                deadline: job.deadline.replace(/(\d{2}).(\d{2}).(\d{4})/, "$3-$2-$1"),
+                created_at: job.created_at.replace(/(\d{2}).(\d{2}).(\d{4})/, "$3-$2-$1")
+            };
+        }
+    },
+    data: function data() {
+        return {
+            jobs: [],
+            diplomaId: '',
+            translations: {},
+            data_ready: false,
+            errors: [],
+            newJob: {
+                description: '',
+                deadline: ''
+            },
+            dateNow: '',
+            curJob: {}
+        };
+    },
+    watch: {
+        translations: function translations() {
+            this.data_ready = true;
+        }
+    }
+});
+
+/***/ }),
+/* 88 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(1)(
+  /* script */
+  __webpack_require__(87),
+  /* template */
+  __webpack_require__(89),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\professor\\diploma\\jobs\\Jobs.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] Jobs.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-951460f0", Component.options)
+  } else {
+    hotAPI.reload("data-v-951460f0", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 89 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return (_vm.data_ready) ? _c('div', [_c('div', {
+    staticClass: "table-responsive"
+  }, [(_vm.jobs.length) ? _c('table', {
+    staticClass: "table table-bordered"
+  }, [_c('thead', [_c('tr', [_c('th', [_vm._v(_vm._s(_vm.translations.labels.description))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.created_at))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.deadline))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.actions))])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.jobs), function(job) {
+    return _c('tr', {
+      key: job.id
+    }, [_c('td', [_vm._v(_vm._s(job.description))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(job.created_at))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(job.deadline))]), _vm._v(" "), _c('td', [_c('button', {
+      staticClass: "btn btn-sm btn-primary",
+      attrs: {
+        "data-toggle": "modal",
+        "data-target": "#update-job-modal"
+      },
+      on: {
+        "click": function($event) {
+          _vm.openUpdateModal(job)
+        }
+      }
+    }, [_vm._v(_vm._s(_vm.translations.buttons.edit))]), _vm._v(" "), _c('button', {
+      staticClass: "btn btn-sm btn-danger",
+      on: {
+        "click": function($event) {
+          _vm.deleteWithConfirm(job)
+        }
+      }
+    }, [_vm._v(_vm._s(_vm.translations.buttons.delete))])])])
+  })), _vm._v(" "), _c('tfoot', [_c('div', {
+    staticClass: "modal fade",
+    attrs: {
+      "id": "update-job-modal",
+      "role": "dialog",
+      "data-backdrop": "static",
+      "data-keyboard": "false"
+    }
+  }, [_c('div', {
+    staticClass: "modal-dialog"
+  }, [_c('div', {
+    staticClass: "modal-content"
+  }, [_c('div', {
+    staticClass: "modal-header"
+  }, [_c('button', {
+    staticClass: "close",
+    attrs: {
+      "type": "button",
+      "data-dismiss": "modal"
+    },
+    on: {
+      "click": _vm.clearUpdateJobInputs
+    }
+  }, [_vm._v("×")]), _vm._v(" "), _c('h4', {
+    staticClass: "modal-title"
+  }, [_vm._v(_vm._s(_vm.translations.labels.update_job))])]), _vm._v(" "), _c('div', {
+    staticClass: "modal-body"
+  }, [_c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "update-job-description-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "job-description"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.description))]), _vm._v(" "), _c('textarea', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.curJob.description),
+      expression: "curJob.description"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "id": "description"
+    },
+    domProps: {
+      "value": _vm.curJob.description,
+      "value": (_vm.curJob.description)
+    },
+    on: {
+      "keypress": function($event) {
+        _vm.clearErrorMessages('update-job', 'description')
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.curJob.description = $event.target.value
+      }
+    }
+  }), _vm._v(" "), (_vm.errors.hasOwnProperty('description')) ? _c('span', {
+    staticClass: "help-block",
+    attrs: {
+      "id": "description-help-block"
+    }
+  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.description[0]))])]) : _vm._e()]), _vm._v(" "), _c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "update-job-deadline-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "job-deadline"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.deadline))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.curJob.deadline),
+      expression: "curJob.deadline"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "type": "date",
+      "min": _vm.curJob.created_at,
+      "name": "job-deadline"
+    },
+    domProps: {
+      "value": _vm.curJob.deadline,
+      "value": (_vm.curJob.deadline)
+    },
+    on: {
+      "change": function($event) {
+        _vm.clearErrorMessages('update-job', 'deadline')
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.curJob.deadline = $event.target.value
+      }
+    }
+  }), _vm._v(" "), (_vm.errors.hasOwnProperty('deadline')) ? _c('span', {
+    staticClass: "help-block",
+    attrs: {
+      "id": "deadline-help-block"
+    }
+  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.deadline[0]))])]) : _vm._e()])]), _vm._v(" "), _c('div', {
+    staticClass: "modal-footer"
+  }, [_c('button', {
+    staticClass: "btn btn-primary",
+    attrs: {
+      "type": "button"
+    },
+    on: {
+      "click": _vm.updateJob
+    }
+  }, [_vm._v(_vm._s(_vm.translations.buttons.update))]), _vm._v(" "), _c('button', {
+    staticClass: "btn btn-default",
+    attrs: {
+      "id": "close-update-job-modal",
+      "type": "button",
+      "data-dismiss": "modal"
+    },
+    on: {
+      "click": _vm.clearUpdateJobInputs
+    }
+  }, [_vm._v(_vm._s(_vm.translations.buttons.cancel))])])])])])])], 1) : _c('div', {
+    staticClass: "form-group"
+  }, [_c('p', [_vm._v(_vm._s(_vm.translations.labels.no_jobs))])])]), _vm._v(" "), _c('div', {
+    staticClass: "form-group"
+  }, [_c('button', {
+    staticClass: "btn btn-primary",
+    attrs: {
+      "data-toggle": "modal",
+      "data-target": "#new-job-modal"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.buttons.new_job))]), _vm._v(" "), _c('div', {
+    staticClass: "modal fade",
+    attrs: {
+      "id": "new-job-modal",
+      "role": "dialog",
+      "data-backdrop": "static",
+      "data-keyboard": "false"
+    }
+  }, [_c('div', {
+    staticClass: "modal-dialog"
+  }, [_c('div', {
+    staticClass: "modal-content"
+  }, [_c('div', {
+    staticClass: "modal-header"
+  }, [_c('button', {
+    staticClass: "close",
+    attrs: {
+      "type": "button",
+      "data-dismiss": "modal"
+    },
+    on: {
+      "click": _vm.clearNewJobInputs
+    }
+  }, [_vm._v("×")]), _vm._v(" "), _c('h4', {
+    staticClass: "modal-title"
+  }, [_vm._v(_vm._s(_vm.translations.buttons.new_job))])]), _vm._v(" "), _c('div', {
+    staticClass: "modal-body"
+  }, [_c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "new-job-description-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "job-description"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.description))]), _vm._v(" "), _c('textarea', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.newJob.description),
+      expression: "newJob.description"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "id": "description"
+    },
+    domProps: {
+      "value": _vm.newJob.description,
+      "value": (_vm.newJob.description)
+    },
+    on: {
+      "keypress": function($event) {
+        _vm.clearErrorMessages('new-job', 'description')
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.newJob.description = $event.target.value
+      }
+    }
+  }), _vm._v(" "), (_vm.errors.hasOwnProperty('description')) ? _c('span', {
+    staticClass: "help-block",
+    attrs: {
+      "id": "description-help-block"
+    }
+  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.description[0]))])]) : _vm._e()]), _vm._v(" "), _c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "new-job-deadline-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "job-deadline"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.deadline))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.newJob.deadline),
+      expression: "newJob.deadline"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "type": "date",
+      "min": _vm.dateNow,
+      "name": "job-deadline"
+    },
+    domProps: {
+      "value": _vm.newJob.deadline,
+      "value": (_vm.newJob.deadline)
+    },
+    on: {
+      "change": function($event) {
+        _vm.clearErrorMessages('new-job', 'deadline')
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.newJob.deadline = $event.target.value
+      }
+    }
+  }), _vm._v(" "), (_vm.errors.hasOwnProperty('deadline')) ? _c('span', {
+    staticClass: "help-block",
+    attrs: {
+      "id": "deadline-help-block"
+    }
+  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.deadline[0]))])]) : _vm._e()])]), _vm._v(" "), _c('div', {
+    staticClass: "modal-footer"
+  }, [_c('button', {
+    staticClass: "btn btn-primary",
+    attrs: {
+      "type": "button"
+    },
+    on: {
+      "click": _vm.publishJob
+    }
+  }, [_vm._v(_vm._s(_vm.translations.buttons.publish))]), _vm._v(" "), _c('button', {
+    staticClass: "btn btn-default",
+    attrs: {
+      "id": "close-new-job-modal",
+      "type": "button",
+      "data-dismiss": "modal"
+    },
+    on: {
+      "click": _vm.clearNewJobInputs
+    }
+  }, [_vm._v(_vm._s(_vm.translations.buttons.cancel))])])])])])])]) : _vm._e()
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-951460f0", module.exports)
+  }
+}
+
+/***/ }),
+/* 90 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {
+        console.log('task row mounted');
+    }
+});
+
+/***/ }),
+/* 91 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Row_vue__ = __webpack_require__(97);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Row_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Row_vue__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: {
+        Row: __WEBPACK_IMPORTED_MODULE_0__Row_vue___default.a
+    },
+    created: function created() {
+        this.getTranslations();
+    },
+    beforeMount: function beforeMount() {
+        var self = this;
+        this.getGroupList();
+    },
+    mounted: function mounted() {
+        // console.log('Diplomas list mounted.');
+        // var self = this;
+        // setTimeout(function() {
+        //     self.getFilteredData();
+        // }, 450);
+    },
+
+    methods: {
+        getTranslations: function getTranslations() {
+            var self = this;
+            $.ajax({
+                url: '/translation/professor/diplomas/list',
+                type: 'GET',
+                dataType: 'json'
+            }).done(function (response) {
+                console.log("translations loaded");
+                self.translations = response.translations;
+            }).fail(function () {
+                console.log("error");
+            });
+        },
+        getFilteredData: function getFilteredData() {
+            var self = this;
+            // self.setCurrentGroup();
+            var activeGroup = _.find(this.groups, { id: this.currGroup.id });
+            if (typeof activeGroup !== 'undefined') {
+                this.currGroup.name = activeGroup.name;
+            }
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: '/diplomas/professor/list',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    group_id: self.currGroup.id
+                }
+            }).done(function (response) {
+                console.log('diplomas list recieved');
+                console.log(response);
+                self.diplomas = response.diplomas;
+                if (self.diplomas.length) {
+                    self.diplomas = self.diplomas.reverse();
+                }
+                self.data_ready = true;
+            }).fail(function (response) {
+                console.log('fail');
+                console.log(response);
+                if (response.hasOwnProperty('responseJSON')) {
+                    if (response.responseJSON.hasOwnProperty('redirect')) {
+                        window.location.replace(response.responseJSON.redirect);
+                    }
+                }
+            });
+        },
+        openDiploma: function openDiploma(diploma) {
+            return '/diplomas/' + diploma.id;
+        },
+        setCurrentGroup: function setCurrentGroup() {
+            this.currGroup.id = $('#group-id').val();
+            this.currGroup.name = $('#group-id option:selected').text();
+        },
+        getGroupList: function getGroupList() {
+            var self = this;
+            $.ajax({
+                url: '/diplomas/professor/groups',
+                type: 'get',
+                dataType: 'json'
+            }).done(function (response) {
+                console.log('groups list recieved');
+                console.log(response);
+                self.groups = response;
+                self.currGroup = {
+                    'id': self.groups[0].id,
+                    'name': self.groups[0].name
+                };
+            }).fail(function (response) {
+                console.log("error");
+                console.log(response);
+                if (response.hasOwnProperty('responseJSON')) {
+                    if (response.responseJSON.hasOwnProperty('redirect')) {
+                        window.location.replace(response.responseJSON.redirect);
+                    }
+                }
+            });
+        },
+        clearNewTaskInputs: function clearNewTaskInputs() {
+            var self = this;
+            $.each(this.errors, function (index, value) {
+                self.clearErrorMessages('new-diploma', index);
+            });
+            this.newTask = {
+                title: '',
+                description: '',
+                technologies: ''
+            };
+        },
+        publishTask: function publishTask() {
+            var self = this;
+            $.ajax({
+                url: '/diplomas',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    title: self.newTask.title,
+                    description: self.newTask.description,
+                    technologies: self.newTask.technologies ? self.newTask.technologies : '',
+                    group_id: self.currGroup.id
+                }
+            }).done(function (response) {
+                console.log("success");
+                console.log(response);
+                self.diplomas.unshift(response);
+                self.clearNewTaskInputs();
+                $('#close-new-task-modal').click();
+            }).fail(function (response) {
+                console.log("error");
+                console.log(response);
+                self.errors = response.responseJSON;
+                if (self.errors.hasOwnProperty('title')) {
+                    $('#new-diploma-task-title-block').addClass('has-error');
+                }
+                if (self.errors.hasOwnProperty('description')) {
+                    $('#new-diploma-task-description-block').addClass('has-error');
+                }
+                if (self.errors.hasOwnProperty('technologies')) {
+                    $('#new-diploma-task-technologies-block').addClass('has-error');
+                }
+            });
+        },
+        clearErrorMessages: function clearErrorMessages(modalName, fieldName) {
+            console.log('clearing..');
+            var self = this;
+            if (self.errors.hasOwnProperty(fieldName)) {
+                $('#' + modalName + '-task-' + fieldName + '-block').removeClass('has-error');
+                delete self.errors[fieldName];
+            }
+        },
+        deleteWithConfirm: function deleteWithConfirm(diploma) {
+            var self = this;
+            swal({
+                title: self.translations.buttons.delete + ' ' + diploma.title + '?',
+                type: 'warning',
+                showCancelButton: true,
+                closeOnConfirm: true,
+                showLoaderOnConfirm: true,
+                cancelButtonText: self.translations.buttons.cancel,
+                confirmButtonText: "Ок",
+                confirmButtonColor: '#3085d6',
+                confirmLoadingButtonColor: '#DD6B55'
+            }, function () {
+                $.ajax({
+                    url: '/diplomas/' + diploma.id,
+                    type: 'DELETE',
+                    dataType: 'json'
+                }).done(function (response) {
+                    console.log("success");
+                    self.diplomas.splice(self.diplomas.indexOf(diploma), 1);
+                }).fail(function (response) {
+                    console.log("error");
+                    console.log("response");
+                });
+            });
+        },
+        openUpdateModal: function openUpdateModal(diploma) {
+            this.currTask = {
+                created_at: diploma.created_at,
+                description: diploma.description,
+                group_id: diploma.group_id,
+                id: diploma.id,
+                professor_id: diploma.professor_id,
+                requests: diploma.requests,
+                technologies: diploma.technologies,
+                title: diploma.title,
+                type: diploma.type,
+                updated_at: diploma.updated_at
+            };
+        },
+        clearUpdateTaskInputs: function clearUpdateTaskInputs() {
+            var self = this;
+            $.each(this.errors, function (index, value) {
+                self.clearErrorMessages('update-diploma', index);
+            });
+            this.currTask = {
+                created_at: '',
+                description: '',
+                group_id: '',
+                id: '',
+                professor_id: '',
+                requests: '',
+                technologies: '',
+                title: '',
+                type: '',
+                updated_at: ''
+            };
+        },
+        updateTask: function updateTask() {
+            var self = this;
+            $.ajax({
+                url: '/diplomas/' + self.currTask.id,
+                type: 'PATCH',
+                dataType: 'json',
+                data: self.currTask
+            }).done(function (response) {
+                console.log("task updated");
+                console.log(response);
+                self.diplomas[self.diplomas.map(function (diploma) {
+                    return diploma.id;
+                }).indexOf(self.currTask.id)] = response;
+                self.clearUpdateTaskInputs();
+                $('#close-update-task-modal').click();
+            }).fail(function (response) {
+                console.log("error");
+                console.log(response);
+                self.errors = response.responseJSON;
+                if (self.errors.hasOwnProperty('title')) {
+                    $('#update-diploma-task-title-block').addClass('has-error');
+                }
+                if (self.errors.hasOwnProperty('description')) {
+                    $('#update-diploma-task-description-block').addClass('has-error');
+                }
+                if (self.errors.hasOwnProperty('technologies')) {
+                    $('#update-diploma-task-technologies-block').addClass('has-error');
+                }
+            });
+        }
+    },
+    data: function data() {
+        return {
+            diplomas: [],
+            translations: [],
+            groups: [],
+            currGroup: {
+                id: '',
+                name: ''
+            },
+            newTask: {
+                title: '',
+                description: '',
+                technologies: ''
+            },
+            currTask: {
+                created_at: '',
+                description: '',
+                group_id: '',
+                id: '',
+                professor_id: '',
+                requests: '',
+                technologies: '',
+                title: '',
+                type: '',
+                updated_at: ''
+            },
+            data_ready: false,
+            errors: {}
+        };
+    },
+
+    watch: {
+        groups: function groups() {
+            this.getFilteredData();
+        }
+    }
+});
+
+/***/ }),
+/* 92 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {
+        console.log('request panel mounted');
+    }
+});
+
+/***/ }),
+/* 93 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Panel__ = __webpack_require__(99);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Panel___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Panel__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Status__ = __webpack_require__(101);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Status___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__Status__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: {
+        Panel: __WEBPACK_IMPORTED_MODULE_0__Panel___default.a,
+        Status: __WEBPACK_IMPORTED_MODULE_1__Status___default.a
+    },
+    computed: {
+        statuses: function statuses() {
+            return {
+                3: this.translations.buttons.all,
+                0: this.translations.buttons.pending,
+                1: this.translations.buttons.accepted,
+                2: this.translations.buttons.declined
+            };
+        }
+    },
+    directives: {
+        radio: {
+            twoWay: true,
+            bind: function bind() {
+                var self = this;
+                var btns = $('#status_type').find('.btn');
+                btns.each(function () {
+                    $(this).on('click', function () {
+                        var v = $(this).find('input').get(0).value;
+                        self.set(v);
+                    });
+                });
+            },
+            update: function update() {
+                var value = this._watcher.value;
+                if (value) {
+                    this.set(value);
+                    var btns = $(this.el).find('.btn');
+                    btns.each(function () {
+                        $(this).removeClass('active');
+                        var v = $(this).find('input').get(0).value;
+
+                        if (v === value) {
+                            $(this).addClass('active');
+                        }
+                    });
+                } else {
+                    var input = $(this.el).find('.active input').get(0);
+                    if (input) {
+                        this.set(input.value);
+                    }
+                }
+            }
+        }
+    },
+    created: function created() {
+        this.getTranslations();
+    },
+    beforeMount: function beforeMount() {
+        this.getGroupList();
+    },
+    mounted: function mounted() {
+        // var self = this;
+        // setTimeout(function() {
+        //     self.getFilteredData();
+        // }, 450);
+        // console.log('Requests list mounted.');
+    },
+
+    methods: {
+        getTranslations: function getTranslations() {
+            var self = this;
+            $.ajax({
+                url: '/translation/professor/requests/list',
+                type: 'GET',
+                dataType: 'json'
+            }).done(function (response) {
+                console.log("translations loaded");
+                self.translations = response.translations;
+            }).fail(function () {
+                console.log("no translations");
+            });
+        },
+        getFilteredData: function getFilteredData() {
+            var self = this;
+            var activeGroup = _.find(this.groups, { id: this.currGroup.id });
+            if (typeof activeGroup !== 'undefined') {
+                this.currGroup.name = activeGroup.name;
+            }
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: '/diplomas/professor/requests',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    group_id: self.currGroup.id,
+                    status_type: self.status_type
+                }
+            }).done(function (response) {
+                console.log('requests list recieved');
+                console.log(response);
+                self.requests = response.requests;
+                if (self.requests.length) {
+                    self.requests = self.requests.reverse();
+                }
+            }).fail(function (response) {
+                console.log('fail');
+                console.log(response);
+                if (response.hasOwnProperty('responseJSON')) {
+                    if (response.responseJSON.hasOwnProperty('redirect')) {
+                        window.location.replace(response.responseJSON.redirect);
+                    }
+                }
+            });
+        },
+        openDiploma: function openDiploma(request) {
+            return '/diplomas/' + request.diploma_id;
+        },
+        getGroupList: function getGroupList() {
+            var self = this;
+            $.ajax({
+                url: '/diplomas/professor/requests/groups',
+                type: 'get',
+                dataType: 'json'
+            }).done(function (response) {
+                console.log('groups list recieved');
+                console.log(response);
+                self.groups = response;
+                self.currGroup = {
+                    'id': self.groups[0].id,
+                    'name': self.groups[0].name
+                };
+            }).fail(function (response) {
+                console.log("error");
+                console.log(response);
+                if (response.hasOwnProperty('responseJSON')) {
+                    if (response.responseJSON.hasOwnProperty('redirect')) {
+                        window.location.replace(response.responseJSON.redirect);
+                    }
+                }
+            });
+        },
+        acceptRequest: function acceptRequest(request) {
+            var self = this;
+            $.ajax({
+                url: '/diplomas/professor/requests/accept/' + request.student_id + '/' + request.task_id,
+                type: 'PATCH',
+                dataType: 'json',
+                data: request
+            }).done(function (response) {
+                console.log("success");
+                self.requests[self.requests.indexOf(request)].status = '1';
+            }).fail(function (response) {
+                console.log("error");
+                console.log(response);
+            });
+        },
+        declineRequest: function declineRequest(request) {
+            var self = this;
+            $.ajax({
+                url: '/diplomas/professor/requests/decline/' + request.student_id + '/' + request.task_id,
+                type: 'PATCH',
+                dataType: 'json',
+                data: request
+            }).done(function (response) {
+                console.log("success");
+                self.requests[self.requests.indexOf(request)].status = '2';
+            }).fail(function (response) {
+                console.log("error");
+                console.log(response);
+            });
+        },
+        requestStatus: function requestStatus(request) {
+            var self = this;
+            var statusWord = '';
+            switch (request.status) {
+                case '0':
+                    statusWord = self.translations.labels.pending;
+                    break;
+                case '1':
+                    statusWord = self.translations.labels.accepted;
+                    break;
+                case '2':
+                    statusWord = self.translations.labels.declined;
+                    break;
+            }
+            return statusWord;
+        },
+        setPanelsColour: function setPanelsColour(request) {
+            var panel_class = '';
+            switch (request.status) {
+                case '0':
+                    panel_class = 'panel panel-warning';
+                    break;
+                case '1':
+                    panel_class = 'panel panel-success';
+                    break;
+                case '2':
+                    panel_class = 'panel panel-danger';
+            }
+            return panel_class;
+        }
+    },
+
+    data: function data() {
+        return {
+            requests: [],
+            translations: [],
+            groups: [],
+            data_ready: false,
+            status_type: '',
+            currGroup: {
+                id: '',
+                name: ''
+            }
+        };
+    },
+
+    watch: {
+        status_type: function status_type() {
+            this.getFilteredData();
+        },
+        groups: function groups() {
+            this.data_ready = true;
+        }
+    }
+
+});
+
+/***/ }),
+/* 94 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['values', 'selected', 'default'],
+    mounted: function mounted() {
+        this.mutableSelected = this.default;
+        this.$emit('update:selected', this.default);
+        console.log(this.mutableSelected);
+    },
+
+    methods: {
+        changeSelectVal: function changeSelectVal(index) {
+            this.mutableSelected = index;
+            this.$emit('update:selected', index);
+        }
+    },
+    data: function data() {
+        return {
+            mutableSelected: this.selected
+        };
+    }
+});
+
+/***/ }),
+/* 95 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {
+        console.log('task row mounted');
+    }
+});
+
+/***/ }),
+/* 96 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Row__ = __webpack_require__(102);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Row___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Row__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: {
+        Row: __WEBPACK_IMPORTED_MODULE_0__Row___default.a
+    },
+    created: function created() {
+        this.getTranslations();
+    },
+    beforeMount: function beforeMount() {
+        this.getGroupList();
+    },
+    mounted: function mounted() {
+        // console.log('Diplomas list mounted.');
+        // var self = this;
+        // setTimeout(function() {
+        //     self.getFilteredData();
+        // }, 450);
+    },
+
+    methods: {
+        getTranslations: function getTranslations() {
+            var self = this;
+            $.ajax({
+                url: '/translation/student/diplomas/list',
+                type: 'GET',
+                dataType: 'json'
+            }).done(function (response) {
+                console.log("translations loaded");
+                self.translations = response.translations;
+            }).fail(function () {
+                console.log("error");
+            });
+        },
+        getFilteredData: function getFilteredData() {
+            var self = this;
+            var activeGroup = _.find(this.groups, { id: this.currGroup.id });
+            if (typeof activeGroup !== 'undefined') {
+                this.currGroup.name = activeGroup.name;
+            }
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: '/diplomas/student/list',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    group_id: self.currGroup.id
+                }
+            }).done(function (response) {
+                console.log('diplomas list recieved');
+                console.log(response);
+                self.diplomas = response.diplomas;
+                if (self.diplomas.length) {
+                    self.diplomas = self.diplomas.reverse();
+                }
+                self.student_id = response.student_id;
+                self.data_ready = true;
+            }).fail(function (response) {
+                console.log('fail');
+                console.log(response);
+                if (response.hasOwnProperty('responseJSON')) {
+                    if (response.responseJSON.hasOwnProperty('redirect')) {
+                        window.location.replace(response.responseJSON.redirect);
+                    }
+                }
+            });
+        },
+        setCurrentGroup: function setCurrentGroup() {
+            this.currGroup.id = $('#group-id').val();
+            this.currGroup.name = $('#group-id option:selected').text();
+        },
+        openDiploma: function openDiploma(diploma) {
+            return '/diplomas/' + diploma.id;
+        },
+        showJobs: function showJobs(diploma) {
+            return '/diplomas/jobs/' + diploma.id;
+        },
+        getGroupList: function getGroupList() {
+            var self = this;
+            $.ajax({
+                url: '/diplomas/student/groups',
+                type: 'get',
+                dataType: 'json'
+            }).done(function (response) {
+                console.log('groups list recieved');
+                console.log(response);
+                self.groups = response;
+                self.currGroup = {
+                    'id': self.groups[0].id,
+                    'name': self.groups[0].name
+                };
+            }).fail(function (response) {
+                console.log("error");
+                console.log(response);
+                if (response.hasOwnProperty('responseJSON')) {
+                    if (response.responseJSON.hasOwnProperty('redirect')) {
+                        window.location.replace(response.responseJSON.redirect);
+                    }
+                }
+            });
+        },
+        clearRequestInputs: function clearRequestInputs() {
+            var self = this;
+            $.each(this.errors, function (index, value) {
+                self.clearErrorMessages('diploma-send-request', index);
+            });
+            this.currTask = {};
+        },
+        sendRequest: function sendRequest() {
+            var self = this;
+            $.ajax({
+                url: '/diplomas/requests/' + self.student_id,
+                type: 'POST',
+                dataType: 'json',
+                data: self.currTask
+            }).done(function (response) {
+                console.log("success");
+                self.diplomas[self.diplomas.map(function (diploma) {
+                    return diploma.id;
+                }).indexOf(self.currTask.id)].status = response.diplomaStatus.toString();
+                self.clearRequestInputs();
+                $('#close-request-modal').click();
+            }).fail(function (response) {
+                console.log("error");
+                self.errors = response.responseJSON;
+                if (self.errors.hasOwnProperty('message')) {
+                    $('#task-message-block').addClass('has-error');
+                }
+            });
+        },
+        resendRequest: function resendRequest() {
+            var self = this;
+            $.ajax({
+                url: '/diplomas/requests/' + self.student_id,
+                type: 'PATCH',
+                dataType: 'json',
+                data: self.currTask
+            }).done(function (response) {
+                console.log("success");
+                self.diplomas[self.diplomas.map(function (diploma) {
+                    return diploma.id;
+                }).indexOf(self.currTask.id)].status = response.diplomaStatus.toString();
+                self.clearRequestInputs();
+                $('#close-resend-request-modal').click();
+            }).fail(function (response) {
+                console.log("error");
+                self.errors = response.responseJSON;
+                if (self.errors.hasOwnProperty('message')) {
+                    $('#task-message-block').addClass('has-error');
+                }
+            });
+        },
+        openRequestModal: function openRequestModal(diploma) {
+            var self = this;
+            this.currTask = {
+                id: diploma.id,
+                title: diploma.title,
+                technologies: diploma.technologies ? diploma.technologies : '-',
+                professor: diploma.professor,
+                group: self.currGroup.name,
+                description: diploma.description,
+                message: '',
+                index: self.diplomas.indexOf(diploma)
+            };
+        },
+        clearErrorMessages: function clearErrorMessages(fieldName) {
+            console.log('clearing..');
+            var self = this;
+            if (self.errors.hasOwnProperty(fieldName)) {
+                $('#' + modalName + '-task-' + fieldName + '-block').removeClass('has-error');
+                delete self.errors[fieldName];
+            }
+        },
+        diplomaStatus: function diplomaStatus(diploma) {
+            var self = this;
+            var statusWord = '';
+            switch (diploma.status) {
+                case '0':
+                    statusWord = self.translations.labels.pending;
+                    break;
+                case '1':
+                    statusWord = self.translations.labels.accepted;
+                    break;
+                case '2':
+                    statusWord = self.translations.labels.declined;
+                    break;
+            }
+
+            return statusWord;
+        },
+        deleteRequest: function deleteRequest(diploma) {
+            var self = this;
+            swal({
+                title: self.translations.labels.delete_request + ' ' + diploma.title + '?',
+                type: 'warning',
+                showCancelButton: true,
+                closeOnConfirm: true,
+                showLoaderOnConfirm: true,
+                cancelButtonText: self.translations.buttons.cancel,
+                confirmButtonText: "Ок",
+                confirmButtonColor: '#3085d6',
+                confirmLoadingButtonColor: '#DD6B55'
+            }, function () {
+                $.ajax({
+                    url: '/diplomas/' + diploma.id + '/requests',
+                    type: 'DELETE',
+                    dataType: 'json'
+                }).done(function (response) {
+                    console.log("success");
+                    diploma.status = null;
+                }).fail(function (response) {
+                    console.log("error");
+                    console.log("response");
+                });
+            });
+        }
+    },
+    data: function data() {
+        return {
+            diplomas: [],
+            translations: [],
+            groups: [],
+            errors: [],
+            currGroup: {
+                id: '',
+                name: ''
+            },
+            currTask: {},
+            data_ready: false
+        };
+    },
+
+    watch: {
+        groups: function groups() {
+            this.getFilteredData();
+        }
+    }
+
+});
+
+/***/ }),
+/* 97 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(1)(
+  /* script */
+  __webpack_require__(90),
+  /* template */
+  __webpack_require__(105),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\professor\\diploma\\list\\Row.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] Row.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-278c7640", Component.options)
+  } else {
+    hotAPI.reload("data-v-278c7640", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 98 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(1)(
+  /* script */
+  __webpack_require__(91),
+  /* template */
+  __webpack_require__(109),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\professor\\diploma\\list\\Table.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] Table.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-50ee8954", Component.options)
+  } else {
+    hotAPI.reload("data-v-50ee8954", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 99 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(1)(
+  /* script */
+  __webpack_require__(92),
+  /* template */
+  __webpack_require__(107),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\professor\\diploma\\requests\\Panel.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] Panel.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-355b8cb0", Component.options)
+  } else {
+    hotAPI.reload("data-v-355b8cb0", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 100 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(1)(
+  /* script */
+  __webpack_require__(93),
+  /* template */
+  __webpack_require__(106),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\professor\\diploma\\requests\\Requests.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] Requests.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-341af5c8", Component.options)
+  } else {
+    hotAPI.reload("data-v-341af5c8", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 101 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(1)(
+  /* script */
+  __webpack_require__(94),
+  /* template */
+  __webpack_require__(108),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\professor\\diploma\\requests\\Status.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] Status.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-3a1c09f6", Component.options)
+  } else {
+    hotAPI.reload("data-v-3a1c09f6", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 102 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(1)(
+  /* script */
+  __webpack_require__(95),
+  /* template */
+  __webpack_require__(110),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\student\\diploma\\list\\Row.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] Row.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-69153d14", Component.options)
+  } else {
+    hotAPI.reload("data-v-69153d14", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 103 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(1)(
+  /* script */
+  __webpack_require__(96),
+  /* template */
+  __webpack_require__(104),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\student\\diploma\\list\\Table.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] Table.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-04ccc488", Component.options)
+  } else {
+    hotAPI.reload("data-v-04ccc488", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 104 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return (_vm.data_ready) ? _c('div', {
+    staticClass: "form-group"
+  }, [_c('div', {
+    staticClass: "form-group"
+  }, [_c('label', {
+    staticClass: "control-label",
+    attrs: {
+      "for": "group"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.group))]), _vm._v(" "), _c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.currGroup.id),
+      expression: "currGroup.id"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "name": "group",
+      "id": "group-id"
+    },
+    on: {
+      "change": [function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.currGroup.id = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }, _vm.getFilteredData]
+    }
+  }, _vm._l((_vm.groups), function(group) {
+    return _c('option', {
+      domProps: {
+        "value": group.id
+      }
+    }, [_vm._v(_vm._s(group.name))])
+  }))]), _vm._v(" "), _c('div', {
+    staticClass: "table-responsive"
+  }, [(_vm.diplomas.length) ? _c('table', {
+    staticClass: "table table-bordered"
+  }, [_c('thead', [_c('tr', [_c('th', [_vm._v(_vm._s(_vm.translations.labels.topic))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.professor))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.technologies))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.status))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.created_at))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.actions))])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.diplomas), function(diploma) {
+    return _c('row', {
+      key: diploma.id
+    }, [_c('template', {
+      slot: "col-topic"
+    }, [_c('a', {
+      attrs: {
+        "href": _vm.openDiploma(diploma)
+      }
+    }, [_vm._v(_vm._s(diploma.title.length > 10 ?
+      diploma.title.substr(0, 10) + '...' : diploma.title))])]), _vm._v(" "), _c('template', {
+      slot: "col-professor"
+    }, [_vm._v(_vm._s(diploma.professor))]), _vm._v(" "), _c('template', {
+      slot: "col-technologies"
+    }, [_vm._v(_vm._s(diploma.technologies ? diploma.technologies : '-'))]), _vm._v(" "), _c('template', {
+      slot: "col-status"
+    }, [_vm._v(_vm._s(diploma.status ? _vm.diplomaStatus(diploma) : '-'))]), _vm._v(" "), _c('template', {
+      slot: "col-cr_at"
+    }, [_vm._v(_vm._s(diploma.created_at))]), _vm._v(" "), _c('template', {
+      slot: "col-actions"
+    }, [(diploma.status === '0') ? _c('button', {
+      staticClass: "btn btn-danger btn-sm",
+      on: {
+        "click": function($event) {
+          _vm.deleteRequest(diploma)
+        }
+      }
+    }, [_vm._v(_vm._s(_vm.translations.buttons.delete_request))]) : (diploma.status === '2') ? _c('button', {
+      staticClass: "btn btn-warning btn-sm",
+      attrs: {
+        "data-toggle": "modal",
+        "data-target": "#diploma-resend-request-modal"
+      },
+      on: {
+        "click": function($event) {
+          _vm.openRequestModal(diploma)
+        }
+      }
+    }, [_vm._v(_vm._s(_vm.translations.buttons.resend_request))]) : (diploma.status === '1') ? _c('a', {
+      staticClass: "btn btn-info btn-sm",
+      attrs: {
+        "href": _vm.showJobs(diploma)
+      }
+    }, [_vm._v(_vm._s(_vm.translations.buttons.show_tasks))]) : _c('button', {
+      staticClass: "btn btn-primary btn-sm",
+      attrs: {
+        "data-toggle": "modal",
+        "data-target": "#diploma-send-request-modal"
+      },
+      on: {
+        "click": function($event) {
+          _vm.openRequestModal(diploma)
+        }
+      }
+    }, [_vm._v(_vm._s(_vm.translations.buttons.apply))])])], 2)
+  })), _vm._v(" "), _c('tfoot', [_c('div', {
+    staticClass: "modal fade",
+    attrs: {
+      "id": "diploma-send-request-modal",
+      "role": "dialog",
+      "data-backdrop": "static",
+      "data-keyboard": "false"
+    }
+  }, [_c('div', {
+    staticClass: "modal-dialog"
+  }, [_c('div', {
+    staticClass: "modal-content"
+  }, [_c('div', {
+    staticClass: "modal-header"
+  }, [_c('button', {
+    staticClass: "close",
+    attrs: {
+      "type": "button",
+      "data-dismiss": "modal"
+    },
+    on: {
+      "click": _vm.clearRequestInputs
+    }
+  }, [_vm._v("×")]), _vm._v(" "), _c('h4', {
+    staticClass: "modal-title"
+  }, [_vm._v(_vm._s(_vm.translations.labels.request))])]), _vm._v(" "), _c('div', {
+    staticClass: "modal-body"
+  }, [_c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "diploma-send-request-task-title-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "diploma-send-request-task-title"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.topic))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('i', [_vm._v(_vm._s(_vm.currTask.title))])]), _vm._v(" "), _c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "diploma-send-request-task-professor-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "diploma-send-request-task-group"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.professor))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('i', [_vm._v(_vm._s(_vm.currTask.professor))])]), _vm._v(" "), _c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "diploma-send-request-task-description-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "diploma-send-request-task-group"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.description))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('i', [_vm._v(_vm._s(_vm.currTask.description))])]), _vm._v(" "), _c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "diploma-send-request-task-technologies-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "diploma-send-request-task-group"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.technologies))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('i', [_vm._v(_vm._s(_vm.currTask.technologies))])]), _vm._v(" "), _c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "diploma-send-request-task-group-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "diploma-send-request-task-group"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.group))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('i', [_vm._v(_vm._s(_vm.currTask.group))])]), _vm._v(" "), _c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "diploma-send-request-task-message-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "diploma-send-request-task-message"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.message))]), _vm._v(" "), _c('textarea', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.currTask.message),
+      expression: "currTask.message"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "id": "diploma-send-request-task-message"
+    },
+    domProps: {
+      "value": _vm.currTask.message,
+      "value": (_vm.currTask.message)
+    },
+    on: {
+      "keypress": function($event) {
+        _vm.clearErrorMessages('diploma-send-request', 'message')
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.currTask.message = $event.target.value
+      }
+    }
+  }), _vm._v(" "), (_vm.errors.hasOwnProperty('message')) ? _c('span', {
+    staticClass: "help-block",
+    attrs: {
+      "id": "message-help-block"
+    }
+  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.message[0]))])]) : _vm._e()])]), _vm._v(" "), _c('div', {
+    staticClass: "modal-footer"
+  }, [_c('button', {
+    staticClass: "btn btn-primary",
+    attrs: {
+      "type": "button"
+    },
+    on: {
+      "click": _vm.sendRequest
+    }
+  }, [_vm._v(_vm._s(_vm.translations.buttons.apply))]), _vm._v(" "), _c('button', {
+    staticClass: "btn btn-default",
+    attrs: {
+      "id": "close-request-modal",
+      "type": "button",
+      "data-dismiss": "modal"
+    },
+    on: {
+      "click": _vm.clearRequestInputs
+    }
+  }, [_vm._v(_vm._s(_vm.translations.buttons.cancel))])])])])]), _vm._v(" "), _c('div', {
+    staticClass: "modal fade",
+    attrs: {
+      "id": "diploma-resend-request-modal",
+      "role": "dialog",
+      "data-backdrop": "static",
+      "data-keyboard": "false"
+    }
+  }, [_c('div', {
+    staticClass: "modal-dialog"
+  }, [_c('div', {
+    staticClass: "modal-content"
+  }, [_c('div', {
+    staticClass: "modal-header"
+  }, [_c('button', {
+    staticClass: "close",
+    attrs: {
+      "type": "button",
+      "data-dismiss": "modal"
+    },
+    on: {
+      "click": _vm.clearRequestInputs
+    }
+  }, [_vm._v("×")]), _vm._v(" "), _c('h4', {
+    staticClass: "modal-title"
+  }, [_vm._v(_vm._s(_vm.translations.labels.request))])]), _vm._v(" "), _c('div', {
+    staticClass: "modal-body"
+  }, [_c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "diploma-resend-request-task-title-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "diploma-resend-request-task-title"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.topic))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('i', [_vm._v(_vm._s(_vm.currTask.title))])]), _vm._v(" "), _c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "diploma-resend-request-task-professor-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "diploma-resend-request-task-group"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.professor))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('i', [_vm._v(_vm._s(_vm.currTask.professor))])]), _vm._v(" "), _c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "diploma-resend-request-task-description-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "diploma-resend-request-task-group"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.description))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('i', [_vm._v(_vm._s(_vm.currTask.description))])]), _vm._v(" "), _c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "diploma-resend-request-task-technologies-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "diploma-resend-request-task-group"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.technologies))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('i', [_vm._v(_vm._s(_vm.currTask.technologies))])]), _vm._v(" "), _c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "diploma-resend-request-task-group-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "diploma-resend-request-task-group"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.group))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('i', [_vm._v(_vm._s(_vm.currTask.group))])]), _vm._v(" "), _c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "diploma-resend-request-task-message-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "diploma-resend-request-task-message"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.message))]), _vm._v(" "), _c('textarea', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.currTask.message),
+      expression: "currTask.message"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "id": "diploma-resend-request-task-message"
+    },
+    domProps: {
+      "value": _vm.currTask.message,
+      "value": (_vm.currTask.message)
+    },
+    on: {
+      "keypress": function($event) {
+        _vm.clearErrorMessages('diploma-resend-request', 'message')
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.currTask.message = $event.target.value
+      }
+    }
+  }), _vm._v(" "), (_vm.errors.hasOwnProperty('message')) ? _c('span', {
+    staticClass: "help-block",
+    attrs: {
+      "id": "diploma-resend-request-message-help-block"
+    }
+  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.message[0]))])]) : _vm._e()])]), _vm._v(" "), _c('div', {
+    staticClass: "modal-footer"
+  }, [_c('button', {
+    staticClass: "btn btn-primary",
+    attrs: {
+      "type": "button"
+    },
+    on: {
+      "click": _vm.resendRequest
+    }
+  }, [_vm._v(_vm._s(_vm.translations.buttons.apply))]), _vm._v(" "), _c('button', {
+    staticClass: "btn btn-default",
+    attrs: {
+      "id": "close-resend-request-modal",
+      "type": "button",
+      "data-dismiss": "modal"
+    },
+    on: {
+      "click": _vm.clearRequestInputs
+    }
+  }, [_vm._v(_vm._s(_vm.translations.buttons.cancel))])])])])])])], 1) : _c('div', {
+    staticClass: "form-group"
+  }, [_c('p', [_vm._v(_vm._s(_vm.translations.labels.no_tasks))])])])]) : _vm._e()
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-04ccc488", module.exports)
+  }
+}
+
+/***/ }),
+/* 105 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('tr', [_c('td', [_vm._t("col-topic")], 2), _vm._v(" "), _c('td', [_vm._t("col-requests-accepted")], 2), _vm._v(" "), _c('td', [_vm._t("col-requests-pending")], 2), _vm._v(" "), _c('td', [_vm._t("col-requests-denied")], 2), _vm._v(" "), _c('td', [_vm._t("col-student")], 2), _vm._v(" "), _c('td', [_vm._t("col-cr_at")], 2), _vm._v(" "), _c('td', [_vm._t("col-upd_at")], 2), _vm._v(" "), _c('td', [_vm._t("col-actions")], 2)])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-278c7640", module.exports)
+  }
+}
+
+/***/ }),
+/* 106 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return (_vm.data_ready) ? _c('div', {
+    staticClass: "form-group"
+  }, [(_vm.groups.length) ? _c('div', [_c('div', {
+    staticClass: "form-group"
+  }, [_c('label', {
+    staticClass: "control-label",
+    attrs: {
+      "for": "group"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.group))]), _vm._v(" "), _c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.currGroup.id),
+      expression: "currGroup.id"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "name": "group",
+      "id": "group-id"
+    },
+    on: {
+      "change": [function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.currGroup.id = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }, _vm.getFilteredData]
+    }
+  }, _vm._l((_vm.groups), function(group) {
+    return _c('option', {
+      domProps: {
+        "value": group.id
+      }
+    }, [_vm._v(_vm._s(group.name))])
+  }))]), _vm._v(" "), _c('div', {
+    staticClass: "form-group"
+  }, [_c('label', [_vm._v(_vm._s(_vm.translations.labels.status) + ":")]), _vm._v(" "), _c('status', {
+    attrs: {
+      "values": _vm.statuses,
+      "selected": _vm.status_type,
+      "default": '3'
+    },
+    on: {
+      "update:selected": function($event) {
+        _vm.status_type = $event
+      }
+    }
+  })], 1), _vm._v(" "), _c('div', {
+    staticClass: "table-responsive"
+  }, [(_vm.requests.length) ? _c('div', _vm._l((_vm.requests), function(request) {
+    return _c('panel', {
+      key: request.id,
+      class: _vm.setPanelsColour(request)
+    }, [_c('div', {
+      staticClass: "form-group",
+      slot: "task-title"
+    }, [_c('h1', [_vm._v(_vm._s(request.task_title))])]), _vm._v(" "), _c('div', {
+      staticClass: "form-group",
+      slot: "request-student"
+    }, [_c('label', {
+      attrs: {
+        "for": "request-student"
+      }
+    }, [_vm._v(_vm._s(_vm.translations.labels.student) + ":")]), _vm._v(" "), _c('span', {
+      attrs: {
+        "name": "request-student"
+      }
+    }, [_vm._v(_vm._s(request.student))])]), _vm._v(" "), _c('div', {
+      staticClass: "form-group",
+      slot: "request-status"
+    }, [_c('label', {
+      attrs: {
+        "for": "request-status"
+      }
+    }, [_vm._v(_vm._s(_vm.translations.labels.status) + ":")]), _vm._v(" "), _c('span', {
+      attrs: {
+        "name": "request-status"
+      }
+    }, [_vm._v(_vm._s(_vm.requestStatus(request)))])]), _vm._v(" "), _c('div', {
+      staticClass: "form-group",
+      slot: "request-message"
+    }, [_c('label', {
+      attrs: {
+        "for": "request-message"
+      }
+    }, [_vm._v(_vm._s(_vm.translations.labels.message) + ":")]), _vm._v(" "), _c('span', {
+      attrs: {
+        "name": "request-message"
+      }
+    }, [_vm._v(_vm._s(request.message ? request.message : '-'))])]), _vm._v(" "), _c('div', {
+      staticClass: "form-group",
+      slot: "request-cr_at"
+    }, [_c('label', {
+      attrs: {
+        "for": "request-cr_at"
+      }
+    }, [_vm._v(_vm._s(_vm.translations.labels.created_at) + ":")]), _vm._v(" "), _c('span', {
+      attrs: {
+        "name": "request-cr_at"
+      }
+    }, [_vm._v(_vm._s(request.created_at))])]), _vm._v(" "), (request.status === '0') ? _c('div', {
+      staticClass: "panel-footer",
+      slot: "request-footer"
+    }, [_c('button', {
+      staticClass: "btn btn-primary btn-sm",
+      on: {
+        "click": function($event) {
+          _vm.acceptRequest(request)
+        }
+      }
+    }, [_vm._v(_vm._s(_vm.translations.buttons.accept))]), _vm._v(" "), _c('button', {
+      staticClass: "btn btn-danger btn-sm",
+      on: {
+        "click": function($event) {
+          _vm.declineRequest(request)
+        }
+      }
+    }, [_vm._v(_vm._s(_vm.translations.buttons.decline))])]) : _vm._e()])
+  })) : _c('div', {
+    staticClass: "form-group"
+  }, [_c('p', [_vm._v(_vm._s(_vm.translations.labels.no_requests))])])])]) : _c('div', {
+    staticClass: "form-group"
+  }, [_c('p', [_vm._v(_vm._s(_vm.translations.labels.no_requests))])])]) : _vm._e()
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-341af5c8", module.exports)
+  }
+}
+
+/***/ }),
+/* 107 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', [_c('div', {
+    staticClass: "panel-heading"
+  }, [_vm._t("task-title")], 2), _vm._v(" "), _c('div', {
+    staticClass: "panel-body"
+  }, [_vm._t("request-student"), _vm._v(" "), _vm._t("request-status"), _vm._v(" "), _vm._t("request-message"), _vm._v(" "), _vm._t("request-cr_at")], 2), _vm._v(" "), _vm._t("request-footer")], 2)
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-355b8cb0", module.exports)
+  }
+}
+
+/***/ }),
+/* 108 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "btn-group"
+  }, _vm._l((_vm.values), function(item, index) {
+    return _c('button', {
+      class: ['btn', {
+        'btn-primary': _vm.mutableSelected === index,
+        'btn-default': _vm.mutableSelected !== index
+      }],
+      attrs: {
+        "type": "button"
+      },
+      on: {
+        "click": function($event) {
+          _vm.changeSelectVal(index)
+        }
+      }
+    }, [_vm._v(_vm._s(item))])
+  }))
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-3a1c09f6", module.exports)
+  }
+}
+
+/***/ }),
+/* 109 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return (_vm.data_ready) ? _c('div', {
+    staticClass: "form-group"
+  }, [(_vm.groups.length) ? _c('div', [_c('div', {
+    staticClass: "form-group"
+  }, [_c('label', {
+    staticClass: "control-label",
+    attrs: {
+      "for": "group"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.group))]), _vm._v(" "), _c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.currGroup.id),
+      expression: "currGroup.id"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "name": "group",
+      "id": "group-id"
+    },
+    on: {
+      "change": [function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.currGroup.id = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }, _vm.getFilteredData]
+    }
+  }, _vm._l((_vm.groups), function(group) {
+    return _c('option', {
+      domProps: {
+        "value": group.id
+      }
+    }, [_vm._v(_vm._s(group.name))])
+  }))]), _vm._v(" "), _c('div', {
+    staticClass: "table-responsive"
+  }, [(_vm.diplomas.length) ? _c('table', {
+    staticClass: "table table-bordered"
+  }, [_c('thead', [_c('tr', [_c('th', {
+    staticClass: "col-md-1",
+    attrs: {
+      "rowspan": "2"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.topic))]), _vm._v(" "), _c('th', {
+    staticClass: "col-md-3",
+    attrs: {
+      "colspan": "3"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.number_of_requests) + "\n                        ")]), _c('th', {
+    staticClass: "col-md-2",
+    attrs: {
+      "rowspan": "2"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.student))]), _vm._v(" "), _c('th', {
+    staticClass: "col-md-2",
+    attrs: {
+      "rowspan": "2"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.created_at))]), _vm._v(" "), _c('th', {
+    staticClass: "col-md-2",
+    attrs: {
+      "rowspan": "2"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.updated_at))]), _vm._v(" "), _c('th', {
+    staticClass: "col-md-2",
+    attrs: {
+      "rowspan": "2"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.actions))])]), _vm._v(" "), _c('tr', [_c('th', {
+    staticClass: "col-md-1"
+  }, [_vm._v(_vm._s(_vm.translations.labels.accepted))]), _vm._v(" "), _c('th', {
+    staticClass: "col-md-1"
+  }, [_vm._v(_vm._s(_vm.translations.labels.pending))]), _vm._v(" "), _c('th', {
+    staticClass: "col-md-1"
+  }, [_vm._v(_vm._s(_vm.translations.labels.declined))])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.diplomas), function(diploma) {
+    return _c('row', {
+      key: diploma.id
+    }, [_c('template', {
+      slot: "col-topic"
+    }, [_c('a', {
+      attrs: {
+        "href": _vm.openDiploma(diploma)
+      }
+    }, [_vm._v(_vm._s(diploma.title.length > 10 ?
+      diploma.title.substr(0, 10) + '...' : diploma.title))])]), _vm._v(" "), _c('template', {
+      slot: "col-requests-accepted"
+    }, [_vm._v(_vm._s(diploma.requests.accepted))]), _vm._v(" "), _c('template', {
+      slot: "col-requests-pending"
+    }, [_vm._v(_vm._s(diploma.requests.pending))]), _vm._v(" "), _c('template', {
+      slot: "col-requests-denied"
+    }, [_vm._v(_vm._s(diploma.requests.declined))]), _vm._v(" "), _c('template', {
+      slot: "col-student"
+    }, [_vm._v(_vm._s(diploma.student !== null ? diploma.student : '-'))]), _vm._v(" "), _c('template', {
+      slot: "col-cr_at"
+    }, [_vm._v(_vm._s(diploma.created_at))]), _vm._v(" "), _c('template', {
+      slot: "col-upd_at"
+    }, [_vm._v(_vm._s(diploma.updated_at !== null ? diploma.updated_at : '-'))]), _vm._v(" "), _c('template', {
+      slot: "col-actions"
+    }, [_c('button', {
+      staticClass: "btn btn-primary btn-sm",
+      attrs: {
+        "data-toggle": "modal",
+        "data-target": "#update-diploma-modal"
+      },
+      on: {
+        "click": function($event) {
+          _vm.openUpdateModal(diploma)
+        }
+      }
+    }, [_vm._v(_vm._s(_vm.translations.buttons.edit))]), _vm._v(" "), _c('button', {
+      staticClass: "btn btn-danger btn-sm",
+      on: {
+        "click": function($event) {
+          _vm.deleteWithConfirm(diploma)
+        }
+      }
+    }, [_vm._v(_vm._s(_vm.translations.buttons.delete))])])], 2)
+  })), _vm._v(" "), _c('tfoot', [_c('div', {
+    staticClass: "modal fade",
+    attrs: {
+      "id": "update-diploma-modal",
+      "role": "dialog",
+      "data-backdrop": "static",
+      "data-keyboard": "false"
+    }
+  }, [_c('div', {
+    staticClass: "modal-dialog"
+  }, [_c('div', {
+    staticClass: "modal-content"
+  }, [_c('div', {
+    staticClass: "modal-header"
+  }, [_c('button', {
+    staticClass: "close",
+    attrs: {
+      "type": "button",
+      "data-dismiss": "modal"
+    },
+    on: {
+      "click": _vm.clearNewTaskInputs
+    }
+  }, [_vm._v("×")]), _vm._v(" "), _c('h4', {
+    staticClass: "modal-title"
+  }, [_vm._v(_vm._s(_vm.translations.labels.update_task))])]), _vm._v(" "), _c('div', {
+    staticClass: "modal-body"
+  }, [_c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "update-diploma-task-title-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "task-title"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.topic))]), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.currTask.title),
+      expression: "currTask.title"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "id": "task-title",
+      "type": "text"
+    },
+    domProps: {
+      "value": _vm.currTask.title,
+      "value": (_vm.currTask.title)
+    },
+    on: {
+      "keypress": function($event) {
+        _vm.clearErrorMessages('update-diploma', 'title')
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.currTask.title = $event.target.value
+      }
+    }
+  }), _vm._v(" "), (_vm.errors.hasOwnProperty('title')) ? _c('span', {
+    staticClass: "help-block",
+    attrs: {
+      "id": "title-help-block"
+    }
+  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.title[0]))])]) : _vm._e()]), _vm._v(" "), _c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "update-diploma-task-description-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "task-description"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.description))]), _vm._v(" "), _c('textarea', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.currTask.description),
+      expression: "currTask.description"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "id": "task-description"
+    },
+    domProps: {
+      "value": _vm.currTask.description,
+      "value": (_vm.currTask.description)
+    },
+    on: {
+      "keypress": function($event) {
+        _vm.clearErrorMessages('update-diploma', 'description')
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.currTask.description = $event.target.value
+      }
+    }
+  }), _vm._v(" "), (_vm.errors.hasOwnProperty('description')) ? _c('span', {
+    staticClass: "help-block",
+    attrs: {
+      "id": "description-help-block"
+    }
+  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.description[0]))])]) : _vm._e()]), _vm._v(" "), _c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "update-diploma-task-technologies-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "task-technologies"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.technologies))]), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.currTask.technologies),
+      expression: "currTask.technologies"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "id": "task-technologies",
+      "type": "text"
+    },
+    domProps: {
+      "value": _vm.currTask.technologies,
+      "value": (_vm.currTask.technologies)
+    },
+    on: {
+      "keypress": function($event) {
+        _vm.clearErrorMessages('update-diploma', 'technologies')
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.currTask.technologies = $event.target.value
+      }
+    }
+  }), _vm._v(" "), (_vm.errors.hasOwnProperty('technologies')) ? _c('span', {
+    staticClass: "help-block",
+    attrs: {
+      "id": "technologies-help-block"
+    }
+  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.technologies[0]))])]) : _vm._e()]), _vm._v(" "), _c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "update-diploma-task-group-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "task-group"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.group))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('i', [_vm._v(_vm._s(_vm.currGroup.name))])])]), _vm._v(" "), _c('div', {
+    staticClass: "modal-footer"
+  }, [_c('button', {
+    staticClass: "btn btn-primary",
+    attrs: {
+      "type": "button"
+    },
+    on: {
+      "click": _vm.updateTask
+    }
+  }, [_vm._v(_vm._s(_vm.translations.buttons.update))]), _vm._v(" "), _c('button', {
+    staticClass: "btn btn-default",
+    attrs: {
+      "id": "close-update-task-modal",
+      "type": "button",
+      "data-dismiss": "modal"
+    },
+    on: {
+      "click": _vm.clearUpdateTaskInputs
+    }
+  }, [_vm._v(_vm._s(_vm.translations.buttons.cancel))])])])])])])], 1) : _c('div', {
+    staticClass: "form-group"
+  }, [_c('p', [_vm._v(_vm._s(_vm.translations.labels.no_tasks))])])]), _vm._v(" "), _c('div', {
+    staticClass: "form-group"
+  }, [_c('button', {
+    staticClass: "btn btn-primary",
+    attrs: {
+      "type": "button",
+      "data-toggle": "modal",
+      "data-target": "#new-diploma-modal"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.buttons.new_task))]), _vm._v(" "), _c('div', {
+    staticClass: "modal fade",
+    attrs: {
+      "id": "new-diploma-modal",
+      "role": "dialog",
+      "data-backdrop": "static",
+      "data-keyboard": "false"
+    }
+  }, [_c('div', {
+    staticClass: "modal-dialog"
+  }, [_c('div', {
+    staticClass: "modal-content"
+  }, [_c('div', {
+    staticClass: "modal-header"
+  }, [_c('button', {
+    staticClass: "close",
+    attrs: {
+      "type": "button",
+      "data-dismiss": "modal"
+    },
+    on: {
+      "click": _vm.clearNewTaskInputs
+    }
+  }, [_vm._v("×")]), _vm._v(" "), _c('h4', {
+    staticClass: "modal-title"
+  }, [_vm._v(_vm._s(_vm.translations.buttons.new_task))])]), _vm._v(" "), _c('div', {
+    staticClass: "modal-body"
+  }, [_c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "new-diploma-task-title-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "task-title"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.topic))]), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.newTask.title),
+      expression: "newTask.title"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "id": "task-title",
+      "type": "text"
+    },
+    domProps: {
+      "value": _vm.newTask.title,
+      "value": (_vm.newTask.title)
+    },
+    on: {
+      "keypress": function($event) {
+        _vm.clearErrorMessages('new-diploma', 'title')
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.newTask.title = $event.target.value
+      }
+    }
+  }), _vm._v(" "), (_vm.errors.hasOwnProperty('title')) ? _c('span', {
+    staticClass: "help-block",
+    attrs: {
+      "id": "title-help-block"
+    }
+  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.title[0]))])]) : _vm._e()]), _vm._v(" "), _c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "new-diploma-task-description-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "task-description"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.description))]), _vm._v(" "), _c('textarea', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.newTask.description),
+      expression: "newTask.description"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "id": "task-description"
+    },
+    domProps: {
+      "value": _vm.newTask.description,
+      "value": (_vm.newTask.description)
+    },
+    on: {
+      "keypress": function($event) {
+        _vm.clearErrorMessages('new-diploma', 'description')
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.newTask.description = $event.target.value
+      }
+    }
+  }), _vm._v(" "), (_vm.errors.hasOwnProperty('description')) ? _c('span', {
+    staticClass: "help-block",
+    attrs: {
+      "id": "description-help-block"
+    }
+  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.description[0]))])]) : _vm._e()]), _vm._v(" "), _c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "new-diploma-task-technologies-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "task-technologies"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.technologies))]), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.newTask.technologies),
+      expression: "newTask.technologies"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "id": "task-technologies",
+      "type": "text"
+    },
+    domProps: {
+      "value": _vm.newTask.technologies,
+      "value": (_vm.newTask.technologies)
+    },
+    on: {
+      "keypress": function($event) {
+        _vm.clearErrorMessages('new-diploma', 'technologies')
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.newTask.technologies = $event.target.value
+      }
+    }
+  }), _vm._v(" "), (_vm.errors.hasOwnProperty('technologies')) ? _c('span', {
+    staticClass: "help-block",
+    attrs: {
+      "id": "technologies-help-block"
+    }
+  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.technologies[0]))])]) : _vm._e()]), _vm._v(" "), _c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "new-diploma-task-group-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "task-group"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.group))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('i', [_vm._v(_vm._s(_vm.currGroup.name))])])]), _vm._v(" "), _c('div', {
+    staticClass: "modal-footer"
+  }, [_c('button', {
+    staticClass: "btn btn-primary",
+    attrs: {
+      "type": "button"
+    },
+    on: {
+      "click": _vm.publishTask
+    }
+  }, [_vm._v(_vm._s(_vm.translations.buttons.publish))]), _vm._v(" "), _c('button', {
+    staticClass: "btn btn-default",
+    attrs: {
+      "id": "close-new-task-modal",
+      "type": "button",
+      "data-dismiss": "modal"
+    },
+    on: {
+      "click": _vm.clearNewTaskInputs
+    }
+  }, [_vm._v(_vm._s(_vm.translations.buttons.cancel))])])])])])])]) : _c('div', {
+    staticClass: "form-group"
+  }, [_c('p', [_vm._v(_vm._s(_vm.translations.labels.no_groups))])])]) : _vm._e()
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-50ee8954", module.exports)
+  }
+}
+
+/***/ }),
+/* 110 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('tr', [_c('td', [_vm._t("col-topic")], 2), _vm._v(" "), _c('td', [_vm._t("col-professor")], 2), _vm._v(" "), _c('td', [_vm._t("col-technologies")], 2), _vm._v(" "), _c('td', [_vm._t("col-status")], 2), _vm._v(" "), _c('td', [_vm._t("col-cr_at")], 2), _vm._v(" "), _c('td', [_vm._t("col-actions")], 2)])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-69153d14", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

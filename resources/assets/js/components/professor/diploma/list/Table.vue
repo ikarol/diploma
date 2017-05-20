@@ -1,137 +1,142 @@
 <template>
     <div class="form-group" v-if="data_ready">
-        <div class="form-group">
-            <label for="group" class="control-label">{{ translations.labels.group }}</label>
-            <select name="group" id="group-id" v-model="currGroup.id" class="form-control" @change="getFilteredData">
-                <option v-for="group in groups" :value="group.id">{{ group.name }}</option>
-            </select>
-        </div>
-        <div class="table-responsive">
-            <table v-if="diplomas.length" class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th class="col-md-1" rowspan="2">{{ translations.labels.topic }}</th>
-                        <th class="col-md-3" colspan="3">{{ translations.labels.number_of_requests }}
-                        <th class="col-md-2" rowspan="2">{{ translations.labels.student }}</th>
-                        <th class="col-md-2" rowspan="2">{{ translations.labels.created_at }}</th>
-                        <th class="col-md-2" rowspan="2">{{ translations.labels.updated_at }}</th>
-                        <th class="col-md-2" rowspan="2">{{ translations.labels.actions }}</th>
-                    </tr>
-                    <tr>
-                        <th class="col-md-1">{{ translations.labels.accepted }}</th>
-                        <th class="col-md-1">{{ translations.labels.pending }}</th>
-                        <th class="col-md-1">{{ translations.labels.declined }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <professor-diplomas-row v-for="diploma in diplomas" :key="diploma.id">
-                        <template slot="col-topic"><a :href="openDiploma(diploma)">{{ diploma.title.length > 10 ?
-                            diploma.title.substr(0,10) + '...' : diploma.title }}</a></template>
-                        <template slot="col-requests-accepted">{{ diploma.requests.accepted }}</template>
-                        <template slot="col-requests-pending">{{ diploma.requests.pending }}</template>
-                        <template slot="col-requests-denied">{{ diploma.requests.declined }}</template>
-                        <template slot="col-student">{{ diploma.student !== null ? diploma.student : translations.labels.empty }}</template>
-                        <template slot="col-cr_at">{{ diploma.created_at }}</template>
-                        <template slot="col-upd_at">{{ diploma.updated_at !== null ? diploma.updated_at : translations.labels.empty }}</template>
-                        <template slot="col-actions">
-                            <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#update-diploma-modal" @click="openUpdateModal(diploma)">{{ translations.buttons.edit }}</button>
-                            <button class="btn btn-danger btn-sm" @click="deleteWithConfirm(diploma)">{{ translations.buttons.delete }}</button>
-                        </template>
-                    </professor-diplomas-row>
-                </tbody>
-                <tfoot>
-                    <div id="update-diploma-modal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" @click="clearNewTaskInputs">&times;</button>
-                                    <h4 class="modal-title">{{ translations.labels.update_task }}</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div id="update-diploma-task-title-block" class="form-group">
-                                        <label for="task-title">{{ translations.labels.topic }}</label>
-                                        <input id="task-title" type="text" class="form-control" v-model="currTask.title" :value="currTask.title" @keypress="clearErrorMessages('update-diploma', 'title')">
-                                        <span id="title-help-block" class="help-block" v-if="errors.hasOwnProperty('title')">
-                                            <strong>{{ errors.title[0] }}</strong>
-                                        </span>
-                                    </div>
-                                    <div id="update-diploma-task-description-block" class="form-group">
-                                        <label for="task-description">{{ translations.labels.description }}</label>
-                                        <textarea id="task-description" class="form-control" v-model="currTask.description" :value="currTask.description" @keypress="clearErrorMessages('update-diploma', 'description')"></textarea>
-                                        <span id="description-help-block" class="help-block" v-if="errors.hasOwnProperty('description')">
-                                            <strong>{{ errors.description[0] }}</strong>
-                                        </span>
-                                    </div>
-                                    <div id="update-diploma-task-technologies-block" class="form-group">
-                                        <label for="task-technologies">{{ translations.labels.technologies }}</label>
-                                        <input id="task-technologies" type="text" class="form-control" v-model="currTask.technologies" :value="currTask.technologies" @keypress="clearErrorMessages('update-diploma', 'technologies')">
-                                        <span id="technologies-help-block" class="help-block" v-if="errors.hasOwnProperty('technologies')">
-                                            <strong>{{ errors.technologies[0] }}</strong>
-                                        </span>
-                                    </div>
-                                    <div id="update-diploma-task-group-block" class="form-group">
-                                        <label for="task-group">{{ translations.labels.group }}</label>
-                                        <br>
-                                        <i>{{ currGroup.name }}</i>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary" @click="updateTask">{{ translations.buttons.update }}</button>
-                                    <button id="close-update-task-modal" type="button" class="btn btn-default" data-dismiss="modal" @click="clearUpdateTaskInputs">{{ translations.buttons.cancel }}</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </tfoot>
-            </table>
-            <div v-else class="form-group">
-                <p>{{ translations.labels.no_tasks }}</p>
+        <div v-if="groups.length">
+            <div class="form-group">
+                <label for="group" class="control-label">{{ translations.labels.group }}</label>
+                <select name="group" id="group-id" v-model="currGroup.id" class="form-control" @change="getFilteredData">
+                    <option v-for="group in groups" :value="group.id">{{ group.name }}</option>
+                </select>
             </div>
-        </div>
-        <div class="form-group">
-            <button type="button"class="btn btn-primary" data-toggle="modal" data-target="#new-diploma-modal">{{ translations.buttons.new_task }}</button>
-            <div id="new-diploma-modal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" @click="clearNewTaskInputs">&times;</button>
-                            <h4 class="modal-title">{{ translations.buttons.new_task }}</h4>
+            <div class="table-responsive">
+                <table v-if="diplomas.length" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="col-md-1" rowspan="2">{{ translations.labels.topic }}</th>
+                            <th class="col-md-3" colspan="3">{{ translations.labels.number_of_requests }}
+                            <th class="col-md-2" rowspan="2">{{ translations.labels.student }}</th>
+                            <th class="col-md-2" rowspan="2">{{ translations.labels.created_at }}</th>
+                            <th class="col-md-2" rowspan="2">{{ translations.labels.updated_at }}</th>
+                            <th class="col-md-2" rowspan="2">{{ translations.labels.actions }}</th>
+                        </tr>
+                        <tr>
+                            <th class="col-md-1">{{ translations.labels.accepted }}</th>
+                            <th class="col-md-1">{{ translations.labels.pending }}</th>
+                            <th class="col-md-1">{{ translations.labels.declined }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <row v-for="diploma in diplomas" :key="diploma.id">
+                            <template slot="col-topic"><a :href="openDiploma(diploma)">{{ diploma.title.length > 10 ?
+                                diploma.title.substr(0,10) + '...' : diploma.title }}</a></template>
+                            <template slot="col-requests-accepted">{{ diploma.requests.accepted }}</template>
+                            <template slot="col-requests-pending">{{ diploma.requests.pending }}</template>
+                            <template slot="col-requests-denied">{{ diploma.requests.declined }}</template>
+                            <template slot="col-student">{{ diploma.student !== null ? diploma.student : '-' }}</template>
+                            <template slot="col-cr_at">{{ diploma.created_at }}</template>
+                            <template slot="col-upd_at">{{ diploma.updated_at !== null ? diploma.updated_at : '-' }}</template>
+                            <template slot="col-actions">
+                                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#update-diploma-modal" @click="openUpdateModal(diploma)">{{ translations.buttons.edit }}</button>
+                                <button class="btn btn-danger btn-sm" @click="deleteWithConfirm(diploma)">{{ translations.buttons.delete }}</button>
+                            </template>
+                        </row>
+                    </tbody>
+                    <tfoot>
+                        <div id="update-diploma-modal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" @click="clearNewTaskInputs">&times;</button>
+                                        <h4 class="modal-title">{{ translations.labels.update_task }}</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div id="update-diploma-task-title-block" class="form-group">
+                                            <label for="task-title">{{ translations.labels.topic }}</label>
+                                            <input id="task-title" type="text" class="form-control" v-model="currTask.title" :value="currTask.title" @keypress="clearErrorMessages('update-diploma', 'title')">
+                                            <span id="title-help-block" class="help-block" v-if="errors.hasOwnProperty('title')">
+                                                <strong>{{ errors.title[0] }}</strong>
+                                            </span>
+                                        </div>
+                                        <div id="update-diploma-task-description-block" class="form-group">
+                                            <label for="task-description">{{ translations.labels.description }}</label>
+                                            <textarea id="task-description" class="form-control" v-model="currTask.description" :value="currTask.description" @keypress="clearErrorMessages('update-diploma', 'description')"></textarea>
+                                            <span id="description-help-block" class="help-block" v-if="errors.hasOwnProperty('description')">
+                                                <strong>{{ errors.description[0] }}</strong>
+                                            </span>
+                                        </div>
+                                        <div id="update-diploma-task-technologies-block" class="form-group">
+                                            <label for="task-technologies">{{ translations.labels.technologies }}</label>
+                                            <input id="task-technologies" type="text" class="form-control" v-model="currTask.technologies" :value="currTask.technologies" @keypress="clearErrorMessages('update-diploma', 'technologies')">
+                                            <span id="technologies-help-block" class="help-block" v-if="errors.hasOwnProperty('technologies')">
+                                                <strong>{{ errors.technologies[0] }}</strong>
+                                            </span>
+                                        </div>
+                                        <div id="update-diploma-task-group-block" class="form-group">
+                                            <label for="task-group">{{ translations.labels.group }}</label>
+                                            <br>
+                                            <i>{{ currGroup.name }}</i>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" @click="updateTask">{{ translations.buttons.update }}</button>
+                                        <button id="close-update-task-modal" type="button" class="btn btn-default" data-dismiss="modal" @click="clearUpdateTaskInputs">{{ translations.buttons.cancel }}</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="modal-body">
-                            <div id="new-diploma-task-title-block" class="form-group">
-                                <label for="task-title">{{ translations.labels.topic }}</label>
-                                <input id="task-title" type="text" class="form-control" v-model="newTask.title" :value="newTask.title" @keypress="clearErrorMessages('new-diploma', 'title')">
-                                <span id="title-help-block" class="help-block" v-if="errors.hasOwnProperty('title')">
-                                    <strong>{{ errors.title[0] }}</strong>
-                                </span>
+                    </tfoot>
+                </table>
+                <div v-else class="form-group">
+                    <p>{{ translations.labels.no_tasks }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="button"class="btn btn-primary" data-toggle="modal" data-target="#new-diploma-modal">{{ translations.buttons.new_task }}</button>
+                <div id="new-diploma-modal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" @click="clearNewTaskInputs">&times;</button>
+                                <h4 class="modal-title">{{ translations.buttons.new_task }}</h4>
                             </div>
-                            <div id="new-diploma-task-description-block" class="form-group">
-                                <label for="task-description">{{ translations.labels.description }}</label>
-                                <textarea id="task-description" class="form-control" v-model="newTask.description" :value="newTask.description" @keypress="clearErrorMessages('new-diploma', 'description')"></textarea>
-                                <span id="description-help-block" class="help-block" v-if="errors.hasOwnProperty('description')">
-                                    <strong>{{ errors.description[0] }}</strong>
-                                </span>
+                            <div class="modal-body">
+                                <div id="new-diploma-task-title-block" class="form-group">
+                                    <label for="task-title">{{ translations.labels.topic }}</label>
+                                    <input id="task-title" type="text" class="form-control" v-model="newTask.title" :value="newTask.title" @keypress="clearErrorMessages('new-diploma', 'title')">
+                                    <span id="title-help-block" class="help-block" v-if="errors.hasOwnProperty('title')">
+                                        <strong>{{ errors.title[0] }}</strong>
+                                    </span>
+                                </div>
+                                <div id="new-diploma-task-description-block" class="form-group">
+                                    <label for="task-description">{{ translations.labels.description }}</label>
+                                    <textarea id="task-description" class="form-control" v-model="newTask.description" :value="newTask.description" @keypress="clearErrorMessages('new-diploma', 'description')"></textarea>
+                                    <span id="description-help-block" class="help-block" v-if="errors.hasOwnProperty('description')">
+                                        <strong>{{ errors.description[0] }}</strong>
+                                    </span>
+                                </div>
+                                <div id="new-diploma-task-technologies-block" class="form-group">
+                                    <label for="task-technologies">{{ translations.labels.technologies }}</label>
+                                    <input id="task-technologies" type="text" class="form-control" v-model="newTask.technologies" :value="newTask.technologies" @keypress="clearErrorMessages('new-diploma', 'technologies')">
+                                    <span id="technologies-help-block" class="help-block" v-if="errors.hasOwnProperty('technologies')">
+                                        <strong>{{ errors.technologies[0] }}</strong>
+                                    </span>
+                                </div>
+                                <div id="new-diploma-task-group-block" class="form-group">
+                                    <label for="task-group">{{ translations.labels.group }}</label>
+                                    <br>
+                                    <i>{{ currGroup.name }}</i>
+                                </div>
                             </div>
-                            <div id="new-diploma-task-technologies-block" class="form-group">
-                                <label for="task-technologies">{{ translations.labels.technologies }}</label>
-                                <input id="task-technologies" type="text" class="form-control" v-model="newTask.technologies" :value="newTask.technologies" @keypress="clearErrorMessages('new-diploma', 'technologies')">
-                                <span id="technologies-help-block" class="help-block" v-if="errors.hasOwnProperty('technologies')">
-                                    <strong>{{ errors.technologies[0] }}</strong>
-                                </span>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" @click="publishTask">{{ translations.buttons.publish }}</button>
+                                <button id="close-new-task-modal" type="button" class="btn btn-default" data-dismiss="modal" @click="clearNewTaskInputs">{{ translations.buttons.cancel }}</button>
                             </div>
-                            <div id="new-diploma-task-group-block" class="form-group">
-                                <label for="task-group">{{ translations.labels.group }}</label>
-                                <br>
-                                <i>{{ currGroup.name }}</i>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" @click="publishTask">{{ translations.buttons.publish }}</button>
-                            <button id="close-new-task-modal" type="button" class="btn btn-default" data-dismiss="modal" @click="clearNewTaskInputs">{{ translations.buttons.cancel }}</button>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <div v-else class="form-group">
+            <p>{{ translations.labels.no_groups }}</p>
         </div>
     </div>
 
@@ -139,11 +144,11 @@
 
 <script>
 
-import ProfessorDiplomasRow from './ProfessorDiplomasRow.vue';
+import Row from './Row.vue';
 
     export default {
         components: {
-            ProfessorDiplomasRow
+            Row
         },
         created() {
             this.getTranslations();

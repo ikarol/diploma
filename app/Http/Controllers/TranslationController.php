@@ -25,7 +25,8 @@ class TranslationController extends Controller
                 'created_at' => __('Publication date'),
                 'updated_at' => __('Date of update'),
                 'actions' => __('Actions'),
-                'no_tasks' => __('You haven\'t published any tasks yet'),
+                'no_tasks' => __('You haven\'t published any projects yet'),
+                'no_groups' => __('There are no any groups yet'),
                 'update_task' => __('Update task'),
                 'accepted' => __('Accepted'),
                 'pending' => __('Pending'),
@@ -58,7 +59,7 @@ class TranslationController extends Controller
                 'professor' => __('Professor'),
                 'created_at' => __('Publication date'),
                 'actions' => __('Actions'),
-                'no_tasks' => __('There are no tasks for this group'),
+                'no_tasks' => __('There are no projects for this group'),
                 'request' => __('Request'),
                 'message' => __('Message'),
                 'empty' => __('Empty'),
@@ -105,6 +106,31 @@ class TranslationController extends Controller
                 'declined' => __('Declined'),
                 'pending' => __('Pending'),
                 'all' => __('All'),
+            ]
+        ];
+        return Response::json([
+            'translations' =>$translations
+        ]);
+    }
+
+    public function professor_diploma_jobs()
+    {
+        $translations = [
+            'labels' => [
+                'description' => __('Description'),
+                'created_at' => __('Assigned'),
+                'deadline' => __('Deadline'),
+                'actions' => __('Actions'),
+                'no_jobs' => __('There are no jobs for this project yet'),
+                'update_job' => __('Update job'),
+            ],
+            'buttons' => [
+                'edit' => __('Edit'),
+                'delete' => __('Delete'),
+                'new_job' => __('New job'),
+                'publish' => __('Publish'),
+                'cancel' => __('Cancel'),
+                'update' => __('Update'),
             ]
         ];
         return Response::json([

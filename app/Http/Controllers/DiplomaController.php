@@ -8,6 +8,7 @@ use App\Models\Student;
 use App\Models\Request as DiplomaRequest;
 use App\Models\Professor;
 use App\Models\Task;
+use App\Models\Job;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +22,10 @@ class DiplomaController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('ajax')->except('index');
+        $this->middleware('ajax')->except([
+            'index',
+            'show',
+        ]);
         $this->middleware('professor')->only([
             'store',
             'update',
@@ -193,11 +197,40 @@ class DiplomaController extends Controller
      * @param  \App\Models\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function show(Task $task)
+    public function show($id)
     {
-        //
+        // if (request()->ajax()) {
+        //     return Response::json([
+        //         'diploma' => Task::find($id),
+        //     ]);
+        // }
+        $info = Task::find($id);
+        $user = User::whereHas('student', function($query) use ($info) {
+            $query->where([
+                ['group_id', $info->group_id],
+            ])->whereHas((new DiplomaRequest)->getTable(), function ($queryRequest) use ($info) {
+                $queryRequest->where([
+                    ['status', 1],
+                ])->whereHas('task', function($queryTask) use ($info) {
+                    $queryTask->where([
+                        ['task_id', $info->id],
+                        ['type', 2],
+                    ]);
+                });
+            });
+        })->first();
+        $info->student = count($user) ? $user->getFullName() : null;
+        return view('diplomas.show')->with([
+            'userType' => $this->userType,
+            'id' => $id,
+            'info' => $info,
+        ]);
     }
 
+    // public function info($id)
+    // {
+    //
+    // }
     /**
      * Show the form for editing the specified resource.
      *
@@ -274,6 +307,13 @@ class DiplomaController extends Controller
          */
         if ($requests = DiplomaRequest::where('task_id', $id)) {
             $requests->delete();
+        }
+
+        /**
+         * Cascade deleting jobs if they exist
+         */
+        if ($jobs = Job::where('task_id', $id)) {
+            $jobs->delete();
         }
         Task::destroy($id);
         return Response::json('success');

@@ -3,20 +3,21 @@ import VueRouter from 'vue-router';
 var routes = [
     {
         path: '/prof-diploma-list',
-        component: require('./components/ProfessorDiplomasTable')
+        component: require('./components/professor/diploma/list/Table')
     },
     {
         path: '/prof-diploma-requests',
-        component: require('./components/ProfessorDiplomasRequests')
+        component: require('./components/professor/diploma/requests/Requests')
     },
     {
-        path: '/stud-task-list',
-        component: require('./components/StudentDiplomasTable')
+        path: '/stud-diploma-list',
+        component: require('./components/student/diploma/list/Table')
     },
-    {
-        path: '/stud-requests',
-        component: require('./components/StudentDiplomasRequests')
-    }
+    // {
+    //     path: '/:id/prof-diploma-info',
+    //     component: require('./components/ProfessorDiplomaInfo'),
+    //     props: true,
+    // },
 ];
 
 export default new VueRouter({

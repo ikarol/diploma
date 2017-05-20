@@ -2,6 +2,9 @@ DROP TABLE marks_logs
 
 GO
 
+DROP TABLE jobs
+
+GO
 
 DROP TABLE requests
 
@@ -124,6 +127,17 @@ CREATE TABLE requests
 	created_at datetime NOT NULL,
 	started_at datetime,
 	PRIMARY KEY(task_id, student_id)
+)
+
+GO
+
+CREATE TABLE jobs
+(
+    id int identity primary key,
+    task_id int NOT NULL references tasks(id),
+    description varchar(255) NOT NULL,
+    created_at datetime NOT NULL,
+    deadline datetime NOT NULL
 )
 
 GO
