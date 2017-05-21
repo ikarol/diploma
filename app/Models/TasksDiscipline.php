@@ -14,7 +14,7 @@ class TasksDiscipline extends Model
     /**
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = ['task_id', 'discipline_id'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

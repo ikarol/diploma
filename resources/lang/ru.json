@@ -26,8 +26,7 @@
     "Role": "Роль",
     "Professor": "Преподаватель",
     "Student": "Студент",
-    "Course works": "Курсовые работы",
-    "Course works management": "Управление курсовыми работами",
+    "Course projects": "Курсовые проекты",
     "Diploma projects": "Дипломные проекты",
     "Diploma projects management": "Управление дипломными проектами",
     "Dashboard": "Панель управления",
@@ -37,7 +36,7 @@
     "Group": "Группа",
     "Edit": "Изменить",
     "Delete": "Удалить",
-    "New task": "Новое задание",
+    "New project": "Новый проект",
     "Topic": "Тема",
     "Number of requests": "Количество заявок",
     "Description": "Описание",
@@ -47,7 +46,7 @@
     "Actions": "Действия",
     "Technologies": "Средства выполнения",
     "Optional": "Необязательно",
-    "Update task": "Обновить задание",
+    "Update project": "Обновить проект",
     "Update": "Обновить",
     "Requests": "Заявки",
     "There are no projects for this group": "Для этой группы отсутствуют проекты",
@@ -78,5 +77,9 @@
     "Assigned": "Назначено",
     "New job": "Новое задание",
     "Update job": "Обновить задание",
-    "There are no any groups yet": "Ещё не созданы группы"
+    "There are no any groups yet": "Ещё не созданы группы",
+    "Disciplines": "Дисциплины",
+    "List of course projects": "Список курсовых проектов",
+    "Course projects management": "Управление курсовыми проектами",
+    "Select disciplines": "Выберите дисциплины"
 }

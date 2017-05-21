@@ -6,11 +6,11 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="panel panel-default text-center">
-                    <div class="panel-heading">@lang('Course works')</div>
+                    <div class="panel-heading">@lang('Course projects')</div>
                     <div class="panel-body">
                         <a class="btn btn-primary"
-                            href="/course_works">
-                                @lang('Course works management')
+                            href="/course_projects#/prof-course_project-list">
+                                @lang('Course projects management')
                         </a>
                     </div>
                 </div>
@@ -31,10 +31,10 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="panel panel-default text-center">
-                    <div class="panel-heading">@lang('Course works')</div>
+                    <div class="panel-heading">@lang('Course projects')</div>
                     <div class="panel-body">
                         <a class="btn btn-primary"
-                        href="/course_works">
+                        href="/course_projects#/stud-course_project-list">
                                 @lang('List of course projects')
                         </a>
                     </div>
