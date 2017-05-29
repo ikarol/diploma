@@ -16,4 +16,26 @@ class DisciplineController extends Controller
             'disciplines' => $disciplines,
         ]);
     }
+
+    public function store(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required|unique:groups'
+        ]);
+        $group = Discipline::create([
+            'name' => $request['name'],
+        ]);
+        return Response::json($group);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $this->validate($request, [
+            'name' => 'required'
+        ]);
+        $group = Discipline::find($request['id']);
+        $group->name = $request['name'];
+        $group->save();
+        return Response::json($group);
+    }
 }

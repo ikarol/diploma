@@ -62,3 +62,14 @@ Route::get('/course_projects/jobs/{id}', 'CourseProjectJobController@show');
 Route::post('/course_projects/jobs/{id}', 'CourseProjectJobController@store');
 Route::delete('/course_projects/jobs/{id}', 'CourseProjectJobController@delete');
 Route::patch('/course_projects/jobs/{id}', 'CourseProjectJobController@update');
+
+Route::get('/admin/', 'AdminController@index');
+Route::get('/admin/groups/', 'AdminController@groups');
+Route::post('/admin/groups', 'GroupController@store');
+Route::patch('/admin/groups/{id}', 'GroupController@update');
+Route::get('/admin/disciplines', 'AdminController@disciplines');
+Route::post('/admin/disciplines', 'DisciplineController@store');
+Route::patch('/admin/disciplines/{id}', 'DisciplineController@update');
+
+Route::get('/translation/admin/groups', 'TranslationController@admin_groups');
+Route::get('/translation/admin/disciplines', 'TranslationController@admin_disciplines');

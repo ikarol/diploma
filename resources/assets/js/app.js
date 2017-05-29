@@ -15,6 +15,8 @@ require('./bootstrap');
 import router from './routes.js'
 Vue.component('diploma-jobs', require('./components/professor/diploma/jobs/Jobs'));
 Vue.component('course-project-jobs', require('./components/professor/course_project/jobs/Jobs'));
+Vue.component('groups', require('./components/admin/Groups'));
+Vue.component('disciplines', require('./components/admin/Disciplines'));
 
 const app = new Vue({
     el: '#app',

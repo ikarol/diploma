@@ -15,7 +15,10 @@ class GroupController extends Controller
 
     public function __contstruct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except([
+            'store',
+            'update',
+        ]);
         $this->middleware('ajax');
         $this->middleware('professor')->only('professor_groups');
         $this->middleware('student')->only('student_groups');
@@ -47,6 +50,28 @@ class GroupController extends Controller
     {
         $groups = Group::where('id', Auth::user()->student->group_id)->get()->toArray();
         return Response::json($groups);
+    }
+
+    public function store(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required|unique:groups'
+        ]);
+        $group = Group::create([
+            'name' => $request['name'],
+        ]);
+        return Response::json($group);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $this->validate($request, [
+            'name' => 'required'
+        ]);
+        $group = Group::find($request['id']);
+        $group->name = $request['name'];
+        $group->save();
+        return Response::json($group);
     }
 
 }

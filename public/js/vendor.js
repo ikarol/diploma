@@ -3816,8 +3816,10 @@ __webpack_require__(48);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('diploma-jobs', __webpack_require__(67));
-Vue.component('course-project-jobs', __webpack_require__(104));
+Vue.component('diploma-jobs', __webpack_require__(68));
+Vue.component('course-project-jobs', __webpack_require__(63));
+Vue.component('groups', __webpack_require__(104));
+Vue.component('disciplines', __webpack_require__(103));
 
 var app = new Vue({
   el: '#app',
@@ -4680,6 +4682,305 @@ module.exports = function spread(callback) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['courseproject'],
+    created: function created() {
+        this.getTranslations();
+        this.courseProjectId = this.courseproject;
+        var date = new Date();
+        date.setHours(0, 0, 0, 0);
+        this.dateNow = date.toISOString().substring(0, 10);
+    },
+    mounted: function mounted() {
+        this.getJobs();
+    },
+
+    methods: {
+        getTranslations: function getTranslations() {
+            var self = this;
+            $.ajax({
+                url: '/translation/professor/diplomas/jobs',
+                type: 'GET',
+                dataType: 'json'
+            }).done(function (response) {
+                console.log("translations loaded");
+                self.translations = response.translations;
+            }).fail(function () {
+                console.log("error");
+            });
+        },
+        getJobs: function getJobs() {
+            var self = this;
+            $.ajax({
+                url: '/course_projects/jobs/' + self.courseProjectId,
+                type: 'GET',
+                dataType: 'json'
+            }).done(function (response) {
+                console.log("success");
+                console.log(response);
+                self.jobs = response.jobs;
+            }).fail(function (response) {
+                console.log("error");
+            });
+        },
+        publishJob: function publishJob() {
+            var self = this;
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: '/course_projects/jobs/' + self.courseProjectId,
+                type: 'POST',
+                dataType: 'json',
+                data: self.newJob
+            }).done(function (response) {
+                console.log("success");
+                console.log(response);
+                self.jobs.push(response.job);
+                self.clearNewJobInputs();
+                $('#close-new-job-modal').click();
+            }).fail(function (response) {
+                console.log("error");
+                console.log(response);
+                self.errors = response.responseJSON;
+                if (self.errors.hasOwnProperty('description')) {
+                    $('#new-job-description-block').addClass('has-error');
+                }
+                if (self.errors.hasOwnProperty('deadline')) {
+                    $('#new-job-deadline-block').addClass('has-error');
+                }
+            });
+        },
+        clearNewJobInputs: function clearNewJobInputs() {
+            var self = this;
+            $.each(this.errors, function (index, value) {
+                self.clearErrorMessages('new-job', index);
+            });
+            this.newJob = {
+                description: '',
+                deadline: ''
+            };
+        },
+        clearErrorMessages: function clearErrorMessages(modalName, fieldName) {
+            console.log('clearing..');
+            var self = this;
+            if (self.errors.hasOwnProperty(fieldName)) {
+                console.log('#' + modalName + '-' + fieldName + '-block');
+                $('#' + modalName + '-' + fieldName + '-block').removeClass('has-error');
+                delete self.errors[fieldName];
+            }
+        },
+        deleteWithConfirm: function deleteWithConfirm(job) {
+            var self = this;
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            swal({
+                title: self.translations.buttons.delete + ' ?',
+                type: 'warning',
+                showCancelButton: true,
+                closeOnConfirm: true,
+                showLoaderOnConfirm: true,
+                cancelButtonText: self.translations.buttons.cancel,
+                confirmButtonText: "Ок",
+                confirmButtonColor: '#3085d6',
+                confirmLoadingButtonColor: '#DD6B55'
+            }, function () {
+                $.ajax({
+                    url: '/course_projects/jobs/' + job.id,
+                    type: 'DELETE',
+                    dataType: 'json'
+                }).done(function (response) {
+                    console.log("success");
+                    self.jobs.splice(self.jobs.indexOf(job), 1);
+                }).fail(function (response) {
+                    console.log("error");
+                    console.log(response);
+                });
+            });
+        },
+        clearUpdateJobInputs: function clearUpdateJobInputs() {
+            var self = this;
+            $.each(this.errors, function (index, value) {
+                self.clearErrorMessages('update-job', index);
+            });
+            this.curJob = {
+                description: '',
+                deadline: ''
+            };
+        },
+        updateJob: function updateJob() {
+            var self = this;
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: '/course_projects/jobs/' + self.curJob.id,
+                type: 'PATCH',
+                dataType: 'json',
+                data: self.curJob
+            }).done(function (response) {
+                console.log("success");
+                console.log(response);
+                self.jobs[self.jobs.map(function (job) {
+                    return job.id;
+                }).indexOf(self.curJob.id)] = response.updatedJob;
+                self.clearUpdateJobInputs();
+                $('#close-update-job-modal').click();
+            }).fail(function (response) {
+                console.log("error");
+                console.log(response);
+                self.errors = response.responseJSON;
+                if (self.errors.hasOwnProperty('description')) {
+                    $('#update-job-description-block').addClass('has-error');
+                }
+                if (self.errors.hasOwnProperty('deadline')) {
+                    $('#update-job-deadline-block').addClass('has-error');
+                }
+            });
+        },
+        openUpdateModal: function openUpdateModal(job) {
+            this.curJob = {
+                id: job.id,
+                description: job.description,
+                deadline: job.deadline.replace(/(\d{2}).(\d{2}).(\d{4})/, "$3-$2-$1"),
+                created_at: job.created_at.replace(/(\d{2}).(\d{2}).(\d{4})/, "$3-$2-$1")
+            };
+        }
+    },
+    data: function data() {
+        return {
+            jobs: [],
+            courseProjectId: '',
+            translations: {},
+            data_ready: false,
+            errors: [],
+            newJob: {
+                description: '',
+                deadline: ''
+            },
+            dateNow: '',
+            curJob: {}
+        };
+    },
+    watch: {
+        translations: function translations() {
+            this.data_ready = true;
+        }
+    }
+});
+
+/***/ }),
+/* 35 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_multiselect__ = __webpack_require__(91);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_multiselect___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue_multiselect__);
 //
@@ -5143,7 +5444,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5171,14 +5472,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Panel__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Panel__ = __webpack_require__(65);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Panel___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Panel__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Status__ = __webpack_require__(66);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Status__ = __webpack_require__(67);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Status___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__Status__);
 //
 //
@@ -5465,7 +5766,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5502,7 +5803,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5801,7 +6102,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5827,12 +6128,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Row_vue__ = __webpack_require__(68);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Row_vue__ = __webpack_require__(69);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Row_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Row_vue__);
 //
 //
@@ -6263,7 +6564,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6291,14 +6592,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Panel__ = __webpack_require__(70);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Panel__ = __webpack_require__(71);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Panel___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Panel__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Status__ = __webpack_require__(72);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Status__ = __webpack_require__(73);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Status___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__Status__);
 //
 //
@@ -6616,7 +6917,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6653,7 +6954,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 44 */,
 /* 45 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -7548,19 +7848,19 @@ window.swal = __webpack_require__(62);
 
 var routes = [{
     path: '/prof-diploma-list',
-    component: __webpack_require__(69)
+    component: __webpack_require__(70)
 }, {
     path: '/prof-diploma-requests',
-    component: __webpack_require__(71)
+    component: __webpack_require__(72)
 }, {
     path: '/stud-diploma-list',
     component: __webpack_require__(76)
 }, {
     path: '/prof-course_project-list',
-    component: __webpack_require__(63)
+    component: __webpack_require__(64)
 }, {
     path: '/prof-course_project-requests',
-    component: __webpack_require__(65)
+    component: __webpack_require__(66)
 }, {
     path: '/stud-course_project-list',
     component: __webpack_require__(74)
@@ -40337,6 +40637,40 @@ var Component = __webpack_require__(0)(
   /* script */
   __webpack_require__(34),
   /* template */
+  __webpack_require__(90),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\professor\\course_project\\jobs\\Jobs.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] Jobs.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-ba073f02", Component.options)
+  } else {
+    hotAPI.reload("data-v-ba073f02", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 64 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(0)(
+  /* script */
+  __webpack_require__(35),
+  /* template */
   __webpack_require__(79),
   /* scopeId */
   null,
@@ -40364,12 +40698,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(35),
+  __webpack_require__(36),
   /* template */
   __webpack_require__(81),
   /* scopeId */
@@ -40398,14 +40732,14 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(36),
+  __webpack_require__(37),
   /* template */
-  __webpack_require__(89),
+  __webpack_require__(88),
   /* scopeId */
   null,
   /* cssModules */
@@ -40432,12 +40766,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(37),
+  __webpack_require__(38),
   /* template */
   __webpack_require__(78),
   /* scopeId */
@@ -40466,14 +40800,14 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(38),
+  __webpack_require__(39),
   /* template */
-  __webpack_require__(90),
+  __webpack_require__(89),
   /* scopeId */
   null,
   /* cssModules */
@@ -40500,12 +40834,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(39),
+  __webpack_require__(40),
   /* template */
   __webpack_require__(80),
   /* scopeId */
@@ -40534,14 +40868,14 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(40),
+  __webpack_require__(41),
   /* template */
-  __webpack_require__(87),
+  __webpack_require__(86),
   /* scopeId */
   null,
   /* cssModules */
@@ -40568,12 +40902,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(41),
+  __webpack_require__(42),
   /* template */
   __webpack_require__(84),
   /* scopeId */
@@ -40602,12 +40936,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(42),
+  __webpack_require__(43),
   /* template */
   __webpack_require__(83),
   /* scopeId */
@@ -40636,12 +40970,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(43),
+  __webpack_require__(44),
   /* template */
   __webpack_require__(85),
   /* scopeId */
@@ -40670,7 +41004,6 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 73 */,
 /* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -40712,7 +41045,7 @@ var Component = __webpack_require__(0)(
   /* script */
   __webpack_require__(46),
   /* template */
-  __webpack_require__(88),
+  __webpack_require__(87),
   /* scopeId */
   null,
   /* cssModules */
@@ -42353,8 +42686,7 @@ if (false) {
 }
 
 /***/ }),
-/* 86 */,
-/* 87 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -42847,7 +43179,7 @@ if (false) {
 }
 
 /***/ }),
-/* 88 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -42862,7 +43194,7 @@ if (false) {
 }
 
 /***/ }),
-/* 89 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -43013,6 +43345,307 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
      require("vue-hot-reload-api").rerender("data-v-6fcec082", module.exports)
+  }
+}
+
+/***/ }),
+/* 89 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return (_vm.data_ready) ? _c('div', [_c('div', {
+    staticClass: "table-responsive"
+  }, [(_vm.jobs.length) ? _c('table', {
+    staticClass: "table table-bordered"
+  }, [_c('thead', [_c('tr', [_c('th', [_vm._v(_vm._s(_vm.translations.labels.description))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.created_at))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.deadline))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.actions))])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.jobs), function(job) {
+    return _c('tr', {
+      key: job.id
+    }, [_c('td', [_vm._v(_vm._s(job.description))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(job.created_at))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(job.deadline))]), _vm._v(" "), _c('td', [_c('button', {
+      staticClass: "btn btn-sm btn-primary",
+      attrs: {
+        "data-toggle": "modal",
+        "data-target": "#update-job-modal"
+      },
+      on: {
+        "click": function($event) {
+          _vm.openUpdateModal(job)
+        }
+      }
+    }, [_vm._v(_vm._s(_vm.translations.buttons.edit))]), _vm._v(" "), _c('button', {
+      staticClass: "btn btn-sm btn-danger",
+      on: {
+        "click": function($event) {
+          _vm.deleteWithConfirm(job)
+        }
+      }
+    }, [_vm._v(_vm._s(_vm.translations.buttons.delete))])])])
+  })), _vm._v(" "), _c('tfoot', [_c('div', {
+    staticClass: "modal fade",
+    attrs: {
+      "id": "update-job-modal",
+      "role": "dialog",
+      "data-backdrop": "static",
+      "data-keyboard": "false"
+    }
+  }, [_c('div', {
+    staticClass: "modal-dialog"
+  }, [_c('div', {
+    staticClass: "modal-content"
+  }, [_c('div', {
+    staticClass: "modal-header"
+  }, [_c('button', {
+    staticClass: "close",
+    attrs: {
+      "type": "button",
+      "data-dismiss": "modal"
+    },
+    on: {
+      "click": _vm.clearUpdateJobInputs
+    }
+  }, [_vm._v("×")]), _vm._v(" "), _c('h4', {
+    staticClass: "modal-title"
+  }, [_vm._v(_vm._s(_vm.translations.labels.update_job))])]), _vm._v(" "), _c('div', {
+    staticClass: "modal-body"
+  }, [_c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "update-job-description-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "job-description"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.description))]), _vm._v(" "), _c('textarea', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.curJob.description),
+      expression: "curJob.description"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "id": "description"
+    },
+    domProps: {
+      "value": _vm.curJob.description,
+      "value": (_vm.curJob.description)
+    },
+    on: {
+      "keypress": function($event) {
+        _vm.clearErrorMessages('update-job', 'description')
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.curJob.description = $event.target.value
+      }
+    }
+  }), _vm._v(" "), (_vm.errors.hasOwnProperty('description')) ? _c('span', {
+    staticClass: "help-block",
+    attrs: {
+      "id": "description-help-block"
+    }
+  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.description[0]))])]) : _vm._e()]), _vm._v(" "), _c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "update-job-deadline-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "job-deadline"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.deadline))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.curJob.deadline),
+      expression: "curJob.deadline"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "type": "date",
+      "min": _vm.curJob.created_at,
+      "name": "job-deadline"
+    },
+    domProps: {
+      "value": _vm.curJob.deadline,
+      "value": (_vm.curJob.deadline)
+    },
+    on: {
+      "change": function($event) {
+        _vm.clearErrorMessages('update-job', 'deadline')
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.curJob.deadline = $event.target.value
+      }
+    }
+  }), _vm._v(" "), (_vm.errors.hasOwnProperty('deadline')) ? _c('span', {
+    staticClass: "help-block",
+    attrs: {
+      "id": "deadline-help-block"
+    }
+  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.deadline[0]))])]) : _vm._e()])]), _vm._v(" "), _c('div', {
+    staticClass: "modal-footer"
+  }, [_c('button', {
+    staticClass: "btn btn-primary",
+    attrs: {
+      "type": "button"
+    },
+    on: {
+      "click": _vm.updateJob
+    }
+  }, [_vm._v(_vm._s(_vm.translations.buttons.update))]), _vm._v(" "), _c('button', {
+    staticClass: "btn btn-default",
+    attrs: {
+      "id": "close-update-job-modal",
+      "type": "button",
+      "data-dismiss": "modal"
+    },
+    on: {
+      "click": _vm.clearUpdateJobInputs
+    }
+  }, [_vm._v(_vm._s(_vm.translations.buttons.cancel))])])])])])])], 1) : _c('div', {
+    staticClass: "form-group"
+  }, [_c('p', [_vm._v(_vm._s(_vm.translations.labels.no_jobs))])])]), _vm._v(" "), _c('div', {
+    staticClass: "form-group"
+  }, [_c('button', {
+    staticClass: "btn btn-primary",
+    attrs: {
+      "data-toggle": "modal",
+      "data-target": "#new-job-modal"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.buttons.new_job))]), _vm._v(" "), _c('div', {
+    staticClass: "modal fade",
+    attrs: {
+      "id": "new-job-modal",
+      "role": "dialog",
+      "data-backdrop": "static",
+      "data-keyboard": "false"
+    }
+  }, [_c('div', {
+    staticClass: "modal-dialog"
+  }, [_c('div', {
+    staticClass: "modal-content"
+  }, [_c('div', {
+    staticClass: "modal-header"
+  }, [_c('button', {
+    staticClass: "close",
+    attrs: {
+      "type": "button",
+      "data-dismiss": "modal"
+    },
+    on: {
+      "click": _vm.clearNewJobInputs
+    }
+  }, [_vm._v("×")]), _vm._v(" "), _c('h4', {
+    staticClass: "modal-title"
+  }, [_vm._v(_vm._s(_vm.translations.buttons.new_job))])]), _vm._v(" "), _c('div', {
+    staticClass: "modal-body"
+  }, [_c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "new-job-description-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "job-description"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.description))]), _vm._v(" "), _c('textarea', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.newJob.description),
+      expression: "newJob.description"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "id": "description"
+    },
+    domProps: {
+      "value": _vm.newJob.description,
+      "value": (_vm.newJob.description)
+    },
+    on: {
+      "keypress": function($event) {
+        _vm.clearErrorMessages('new-job', 'description')
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.newJob.description = $event.target.value
+      }
+    }
+  }), _vm._v(" "), (_vm.errors.hasOwnProperty('description')) ? _c('span', {
+    staticClass: "help-block",
+    attrs: {
+      "id": "description-help-block"
+    }
+  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.description[0]))])]) : _vm._e()]), _vm._v(" "), _c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "new-job-deadline-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "job-deadline"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.deadline))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.newJob.deadline),
+      expression: "newJob.deadline"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "type": "date",
+      "min": _vm.dateNow,
+      "name": "job-deadline"
+    },
+    domProps: {
+      "value": _vm.newJob.deadline,
+      "value": (_vm.newJob.deadline)
+    },
+    on: {
+      "change": function($event) {
+        _vm.clearErrorMessages('new-job', 'deadline')
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.newJob.deadline = $event.target.value
+      }
+    }
+  }), _vm._v(" "), (_vm.errors.hasOwnProperty('deadline')) ? _c('span', {
+    staticClass: "help-block",
+    attrs: {
+      "id": "deadline-help-block"
+    }
+  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.deadline[0]))])]) : _vm._e()])]), _vm._v(" "), _c('div', {
+    staticClass: "modal-footer"
+  }, [_c('button', {
+    staticClass: "btn btn-primary",
+    attrs: {
+      "type": "button"
+    },
+    on: {
+      "click": _vm.publishJob
+    }
+  }, [_vm._v(_vm._s(_vm.translations.buttons.publish))]), _vm._v(" "), _c('button', {
+    staticClass: "btn btn-default",
+    attrs: {
+      "id": "close-new-job-modal",
+      "type": "button",
+      "data-dismiss": "modal"
+    },
+    on: {
+      "click": _vm.clearNewJobInputs
+    }
+  }, [_vm._v(_vm._s(_vm.translations.buttons.cancel))])])])])])])]) : _vm._e()
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-951460f0", module.exports)
   }
 }
 
@@ -43313,7 +43946,7 @@ module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-951460f0", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-ba073f02", module.exports)
   }
 }
 
@@ -53067,6 +53700,74 @@ module.exports = __webpack_require__(15);
 /* 101 */,
 /* 102 */,
 /* 103 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(0)(
+  /* script */
+  __webpack_require__(107),
+  /* template */
+  __webpack_require__(108),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\admin\\Disciplines.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] Disciplines.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-22ea03ae", Component.options)
+  } else {
+    hotAPI.reload("data-v-22ea03ae", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 104 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(0)(
+  /* script */
+  __webpack_require__(105),
+  /* template */
+  __webpack_require__(106),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\admin\\Groups.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] Groups.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-a88f80c4", Component.options)
+  } else {
+    hotAPI.reload("data-v-a88f80c4", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 105 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -53146,6 +53847,424 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {
+        this.getTranslations();
+    },
+
+    methods: {
+        getTranslations: function getTranslations() {
+            var self = this;
+            $.ajax({
+                url: '/translation/admin/groups/',
+                type: 'GET',
+                dataType: 'json'
+            }).done(function (response) {
+                console.log("translations loaded");
+                self.translations = response.translations;
+                self.data_ready = true;
+            }).fail(function () {
+                console.log("error");
+            });
+        },
+        getGroups: function getGroups() {
+            var self = this;
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: '/admin/groups/',
+                type: 'GET',
+                dataType: 'json'
+            }).done(function (response) {
+                console.log('groups list recieved');
+                console.log(response);
+                self.groups = response;
+            }).fail(function (response) {
+                console.log("error");
+                console.log(response);
+                if (response.hasOwnProperty('responseJSON')) {
+                    if (response.responseJSON.hasOwnProperty('redirect')) {
+                        window.location.replace(response.responseJSON.redirect);
+                    }
+                }
+            });
+        },
+        clearErrorMessages: function clearErrorMessages(modalName, fieldName) {
+            console.log('clearing..');
+            console.log(this.errors);
+            var self = this;
+            if (self.errors.hasOwnProperty(fieldName)) {
+                $('#' + modalName + '-' + fieldName + '-block').removeClass('has-error');
+                delete self.errors[fieldName];
+            }
+        },
+        clearCreateGroupInputs: function clearCreateGroupInputs() {
+            var self = this;
+            $.each(this.errors, function (index, value) {
+                self.clearErrorMessages('new-group', index);
+            });
+            this.newGroup = {};
+        },
+        clearUpdateGroupInputs: function clearUpdateGroupInputs() {
+            var self = this;
+            $.each(this.errors, function (index, value) {
+                self.clearErrorMessages('update-group', index);
+            });
+            this.curGroup = {};
+        },
+        openEditModal: function openEditModal(group) {
+            this.curGroup = {
+                id: group.id,
+                name: group.name
+            };
+        },
+        createGroup: function createGroup() {
+            var self = this;
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: '/admin/groups',
+                type: 'POST',
+                dataType: 'json',
+                data: self.newGroup
+            }).done(function (response) {
+                console.log("success");
+                console.log(response);
+                self.groups.push(response);
+                self.clearCreateGroupInputs();
+                $('#close-new-group-modal').click();
+            }).fail(function (response) {
+                console.log("error");
+                console.log(response);
+                self.errors = response.responseJSON;
+                if (self.errors.hasOwnProperty('name')) {
+                    $('#new-group-name-block').addClass('has-error');
+                }
+            });
+        },
+        updateGroup: function updateGroup() {
+            var self = this;
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: '/admin/groups/' + self.curGroup.id,
+                type: 'PATCH',
+                dataType: 'json',
+                data: self.curGroup
+            }).done(function (response) {
+                console.log("group updated");
+                console.log(response);
+                self.groups[self.groups.map(function (group) {
+                    return group.id;
+                }).indexOf(self.curGroup.id)] = response;
+                self.clearUpdateGroupInputs();
+                $('#close-update-group-modal').click();
+            }).fail(function (response) {
+                console.log("error");
+                console.log(response);
+                self.errors = response.responseJSON;
+                if (self.errors.hasOwnProperty('name')) {
+                    $('#update-group-name-block').addClass('has-error');
+                }
+            });
+        }
+    },
+    watch: {
+        translations: function translations() {
+            this.getGroups();
+        }
+    },
+    data: function data() {
+        return {
+            groups: [],
+            curGroup: {},
+            newGroup: {
+                name: ''
+            },
+            data_ready: false,
+            translations: [],
+            errors: []
+        };
+    }
+});
+
+/***/ }),
+/* 106 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return (_vm.data_ready) ? _c('div', [(_vm.groups.length) ? _c('table', {
+    staticClass: "table table-bordered"
+  }, [_c('thead', [_c('tr', [_c('th', [_vm._v(_vm._s(_vm.translations.labels.group))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.actions))])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.groups), function(group) {
+    return _c('tr', {
+      key: group.id
+    }, [_c('td', [_vm._v(_vm._s(group.name))]), _vm._v(" "), _c('td', [_c('button', {
+      staticClass: "btn btn-warning",
+      attrs: {
+        "data-toggle": "modal",
+        "data-target": "#update-group-modal"
+      },
+      on: {
+        "click": function($event) {
+          _vm.openEditModal(group)
+        }
+      }
+    }, [_vm._v(_vm._s(_vm.translations.buttons.edit))])])])
+  })), _vm._v(" "), _c('tfoot', [_c('div', {
+    staticClass: "modal fade",
+    attrs: {
+      "id": "update-group-modal",
+      "role": "dialog",
+      "data-backdrop": "static",
+      "data-keyboard": "false"
+    }
+  }, [_c('div', {
+    staticClass: "modal-dialog"
+  }, [_c('div', {
+    staticClass: "modal-content"
+  }, [_c('div', {
+    staticClass: "modal-header"
+  }, [_c('button', {
+    staticClass: "close",
+    attrs: {
+      "type": "button",
+      "data-dismiss": "modal"
+    },
+    on: {
+      "click": _vm.clearUpdateGroupInputs
+    }
+  }, [_vm._v("×")]), _vm._v(" "), _c('h4', {
+    staticClass: "modal-title"
+  }, [_vm._v(_vm._s(_vm.translations.labels.update_group))])]), _vm._v(" "), _c('div', {
+    staticClass: "modal-body"
+  }, [_c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "update-group-name-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "group-title"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.group))]), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.curGroup.name),
+      expression: "curGroup.name"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "id": "group-title",
+      "type": "text"
+    },
+    domProps: {
+      "value": _vm.curGroup.name,
+      "value": (_vm.curGroup.name)
+    },
+    on: {
+      "keypress": function($event) {
+        _vm.clearErrorMessages('update-group', 'name')
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.curGroup.name = $event.target.value
+      }
+    }
+  }), _vm._v(" "), (_vm.errors.hasOwnProperty('name')) ? _c('span', {
+    staticClass: "help-block",
+    attrs: {
+      "id": "group-help-block"
+    }
+  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.name[0]))])]) : _vm._e()])]), _vm._v(" "), _c('div', {
+    staticClass: "modal-footer"
+  }, [_c('button', {
+    staticClass: "btn btn-primary",
+    attrs: {
+      "type": "button"
+    },
+    on: {
+      "click": _vm.updateGroup
+    }
+  }, [_vm._v(_vm._s(_vm.translations.buttons.update))]), _vm._v(" "), _c('button', {
+    staticClass: "btn btn-default",
+    attrs: {
+      "id": "close-update-group-modal",
+      "type": "button",
+      "data-dismiss": "modal"
+    },
+    on: {
+      "click": _vm.clearUpdateGroupInputs
+    }
+  }, [_vm._v(_vm._s(_vm.translations.buttons.cancel))])])])])])])], 1) : _c('div', [_vm._v("\n        " + _vm._s(_vm.translations.labels.no_groups) + "\n    ")]), _vm._v(" "), _c('div', {
+    staticClass: "form-group"
+  }, [_c('button', {
+    staticClass: "btn btn-primary",
+    attrs: {
+      "data-toggle": "modal",
+      "data-target": "#new-group-modal"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.new_group))]), _vm._v(" "), _c('div', {
+    staticClass: "modal fade",
+    attrs: {
+      "id": "new-group-modal",
+      "role": "dialog",
+      "data-backdrop": "static",
+      "data-keyboard": "false"
+    }
+  }, [_c('div', {
+    staticClass: "modal-dialog"
+  }, [_c('div', {
+    staticClass: "modal-content"
+  }, [_c('div', {
+    staticClass: "modal-header"
+  }, [_c('button', {
+    staticClass: "close",
+    attrs: {
+      "type": "button",
+      "data-dismiss": "modal"
+    },
+    on: {
+      "click": _vm.clearCreateGroupInputs
+    }
+  }, [_vm._v("×")]), _vm._v(" "), _c('h4', {
+    staticClass: "modal-title"
+  }, [_vm._v(_vm._s(_vm.translations.labels.new_group))])]), _vm._v(" "), _c('div', {
+    staticClass: "modal-body"
+  }, [_c('div', {
+    staticClass: "form-group",
+    attrs: {
+      "id": "new-group-name-block"
+    }
+  }, [_c('label', {
+    attrs: {
+      "for": "group-title"
+    }
+  }, [_vm._v(_vm._s(_vm.translations.labels.group))]), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.newGroup.name),
+      expression: "newGroup.name"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "id": "group-title",
+      "type": "text"
+    },
+    domProps: {
+      "value": _vm.newGroup.name,
+      "value": (_vm.newGroup.name)
+    },
+    on: {
+      "keypress": function($event) {
+        _vm.clearErrorMessages('new-group', 'name')
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.newGroup.name = $event.target.value
+      }
+    }
+  }), _vm._v(" "), (_vm.errors.hasOwnProperty('name')) ? _c('span', {
+    staticClass: "help-block",
+    attrs: {
+      "id": "group-help-block"
+    }
+  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.name[0]))])]) : _vm._e()])]), _vm._v(" "), _c('div', {
+    staticClass: "modal-footer"
+  }, [_c('button', {
+    staticClass: "btn btn-primary",
+    on: {
+      "click": _vm.createGroup
+    }
+  }, [_vm._v(_vm._s(_vm.translations.buttons.create_group))]), _vm._v(" "), _c('button', {
+    staticClass: "btn btn-default",
+    attrs: {
+      "id": "close-new-group-modal",
+      "type": "button",
+      "data-dismiss": "modal"
+    },
+    on: {
+      "click": _vm.clearCreateGroupInputs
+    }
+  }, [_vm._v(_vm._s(_vm.translations.buttons.cancel))])])])])])])]) : _vm._e()
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-a88f80c4", module.exports)
+  }
+}
+
+/***/ }),
+/* 107 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -53171,47 +54290,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['courseproject'],
-    created: function created() {
-        this.getTranslations();
-        this.courseProjectId = this.courseproject;
-        var date = new Date();
-        date.setHours(0, 0, 0, 0);
-        this.dateNow = date.toISOString().substring(0, 10);
-    },
     mounted: function mounted() {
-        this.getJobs();
+        this.getTranslations();
     },
 
     methods: {
         getTranslations: function getTranslations() {
             var self = this;
             $.ajax({
-                url: '/translation/professor/diplomas/jobs',
+                url: '/translation/admin/disciplines/',
                 type: 'GET',
                 dataType: 'json'
             }).done(function (response) {
                 console.log("translations loaded");
                 self.translations = response.translations;
+                self.data_ready = true;
             }).fail(function () {
                 console.log("error");
             });
         },
-        getJobs: function getJobs() {
-            var self = this;
-            $.ajax({
-                url: '/course_projects/jobs/' + self.courseProjectId,
-                type: 'GET',
-                dataType: 'json'
-            }).done(function (response) {
-                console.log("success");
-                console.log(response);
-                self.jobs = response.jobs;
-            }).fail(function (response) {
-                console.log("error");
-            });
-        },
-        publishJob: function publishJob() {
+        getdisciplines: function getdisciplines() {
             var self = this;
             $.ajaxSetup({
                 headers: {
@@ -53219,89 +54317,52 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
             });
             $.ajax({
-                url: '/course_projects/jobs/' + self.courseProjectId,
-                type: 'POST',
-                dataType: 'json',
-                data: self.newJob
+                url: '/admin/disciplines/',
+                type: 'GET',
+                dataType: 'json'
             }).done(function (response) {
-                console.log("success");
+                console.log('disciplines list recieved');
                 console.log(response);
-                self.jobs.push(response.job);
-                self.clearNewJobInputs();
-                $('#close-new-job-modal').click();
+                self.disciplines = response;
             }).fail(function (response) {
                 console.log("error");
                 console.log(response);
-                self.errors = response.responseJSON;
-                if (self.errors.hasOwnProperty('description')) {
-                    $('#new-job-description-block').addClass('has-error');
-                }
-                if (self.errors.hasOwnProperty('deadline')) {
-                    $('#new-job-deadline-block').addClass('has-error');
+                if (response.hasOwnProperty('responseJSON')) {
+                    if (response.responseJSON.hasOwnProperty('redirect')) {
+                        window.location.replace(response.responseJSON.redirect);
+                    }
                 }
             });
-        },
-        clearNewJobInputs: function clearNewJobInputs() {
-            var self = this;
-            $.each(this.errors, function (index, value) {
-                self.clearErrorMessages('new-job', index);
-            });
-            this.newJob = {
-                description: '',
-                deadline: ''
-            };
         },
         clearErrorMessages: function clearErrorMessages(modalName, fieldName) {
             console.log('clearing..');
             var self = this;
             if (self.errors.hasOwnProperty(fieldName)) {
-                console.log('#' + modalName + '-' + fieldName + '-block');
                 $('#' + modalName + '-' + fieldName + '-block').removeClass('has-error');
                 delete self.errors[fieldName];
             }
         },
-        deleteWithConfirm: function deleteWithConfirm(job) {
-            var self = this;
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            swal({
-                title: self.translations.buttons.delete + ' ?',
-                type: 'warning',
-                showCancelButton: true,
-                closeOnConfirm: true,
-                showLoaderOnConfirm: true,
-                cancelButtonText: self.translations.buttons.cancel,
-                confirmButtonText: "Ок",
-                confirmButtonColor: '#3085d6',
-                confirmLoadingButtonColor: '#DD6B55'
-            }, function () {
-                $.ajax({
-                    url: '/course_projects/jobs/' + job.id,
-                    type: 'DELETE',
-                    dataType: 'json'
-                }).done(function (response) {
-                    console.log("success");
-                    self.jobs.splice(self.jobs.indexOf(job), 1);
-                }).fail(function (response) {
-                    console.log("error");
-                    console.log(response);
-                });
-            });
-        },
-        clearUpdateJobInputs: function clearUpdateJobInputs() {
+        clearCreatedisciplineInputs: function clearCreatedisciplineInputs() {
             var self = this;
             $.each(this.errors, function (index, value) {
-                self.clearErrorMessages('update-job', index);
+                self.clearErrorMessages('new-discipline', index);
             });
-            this.curJob = {
-                description: '',
-                deadline: ''
+            this.newdiscipline = {};
+        },
+        clearUpdatedisciplineInputs: function clearUpdatedisciplineInputs() {
+            var self = this;
+            $.each(this.errors, function (index, value) {
+                self.clearErrorMessages('update-discipline', index);
+            });
+            this.curdiscipline = {};
+        },
+        openEditModal: function openEditModal(discipline) {
+            this.curdiscipline = {
+                id: discipline.id,
+                name: discipline.name
             };
         },
-        updateJob: function updateJob() {
+        creatediscipline: function creatediscipline() {
             var self = this;
             $.ajaxSetup({
                 headers: {
@@ -53309,130 +54370,100 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
             });
             $.ajax({
-                url: '/course_projects/jobs/' + self.curJob.id,
-                type: 'PATCH',
+                url: '/admin/disciplines',
+                type: 'POST',
                 dataType: 'json',
-                data: self.curJob
+                data: self.newdiscipline
             }).done(function (response) {
                 console.log("success");
                 console.log(response);
-                self.jobs[self.jobs.map(function (job) {
-                    return job.id;
-                }).indexOf(self.curJob.id)] = response.updatedJob;
-                self.clearUpdateJobInputs();
-                $('#close-update-job-modal').click();
+                self.disciplines.push(response);
+                self.clearCreatedisciplineInputs();
+                $('#close-new-discipline-modal').click();
             }).fail(function (response) {
                 console.log("error");
                 console.log(response);
                 self.errors = response.responseJSON;
-                if (self.errors.hasOwnProperty('description')) {
-                    $('#update-job-description-block').addClass('has-error');
-                }
-                if (self.errors.hasOwnProperty('deadline')) {
-                    $('#update-job-deadline-block').addClass('has-error');
+                if (self.errors.hasOwnProperty('name')) {
+                    $('#new-discipline-name-block').addClass('has-error');
                 }
             });
         },
-        openUpdateModal: function openUpdateModal(job) {
-            this.curJob = {
-                id: job.id,
-                description: job.description,
-                deadline: job.deadline.replace(/(\d{2}).(\d{2}).(\d{4})/, "$3-$2-$1"),
-                created_at: job.created_at.replace(/(\d{2}).(\d{2}).(\d{4})/, "$3-$2-$1")
-            };
+        updatediscipline: function updatediscipline() {
+            var self = this;
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: '/admin/disciplines/' + self.curdiscipline.id,
+                type: 'PATCH',
+                dataType: 'json',
+                data: self.curdiscipline
+            }).done(function (response) {
+                console.log("discipline updated");
+                console.log(response);
+                self.disciplines[self.disciplines.map(function (discipline) {
+                    return discipline.id;
+                }).indexOf(self.curdiscipline.id)] = response;
+                self.clearUpdatedisciplineInputs();
+                $('#close-update-discipline-modal').click();
+            }).fail(function (response) {
+                console.log("error");
+                console.log(response);
+                self.errors = response.responseJSON;
+                if (self.errors.hasOwnProperty('name')) {
+                    $('#update-discipline-name-block').addClass('has-error');
+                }
+            });
+        }
+    },
+    watch: {
+        translations: function translations() {
+            this.getdisciplines();
         }
     },
     data: function data() {
         return {
-            jobs: [],
-            courseProjectId: '',
-            translations: {},
-            data_ready: false,
-            errors: [],
-            newJob: {
-                description: '',
-                deadline: ''
+            disciplines: [],
+            curdiscipline: {},
+            newdiscipline: {
+                name: ''
             },
-            dateNow: '',
-            curJob: {}
+            data_ready: false,
+            translations: [],
+            errors: []
         };
-    },
-    watch: {
-        translations: function translations() {
-            this.data_ready = true;
-        }
     }
 });
 
 /***/ }),
-/* 104 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Component = __webpack_require__(0)(
-  /* script */
-  __webpack_require__(103),
-  /* template */
-  __webpack_require__(105),
-  /* scopeId */
-  null,
-  /* cssModules */
-  null
-)
-Component.options.__file = "C:\\wamp64\\www\\laravel\\diploma\\resources\\assets\\js\\components\\professor\\course_project\\jobs\\Jobs.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] Jobs.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-ba073f02", Component.options)
-  } else {
-    hotAPI.reload("data-v-ba073f02", Component.options)
-  }
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 105 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return (_vm.data_ready) ? _c('div', [_c('div', {
-    staticClass: "table-responsive"
-  }, [(_vm.jobs.length) ? _c('table', {
+  return (_vm.data_ready) ? _c('div', [(_vm.disciplines.length) ? _c('table', {
     staticClass: "table table-bordered"
-  }, [_c('thead', [_c('tr', [_c('th', [_vm._v(_vm._s(_vm.translations.labels.description))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.created_at))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.deadline))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.actions))])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.jobs), function(job) {
+  }, [_c('thead', [_c('tr', [_c('th', [_vm._v(_vm._s(_vm.translations.labels.discipline))]), _vm._v(" "), _c('th', [_vm._v(_vm._s(_vm.translations.labels.actions))])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.disciplines), function(discipline) {
     return _c('tr', {
-      key: job.id
-    }, [_c('td', [_vm._v(_vm._s(job.description))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(job.created_at))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(job.deadline))]), _vm._v(" "), _c('td', [_c('button', {
-      staticClass: "btn btn-sm btn-primary",
+      key: discipline.id
+    }, [_c('td', [_vm._v(_vm._s(discipline.name))]), _vm._v(" "), _c('td', [_c('button', {
+      staticClass: "btn btn-warning",
       attrs: {
         "data-toggle": "modal",
-        "data-target": "#update-job-modal"
+        "data-target": "#update-discipline-modal"
       },
       on: {
         "click": function($event) {
-          _vm.openUpdateModal(job)
+          _vm.openEditModal(discipline)
         }
       }
-    }, [_vm._v(_vm._s(_vm.translations.buttons.edit))]), _vm._v(" "), _c('button', {
-      staticClass: "btn btn-sm btn-danger",
-      on: {
-        "click": function($event) {
-          _vm.deleteWithConfirm(job)
-        }
-      }
-    }, [_vm._v(_vm._s(_vm.translations.buttons.delete))])])])
+    }, [_vm._v(_vm._s(_vm.translations.buttons.edit))])])])
   })), _vm._v(" "), _c('tfoot', [_c('div', {
     staticClass: "modal fade",
     attrs: {
-      "id": "update-job-modal",
+      "id": "update-discipline-modal",
       "role": "dialog",
       "data-backdrop": "static",
       "data-keyboard": "false"
@@ -53450,91 +54481,52 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "data-dismiss": "modal"
     },
     on: {
-      "click": _vm.clearUpdateJobInputs
+      "click": _vm.clearUpdatedisciplineInputs
     }
   }, [_vm._v("×")]), _vm._v(" "), _c('h4', {
     staticClass: "modal-title"
-  }, [_vm._v(_vm._s(_vm.translations.labels.update_job))])]), _vm._v(" "), _c('div', {
+  }, [_vm._v(_vm._s(_vm.translations.labels.update_discipline))])]), _vm._v(" "), _c('div', {
     staticClass: "modal-body"
   }, [_c('div', {
-    staticClass: "form-group",
+    staticClass: "form-discipline",
     attrs: {
-      "id": "update-job-description-block"
+      "id": "update-discipline-name-block"
     }
   }, [_c('label', {
     attrs: {
-      "for": "job-description"
+      "for": "discipline-title"
     }
-  }, [_vm._v(_vm._s(_vm.translations.labels.description))]), _vm._v(" "), _c('textarea', {
+  }, [_vm._v(_vm._s(_vm.translations.labels.discipline))]), _vm._v(" "), _c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.curJob.description),
-      expression: "curJob.description"
+      value: (_vm.curdiscipline.name),
+      expression: "curdiscipline.name"
     }],
     staticClass: "form-control",
     attrs: {
-      "id": "description"
+      "id": "discipline-title",
+      "type": "text"
     },
     domProps: {
-      "value": _vm.curJob.description,
-      "value": (_vm.curJob.description)
+      "value": _vm.curdiscipline.name,
+      "value": (_vm.curdiscipline.name)
     },
     on: {
       "keypress": function($event) {
-        _vm.clearErrorMessages('update-job', 'description')
+        _vm.clearErrorMessages('update-discipline', 'name')
       },
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.curJob.description = $event.target.value
+        _vm.curdiscipline.name = $event.target.value
       }
     }
-  }), _vm._v(" "), (_vm.errors.hasOwnProperty('description')) ? _c('span', {
+  }), _vm._v(" "), (_vm.errors.hasOwnProperty('name')) ? _c('span', {
     staticClass: "help-block",
     attrs: {
-      "id": "description-help-block"
+      "id": "discipline-help-block"
     }
-  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.description[0]))])]) : _vm._e()]), _vm._v(" "), _c('div', {
-    staticClass: "form-group",
-    attrs: {
-      "id": "update-job-deadline-block"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "job-deadline"
-    }
-  }, [_vm._v(_vm._s(_vm.translations.labels.deadline))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.curJob.deadline),
-      expression: "curJob.deadline"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      "type": "date",
-      "min": _vm.curJob.created_at,
-      "name": "job-deadline"
-    },
-    domProps: {
-      "value": _vm.curJob.deadline,
-      "value": (_vm.curJob.deadline)
-    },
-    on: {
-      "change": function($event) {
-        _vm.clearErrorMessages('update-job', 'deadline')
-      },
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.curJob.deadline = $event.target.value
-      }
-    }
-  }), _vm._v(" "), (_vm.errors.hasOwnProperty('deadline')) ? _c('span', {
-    staticClass: "help-block",
-    attrs: {
-      "id": "deadline-help-block"
-    }
-  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.deadline[0]))])]) : _vm._e()])]), _vm._v(" "), _c('div', {
+  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.name[0]))])]) : _vm._e()])]), _vm._v(" "), _c('div', {
     staticClass: "modal-footer"
   }, [_c('button', {
     staticClass: "btn btn-primary",
@@ -53542,32 +54534,30 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "type": "button"
     },
     on: {
-      "click": _vm.updateJob
+      "click": _vm.updatediscipline
     }
   }, [_vm._v(_vm._s(_vm.translations.buttons.update))]), _vm._v(" "), _c('button', {
     staticClass: "btn btn-default",
     attrs: {
-      "id": "close-update-job-modal",
+      "id": "close-update-discipline-modal",
       "type": "button",
       "data-dismiss": "modal"
     },
     on: {
-      "click": _vm.clearUpdateJobInputs
+      "click": _vm.clearUpdatedisciplineInputs
     }
-  }, [_vm._v(_vm._s(_vm.translations.buttons.cancel))])])])])])])], 1) : _c('div', {
-    staticClass: "form-group"
-  }, [_c('p', [_vm._v(_vm._s(_vm.translations.labels.no_jobs))])])]), _vm._v(" "), _c('div', {
-    staticClass: "form-group"
+  }, [_vm._v(_vm._s(_vm.translations.buttons.cancel))])])])])])])], 1) : _c('div', [_vm._v("\n        " + _vm._s(_vm.translations.labels.no_disciplines) + "\n    ")]), _vm._v(" "), _c('div', {
+    staticClass: "form-discipline"
   }, [_c('button', {
     staticClass: "btn btn-primary",
     attrs: {
       "data-toggle": "modal",
-      "data-target": "#new-job-modal"
+      "data-target": "#new-discipline-modal"
     }
-  }, [_vm._v(_vm._s(_vm.translations.buttons.new_job))]), _vm._v(" "), _c('div', {
+  }, [_vm._v(_vm._s(_vm.translations.labels.new_discipline))]), _vm._v(" "), _c('div', {
     staticClass: "modal fade",
     attrs: {
-      "id": "new-job-modal",
+      "id": "new-discipline-modal",
       "role": "dialog",
       "data-backdrop": "static",
       "data-keyboard": "false"
@@ -53585,109 +54575,67 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "data-dismiss": "modal"
     },
     on: {
-      "click": _vm.clearNewJobInputs
+      "click": _vm.clearCreatedisciplineInputs
     }
   }, [_vm._v("×")]), _vm._v(" "), _c('h4', {
     staticClass: "modal-title"
-  }, [_vm._v(_vm._s(_vm.translations.buttons.new_job))])]), _vm._v(" "), _c('div', {
+  }, [_vm._v(_vm._s(_vm.translations.labels.new_discipline))])]), _vm._v(" "), _c('div', {
     staticClass: "modal-body"
   }, [_c('div', {
-    staticClass: "form-group",
+    staticClass: "form-discipline",
     attrs: {
-      "id": "new-job-description-block"
+      "id": "new-discipline-name-block"
     }
   }, [_c('label', {
     attrs: {
-      "for": "job-description"
+      "for": "discipline-title"
     }
-  }, [_vm._v(_vm._s(_vm.translations.labels.description))]), _vm._v(" "), _c('textarea', {
+  }, [_vm._v(_vm._s(_vm.translations.labels.discipline))]), _vm._v(" "), _c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.newJob.description),
-      expression: "newJob.description"
+      value: (_vm.newdiscipline.name),
+      expression: "newdiscipline.name"
     }],
     staticClass: "form-control",
     attrs: {
-      "id": "description"
+      "id": "discipline-title",
+      "type": "text"
     },
     domProps: {
-      "value": _vm.newJob.description,
-      "value": (_vm.newJob.description)
+      "value": _vm.newdiscipline.name,
+      "value": (_vm.newdiscipline.name)
     },
     on: {
       "keypress": function($event) {
-        _vm.clearErrorMessages('new-job', 'description')
+        _vm.clearErrorMessages('new-discipline', 'name')
       },
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.newJob.description = $event.target.value
+        _vm.newdiscipline.name = $event.target.value
       }
     }
-  }), _vm._v(" "), (_vm.errors.hasOwnProperty('description')) ? _c('span', {
+  }), _vm._v(" "), (_vm.errors.hasOwnProperty('name')) ? _c('span', {
     staticClass: "help-block",
     attrs: {
-      "id": "description-help-block"
+      "id": "discipline-help-block"
     }
-  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.description[0]))])]) : _vm._e()]), _vm._v(" "), _c('div', {
-    staticClass: "form-group",
-    attrs: {
-      "id": "new-job-deadline-block"
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "job-deadline"
-    }
-  }, [_vm._v(_vm._s(_vm.translations.labels.deadline))]), _vm._v(" "), _c('br'), _vm._v(" "), _c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.newJob.deadline),
-      expression: "newJob.deadline"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      "type": "date",
-      "min": _vm.dateNow,
-      "name": "job-deadline"
-    },
-    domProps: {
-      "value": _vm.newJob.deadline,
-      "value": (_vm.newJob.deadline)
-    },
-    on: {
-      "change": function($event) {
-        _vm.clearErrorMessages('new-job', 'deadline')
-      },
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.newJob.deadline = $event.target.value
-      }
-    }
-  }), _vm._v(" "), (_vm.errors.hasOwnProperty('deadline')) ? _c('span', {
-    staticClass: "help-block",
-    attrs: {
-      "id": "deadline-help-block"
-    }
-  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.deadline[0]))])]) : _vm._e()])]), _vm._v(" "), _c('div', {
+  }, [_c('strong', [_vm._v(_vm._s(_vm.errors.name[0]))])]) : _vm._e()])]), _vm._v(" "), _c('div', {
     staticClass: "modal-footer"
   }, [_c('button', {
     staticClass: "btn btn-primary",
-    attrs: {
-      "type": "button"
-    },
     on: {
-      "click": _vm.publishJob
+      "click": _vm.creatediscipline
     }
-  }, [_vm._v(_vm._s(_vm.translations.buttons.publish))]), _vm._v(" "), _c('button', {
+  }, [_vm._v(_vm._s(_vm.translations.buttons.create_discipline))]), _vm._v(" "), _c('button', {
     staticClass: "btn btn-default",
     attrs: {
-      "id": "close-new-job-modal",
+      "id": "close-new-discipline-modal",
       "type": "button",
       "data-dismiss": "modal"
     },
     on: {
-      "click": _vm.clearNewJobInputs
+      "click": _vm.clearCreatedisciplineInputs
     }
   }, [_vm._v(_vm._s(_vm.translations.buttons.cancel))])])])])])])]) : _vm._e()
 },staticRenderFns: []}
@@ -53695,7 +54643,7 @@ module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-ba073f02", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-22ea03ae", module.exports)
   }
 }
 

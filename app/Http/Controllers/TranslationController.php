@@ -10,7 +10,9 @@ class TranslationController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except([
+            'admin_groups'
+        ]);
         $this->middleware('ajax');
     }
     public function professor_diplomas_list()
@@ -204,6 +206,55 @@ class TranslationController extends Controller
                 'resend_request' => __('Resend request'),
                 'show_tasks' => __('Show tasks'),
                 'delete_request' => __('Delete request'),
+            ]
+        ];
+        return Response::json([
+            'translations' =>$translations
+        ]);
+    }
+
+
+    public function admin_groups()
+    {
+        $translations = [
+            'labels' => [
+                'group' => __('Group'),
+                'actions' => __('Actions'),
+                'no_groups' => __('There are no any groups yet'),
+                'update_group' => __('Update group'),
+                'new_group' => __('New group'),
+            ],
+            'buttons' => [
+                'edit' => __('Edit'),
+                'delete' => __('Delete'),
+                'cancel' => __('Cancel'),
+                'publish' => __('Publish'),
+                'update' => __('Update'),
+                'create_group' => __('Create group'),
+            ]
+        ];
+        return Response::json([
+            'translations' =>$translations
+        ]);
+    }
+
+    public function admin_disciplines()
+    {
+        $translations = [
+            'labels' => [
+                'discipline' => __('Discipline'),
+                'actions' => __('Actions'),
+                'no_disciplines' => __('There are no any disciplines yet'),
+                'update_discipline' => __('Update discipline'),
+                'new_discipline' => __('New discipline'),
+            ],
+            'buttons' => [
+                'edit' => __('Edit'),
+                'delete' => __('Delete'),
+                'cancel' => __('Cancel'),
+                'publish' => __('Publish'),
+                'update' => __('Update'),
+                'create_discipline' => __('Create discipline'),
             ]
         ];
         return Response::json([
